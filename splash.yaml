@@ -1,0 +1,13 @@
+flutter_native_splash:
+  color: "#FFFFFF"
+  color_dark: "#272727"
+  image: assets/logos/dms-document-management-system-digital-business-cloud-storage-icon-digital-data_100456-10606.jpg
+  image_dark: assets/logos/dms-document-management-system-digital-business-cloud-storage-icon-digital-data_100456-10606.jpg
+
+  android_12:
+    color: "#FFFFFF"
+    color_dark: "#272727"
+    image: assets/logos/dms-document-management-system-digital-business-cloud-storage-icon-digital-data_100456-10606.jpg
+    image_dark: assets/logos/dms-document-management-system-digital-business-cloud-storage-icon-digital-data_100456-10606.jpg
+
+  web: false
