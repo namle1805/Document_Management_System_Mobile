@@ -70,7 +70,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return Scaffold(
       appBar:
       AppBar(
-        title: Text('Verify OTP', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white), textAlign: TextAlign.center),
+        title: Text('Xác thực OTP', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white), textAlign: TextAlign.center),
         centerTitle: true,
         backgroundColor: TColors.primary,
         iconTheme: IconThemeData(color: Colors.white),
@@ -149,7 +149,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: TSizes.md),
                           child: Text(
-                            'Time Remaining 00:${_start.toString().padLeft(2, '0')}',
+                            'Thời gian còn lại 00:${_start.toString().padLeft(2, '0')}',
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                         ),
@@ -174,7 +174,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             onPressed: () => Get.to(() => const LoginScreen()),
                           ));
                         } else {
-                          Get.snackbar('Error', 'Please enter the complete OTP');
+                          Get.snackbar('Lỗi xác thực', 'Vui lòng nhập OTP đầy đủ và hợp lệ');
                         }
                       },
                       child: Container(

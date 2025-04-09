@@ -56,7 +56,7 @@ class SuccessScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      TTexts.tContinue,
+                      TTexts.signIn,
                       style: GoogleFonts.getFont(
                         "Roboto Condensed",
                         fontWeight: FontWeight.w700,

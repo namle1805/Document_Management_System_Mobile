@@ -72,7 +72,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'Vui lòng nhập email của bạn';
                     }
                     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+\$');
                     if (!emailRegex.hasMatch(value)) {
@@ -107,16 +107,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-              // SizedBox(
-              //   width: double.infinity,
-              //   child: TextButton(
-              //     onPressed: () {},
-              //     child: const Text(
-              //       TTexts.resendEmail,
-              //       style: TextStyle(color: Colors.black),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

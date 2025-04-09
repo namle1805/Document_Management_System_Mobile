@@ -39,12 +39,12 @@ class TTexts {
   static const String verificationCode = "verificationCode";
   static const String resendEmail = "Resend Email";
   static const String resendEmailIn = "Resend email in";
-  static const String resendOTP = "Resend OTP";
+  static const String resendOTP = "Gửi lại OTP";
   static const String tContinue = "Continue";
-  static const String verificationButton = "Verification";
+  static const String verificationButton = "Xác thực";
   static const String alreadyHaveAccount = "Already have an account?";
   static const String submit = "Submit";
-  static const String confirm = "Confirm";
+  static const String confirm = "Xác nhận";
   static const String done = "Done";
   static const String create = "Create";
 
@@ -57,16 +57,16 @@ class TTexts {
   static const String forgotPasswordTitle = "Forgot Password";
   static const String forgotPasswordSubTitle = "Please enter your email to get OTP";
   static const String otpVerificationTitle = "OTP Verification";
-  static const String otpVerificationSubTitle = "Enter your OTP which has been sent to your email and completely verify your account.";
+  static const String otpVerificationSubTitle = "Nhập OTP đã được gửi đến email của bạn và xác minh hoàn toàn tài khoản của bạn";
   static const String createNewPassTitle = "Create New Password";
   static const String createNewPassSubTitle = "Please enter new password";
   static const String changeYourPasswordTitle = "Password Reset Email Sent";
   static const String changeYourPasswordSubTitle = "Account Security is Our Priority! We've Sent You a Secure Link to Safely Change Your Password and Keep Your Account Protected.";
   static const String confirmEmailTitle = "Verify your email address!";
-  static const String confirmEmailSubTitle = "Enter the email associated with your account and we’ll send an email with code to reset your password";
+  static const String confirmEmailSubTitle = "Nhập email được liên kết với tài khoản của bạn và chúng tôi sẽ gửi email có mã để đặt lại mật khẩu của bạn";
   static const String emailNotReceiveMessage = "Didn't get the email? Check your spam or resend it.";
-  static const String yourAccountCreatedTitle = "Your account successfully create!";
-  static const String yourAccountCreatedSubTitle = "Welcome to Trip By Day: Your Account is Created!";
+  static const String yourAccountCreatedTitle = "Thay đổi mật khẩu thành công!";
+  static const String yourAccountCreatedSubTitle = "Tài khoản đã được thay đổi mật khẩu thành công!";
   static const String fillInfoSignUpGoogleTitle = "Complete Account";
   static const String fillInfoSignUpGoogleSubTitle = "Please fill in your information to complete account";
 
