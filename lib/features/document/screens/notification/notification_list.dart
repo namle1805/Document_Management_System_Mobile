@@ -8,19 +8,19 @@ class NotificationListPage extends StatelessWidget {
       'section': 'Hôm nay',
       'items': [
         {
-          'avatar': 'https://via.placeholder.com/150',
+          'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
           'title': 'Hà Công Hiệu vừa gửi văn bản đi của công văn tới cho bạn',
           'content': '9:01am',
           'isRead': false,
         },
         {
-          'avatar': 'https://via.placeholder.com/150',
+          'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
           'title': 'Hà Công Hiệu vừa gửi văn bản đi của công văn tới cho bạn',
           'content': '9:01am',
           'isRead': false,
         },
         {
-          'avatar': 'https://via.placeholder.com/150',
+          'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
           'title': 'Nhật Minh đã gửi văn bản nghị định và đối bạn duyệt văn bản',
           'content': '9:01am',
           'isRead': false,
@@ -31,13 +31,13 @@ class NotificationListPage extends StatelessWidget {
       'section': 'Hôm qua',
       'items': [
         {
-          'avatar': 'https://via.placeholder.com/150',
+          'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
           'title': 'Nam Lê đã gửi đến thời gian phải duyệt xong văn bản...',
           'content': '9:01am',
           'isRead': true,
         },
         {
-          'avatar': 'https://via.placeholder.com/150',
+          'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
           'title': 'Hà Công Hiệu vừa gửi văn bản đi của công văn tới cho bạn',
           'content': '9:01am',
           'isRead': true,
@@ -48,13 +48,13 @@ class NotificationListPage extends StatelessWidget {
       'section': 'Tuần này',
       'items': [
         {
-          'avatar': 'https://via.placeholder.com/150',
+          'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
           'title': 'Nam Lê đã gửi đến thời gian phải duyệt xong văn bản...',
           'content': '9:01am',
           'isRead': true,
         },
         {
-          'avatar': 'https://via.placeholder.com/150',
+          'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
           'title': 'Hà Công Hiệu vừa gửi văn bản đi của công văn tới cho bạn',
           'content': '9:01am',
           'isRead': true,

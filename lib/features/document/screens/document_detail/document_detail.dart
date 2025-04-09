@@ -156,7 +156,8 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
+      appBar:
+      AppBar(
         title: Text('Quyết định 53/2015 QĐ-TTg chí...', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white), textAlign: TextAlign.center),
         centerTitle: true,
         backgroundColor: TColors.primary,
@@ -225,7 +226,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        MaterialPageRoute(builder: (context) => ViewDocumentPage()),
                       );
                     },
                   ),

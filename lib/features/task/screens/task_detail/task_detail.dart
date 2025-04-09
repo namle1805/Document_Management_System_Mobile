@@ -1,5 +1,7 @@
+import 'package:dms/features/document/screens/document_detail/document_detail.dart';
 import 'package:dms/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 
@@ -431,9 +433,7 @@ class TaskDetailPage extends StatelessWidget {
 
             // Nút "Xem chi tiết văn bản"
             ElevatedButton(
-              onPressed: () {
-                // Xử lý khi nhấn nút
-              },
+              onPressed: () => Get.to(() => DocumentDetailPage()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 minimumSize: Size(double.infinity, 50),

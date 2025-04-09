@@ -1,6 +1,7 @@
 import 'package:dms/features/document/screens/document_list/document_list.dart';
 import 'package:dms/features/document/screens/document_type_list/document_type_list.dart';
 import 'package:dms/features/document/screens/setting/setting.dart';
+import 'package:dms/features/task/screens/task_detail/task_detail.dart';
 import 'package:dms/features/task/screens/task_list/task_list.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
@@ -355,6 +356,7 @@ class TaskCard extends StatelessWidget {
   final String status;
 
   const TaskCard({
+    super.key,
     required this.title,
     required this.category,
     required this.time,
@@ -363,86 +365,89 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF333333),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TaskDetailPage(
             ),
           ),
-          const SizedBox(height: 4),
-          // Category
-          Text(
-            category,
-            style: const TextStyle(
-              fontSize: 13,
-              color: Colors.grey,
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 4),
             ),
-          ),
-          const SizedBox(height: 12),
-
-          // Divider
-          Container(
-            height: 1,
-            color: Colors.grey.shade200,
-          ),
-
-          const SizedBox(height: 12),
-          // Time & Status
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.access_time, size: 16, color: Colors.blue),
-                  const SizedBox(width: 4),
-                  Text(
-                    time,
-                    style: const TextStyle(fontSize: 13, color: Colors.grey),
-                  ),
-                ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF333333),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Color(0xFFE3EDFF),
-                  borderRadius: BorderRadius.circular(20),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              category,
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(height: 1, color: Colors.grey.shade200),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.access_time, size: 16, color: Colors.blue),
+                    const SizedBox(width: 4),
+                    Text(
+                      time,
+                      style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  status,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF3F72AF),
-                    fontWeight: FontWeight.w500,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE3EDFF),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    status,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF3F72AF),
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 }
+
 
 
 // Widget cho thẻ Văn bản xử lý
@@ -461,118 +466,125 @@ class DocumentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Color(0xFFE7F0EF),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Stack(
-        children: [
-          // Main content
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Left content
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  SizedBox(
-                    width: 180,
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+        MaterialPageRoute(builder: (_) => TaskDetailPage(
+        ),));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Color(0xFFE7F0EF),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Stack(
+          children: [
+            // Main content
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left content
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    SizedBox(
+                      width: 180,
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        maxLines: 1,
                       ),
-                      maxLines: 1,
                     ),
-                  ),
-                  const SizedBox(height: 6),
+                    const SizedBox(height: 6),
 
-                  // "Thành viên" label
-                  const Text(
-                    'Thành viên',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 6),
+                    // "Thành viên" label
+                    const Text(
+                      'Thành viên',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 6),
 
-                  // Avatars
-                  Row(
-                    children: List.generate(
-                      3,
-                          (index) => Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: CircleAvatar(
-                          radius: 12,
-                          backgroundImage: AssetImage('assets/images/avatar${index + 1}.png'),
+                    // Avatars
+                    Row(
+                      children: List.generate(
+                        3,
+                            (index) => Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: CircleAvatar(
+                            radius: 12,
+                            backgroundImage: AssetImage('assets/images/avatar${index + 1}.png'),
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                  // Time
-                  Row(
-                    children: [
-                      const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
-                      const SizedBox(width: 4),
-                      Text(
-                        time,
-                        style: const TextStyle(fontSize: 13, color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              // Right: Progress circle
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    width: 52,
-                    height: 52,
-                    child: CircularProgressIndicator(
-                      value: progress,
-                      strokeWidth: 5,
-                      backgroundColor: Colors.grey.shade300,
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
+                    // Time
+                    Row(
+                      children: [
+                        const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
+                        const SizedBox(width: 4),
+                        Text(
+                          time,
+                          style: const TextStyle(fontSize: 13, color: Colors.black54),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    '${(progress * 100).toInt()}%',
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
 
-          // Top-right badge
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                '6d',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white,
+                // Right: Progress circle
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 52,
+                      height: 52,
+                      child: CircularProgressIndicator(
+                        value: progress,
+                        strokeWidth: 5,
+                        backgroundColor: Colors.grey.shade300,
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
+                      ),
+                    ),
+                    Text(
+                      '${(progress * 100).toInt()}%',
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            // Top-right badge
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  '6d',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
