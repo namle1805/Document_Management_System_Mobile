@@ -1,10 +1,14 @@
 import 'package:dms/features/document/screens/document_list/document_list.dart';
+import 'package:dms/features/document/screens/document_type_list/document_type_list.dart';
+import 'package:dms/features/document/screens/setting/setting.dart';
 import 'package:dms/features/task/screens/task_list/task_list.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+
+import '../user_detail/user_detail.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -22,12 +26,21 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: Icon(Icons.menu, color: Colors.black),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage(TImages.avatar), // Thay bằng ảnh của bạn
+            padding: const EdgeInsets.all(8.0),
+            child:
+            GestureDetector(
+              onTap: () {
+                Get.to(() => UpdateSettingsPage());
+              },
+              child: CircleAvatar(
+                // radius: 30, // tăng kích thước ảnh avatar
+                backgroundImage: AssetImage(TImages.avatar),
+              ),
             ),
+
+
           ),
         ],
       ),
@@ -42,16 +55,10 @@ class HomePage extends StatelessWidget {
                 'Xin chào Nam',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              // const Text(
-              //   'Feb 12, 2025',
-              //   style: TextStyle(fontSize: 16, color: Colors.grey),
-              // ),
-
-            Text(
-              formattedDate,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-
+              Text(
+                formattedDate,
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
               SizedBox(height: 16),
 
               // Search Bar
@@ -80,7 +87,7 @@ class HomePage extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                    onPressed: () => Get.to(() => DocumentListPage()),
+                    onPressed: () => Get.to(() => DocumentTypeListPage()),
                     child: const Text(
                       "Xem thêm",
                       style: TextStyle(
@@ -94,31 +101,42 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(height: 8),
 
-              const SingleChildScrollView(
+              SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    DocumentTypeCard(
-                      title: 'Quyết định',
-                      count: 12,
-                      progress: 0.1,
-                      members: 6,
-                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => DocumentListPage());
+                      },
+                      child:  DocumentTypeCard(
+                        title: 'Quyết định',
+                        count: 12,
+                        progress: 0.1,
+                        members: 6,
+                      ),),
                     SizedBox(width: 12),
-                    DocumentTypeCard(
-                      title: 'Quy chế',
-                      count: 24,
-                      progress: 0.2,
-                      members: 12,
-                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => DocumentListPage());
+                      },
+                      child:  DocumentTypeCard(
+                        title: 'Quy chế',
+                        count: 24,
+                        progress: 0.2,
+                        members: 12,
+                      ),),
                     SizedBox(width: 12),
-                    DocumentTypeCard(
-                      title: 'Thông báo',
-                      count: 8,
-                      progress: 0.5,
-                      members: 3,
-                    ),
-                    // Thêm bao nhiêu card tùy thích
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => DocumentListPage());
+                      },
+                      child:  DocumentTypeCard(
+                        title: 'Thông báo',
+                        count: 8,
+                        progress: 0.5,
+                        members: 3,
+                      ),),
                   ],
                 ),
               ),
@@ -147,13 +165,13 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 8),
-              TaskCard(
+              const TaskCard(
                 title: 'LANDING PAGE AGENCY CREATIVE',
                 category: 'WEB DESIGN',
                 time: '10:00 - 12:30 am',
                 status: 'Đang xử lý',
               ),
-              TaskCard(
+              const TaskCard(
                 title: 'REACT JS FOR E-COMMERCE WEB',
                 category: 'WEB DESIGN',
                 time: '08:00 - 10:00 am',
@@ -183,13 +201,13 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 8),
-              DocumentCard(
+              const DocumentCard(
                 title: 'Soạn thảo nội dung cho công ...',
                 time: '9:00 PM - 11:00 PM',
-                progress: 0.46,
+                progress: 0.64,
                 members: 6,
               ),
-              DocumentCard(
+              const DocumentCard(
                 title: 'Đánh số & ký chỉ ký số cho văn ...',
                 time: '4:00 PM - 5:00 PM',
                 progress: 0.46,

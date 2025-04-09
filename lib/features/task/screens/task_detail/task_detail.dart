@@ -166,7 +166,7 @@ class TaskDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text(
+            Text(
               'Tiêu đề',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: TColors.grey_1),
             ),

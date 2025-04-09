@@ -22,5 +22,8 @@ class TImages {
   static const String jpg = "assets/images/document_logo_images/jpg.png";
   static const String defaultFile = "assets/images/document_logo_images/default.png";
 
+  // -- Document
+  static const String folder = "assets/images/document_images/folder.png";
+
 
 }

@@ -137,62 +137,62 @@ class TaskItem extends StatelessWidget {
             ),
           );
         },
-    child:  Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
+        child:  Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                time,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey),
-              ),
-              SizedBox(height: 4),
-              Container(width: 2, height: 60, color: Colors.grey[300]),
-            ],
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: isHighlighted ? Colors.blue : Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
                 children: [
                   Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: isHighlighted ? Colors.white : Colors.black,
-                    ),
+                    time,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey),
                   ),
                   SizedBox(height: 4),
-                  Text(
-                    timeRange,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isHighlighted ? Colors.white70 : Colors.grey,
-                    ),
-                  ),
+                  Container(width: 2, height: 60, color: Colors.grey[300]),
                 ],
               ),
-            ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isHighlighted ? Colors.blue : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: isHighlighted ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        timeRange,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: isHighlighted ? Colors.white70 : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }

@@ -1,7 +1,7 @@
-import 'package:dms/features/document/screens/home/home.dart';
+import 'package:dms/features/document/screens/document_detail/document_detail.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:get/get.dart';
 import '../../../../utils/constants/image_strings.dart';
 
 class DocumentListPage extends StatelessWidget {
@@ -166,7 +166,8 @@ class DocumentItem extends StatelessWidget {
   final String size;
   final Color iconColor;
 
-  DocumentItem({
+  const DocumentItem({
+    super.key,
     required this.type,
     required this.title,
     required this.date,
@@ -187,69 +188,74 @@ class DocumentItem extends StatelessWidget {
       case 'JPG':
         return TImages.jpg;
       default:
-        return TImages.defaultFile; // file mặc định nếu không khớp
+        return TImages.defaultFile;
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Color(0xFFECECEC),
-          width: 1
+    return GestureDetector(
+      onTap: () {
+        // 👉 Chuyển đến trang chi tiết
+        Get.to(() => DocumentDetailPage(
+        ));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Color(0xFFECECEC),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: iconColor,
-              borderRadius: BorderRadius.circular(8),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: iconColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.asset(
+                _getIconAsset(),
+                width: 32,
+                height: 32,
+              ),
             ),
-            child:
-             Image.asset(
-          _getIconAsset(),
-      width: 32,
-      height: 32,
-    ),
-
-    ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  '$date | $size',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style:
+                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    '$date | $size',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Icon(Icons.more_vert, color: Colors.grey),
-        ],
+            Icon(Icons.more_vert, color: Colors.grey),
+          ],
+        ),
       ),
     );
   }

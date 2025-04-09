@@ -1,5 +1,7 @@
 import 'package:dms/features/authentication/screens/login/login.dart';
+import 'package:dms/features/document/screens/document_type_list/document_type_list.dart';
 import 'package:dms/features/document/screens/home/home.dart';
+import 'package:dms/features/document/screens/notification/notification_list.dart';
 import 'package:dms/features/task/screens/task_list/task_list.dart';
 import 'package:dms/utils/constants/colors.dart';
 import 'package:dms/utils/helpers/helper_functions.dart';
@@ -41,5 +43,5 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [  HomePage(), const LoginScreen(), TaskListPage(), const LoginScreen()];
+  final screens = [  HomePage(), NotificationListPage(), TaskListPage(), DocumentTypeListPage()];
 }
