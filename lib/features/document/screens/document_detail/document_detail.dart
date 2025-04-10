@@ -22,31 +22,31 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     {
       'name': 'Maria Morgan',
       'role': 'Nhân viên văn thư',
-      'avatar': 'https://via.placeholder.com/150',
+      'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
       'isOnline': true,
     },
     {
       'name': 'Piter Walberg',
       'role': 'Nhân viên phòng - CNTT',
-      'avatar': 'https://via.placeholder.com/150',
+      'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
       'isOnline': false,
     },
     {
       'name': 'Jessica Gold',
       'role': 'Trưởng phòng CNTT',
-      'avatar': 'https://via.placeholder.com/150',
+      'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
       'isOnline': false,
     },
     {
       'name': 'Michael Word',
       'role': 'Lãnh đạo',
-      'avatar': 'https://via.placeholder.com/150',
+      'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
       'isOnline': true,
     },
     {
       'name': 'Sara Parker',
       'role': 'Chánh văn phòng',
-      'avatar': 'https://via.placeholder.com/150',
+      'avatar': 'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
       'isOnline': false,
     },
   ];

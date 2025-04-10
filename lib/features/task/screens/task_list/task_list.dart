@@ -32,6 +32,25 @@ class _TaskListPageState extends State<TaskListPage> {
       'title': 'Phê duyệt văn bản hành chính...',
       'timeRange': '12:00 PM - 13:30 PM',
     },
+    {
+      'date': DateTime(2025, 4, 10),
+      'time': '08 AM',
+      'title': 'Hoàn thành dự án',
+      'timeRange': '08:00 AM - 11:00 AM',
+      'isHighlighted': true,
+    },
+    {
+      'date': DateTime(2025, 4, 10),
+      'time': '09 AM',
+      'title': 'Soạn thảo nội dung cho công...',
+      'timeRange': '09:00 AM - 11:00 AM',
+    },
+    {
+      'date': DateTime(2025, 4, 10),
+      'time': '12 PM',
+      'title': 'Phê duyệt văn bản hành chính...',
+      'timeRange': '12:00 PM - 13:30 PM',
+    },
   ];
 
   @override
