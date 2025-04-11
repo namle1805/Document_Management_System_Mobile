@@ -1,4 +1,3 @@
-import 'package:dms/features/authentication/screens/otp/otp_verification.dart';
 import 'package:dms/features/authentication/screens/otp_forgot/forgot_otp_verification.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/cupertino.dart';
