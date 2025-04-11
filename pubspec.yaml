@@ -23,6 +23,8 @@ dependencies:
   google_fonts: ^6.2.1
   table_calendar: ^3.0.9
   syncfusion_flutter_pdfviewer: ^24.2.9
+  lucide_icons: ^0.257.0
+  shared_preferences: ^2.3.2
 
 
   # Icons

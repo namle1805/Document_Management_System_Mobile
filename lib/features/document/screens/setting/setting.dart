@@ -1,4 +1,6 @@
+import 'package:dms/features/authentication/screens/change_password/change_password.dart';
 import 'package:dms/features/authentication/screens/login/login.dart';
+import 'package:dms/features/authentication/screens/otp/otp_verification.dart';
 import 'package:dms/features/document/screens/user_detail/user_detail.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
@@ -101,11 +103,9 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                     },
                   ),
                   SettingItem(
-                    icon: Iconsax.shield,
-                    title: 'Privacy Policy',
-                    onTap: () {
-                      // Điều hướng đến trang chính sách bảo mật
-                    },
+                    icon: Iconsax.password_check,
+                    title: 'Thay đổi mật khẩu',
+                    onTap: () => Get.to(() => OtpVerificationScreen()),
                   ),
                   SettingItem(
                     icon: Iconsax.setting,

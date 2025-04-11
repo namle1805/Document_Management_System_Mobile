@@ -158,6 +158,19 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
                   initialDate: DateTime.now(),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
+                  builder: (context, child) {
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        dialogBackgroundColor: Colors.white,
+                        colorScheme: ColorScheme.light(
+                          primary: Colors.blue, // Màu cho nút chọn
+                          onPrimary: Colors.white, // Màu chữ trên nút
+                          onSurface: Colors.black, // Màu chữ ngày
+                        ),
+                      ),
+                      child: child!,
+                    );
+                  },
                 );
 
                 if (pickedDate != null) {

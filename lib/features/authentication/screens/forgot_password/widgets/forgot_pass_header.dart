@@ -5,8 +5,8 @@ import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/constants/text_strings.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
 
-class ChangePassHeader extends StatelessWidget {
-  const ChangePassHeader({
+class ForgotPassHeader extends StatelessWidget {
+  const ForgotPassHeader({
     super.key
   });
 

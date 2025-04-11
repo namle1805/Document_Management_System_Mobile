@@ -8,18 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-
-import '../user_detail/user_detail.dart';
+import '../search_document/search_document.dart';
 
 
 class HomePage extends StatelessWidget {
-
-
 
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
     final formattedDate = DateFormat('dd MMMM, yyyy', 'vi').format(today);
+    final TextEditingController _searchController = TextEditingController();
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -61,9 +60,18 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               SizedBox(height: 16),
-
-              // Search Bar
               TextField(
+                controller: _searchController,
+                onSubmitted: (value) {
+                  if (value.trim().isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchDocumentPage(searchQuery: value.trim()),
+                      ),
+                    );
+                  }
+                },
                 decoration: InputDecoration(
                   hintText: 'Tìm kiếm văn bản',
                   hintStyle: TextStyle(color: Colors.grey),
@@ -77,7 +85,7 @@ class HomePage extends StatelessWidget {
                   fillColor: Colors.white,
                 ),
               ),
-              SizedBox(height: 16),
+
 
               // Loại văn bản
               Row(
@@ -524,7 +532,6 @@ class DocumentCard extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 10),
 
                     // Time

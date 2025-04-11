@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:dms/features/authentication/screens/change_password/change_password.dart';
+import 'package:dms/features/authentication/screens/forgot_password/forgot_password.dart';
 import 'package:dms/features/authentication/screens/login/login.dart';
 import 'package:dms/features/authentication/screens/success/success_screen.dart';
 import 'package:dms/features/authentication/screens/verify_email/verify_email.dart';
-import 'package:dms/features/document/screens/setting/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -13,19 +12,21 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
+import '../../controllers/verify_otp/verify_otp_controller.dart';
 
-class OtpVerificationScreen extends StatefulWidget {
-  const OtpVerificationScreen({super.key});
+class ForgotOtpVerificationScreen extends StatefulWidget {
+  const ForgotOtpVerificationScreen({super.key});
 
   @override
   _OtpVerificationScreenState createState() => _OtpVerificationScreenState();
 }
 
-class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
+class _OtpVerificationScreenState extends State<ForgotOtpVerificationScreen> {
   late Timer _timer;
   int _start = 60;
   final List<TextEditingController> _otpControllers = List.generate(6, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  final OtpController _otpController = Get.put(OtpController());
 
   @override
   void initState() {
@@ -82,7 +83,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => UpdateSettingsPage()),
+              MaterialPageRoute(builder: (context) => VerifyEmailScreen()),
             );
           },
         ),
@@ -166,16 +167,26 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     ),
                     const SizedBox(height: TSizes.spaceBtwItems),
                     GestureDetector(
+                      // onTap: () {
+                      //   final otp = _otpControllers.map((controller) => controller.text).join();
+                      //   if (otp.length == 6) {
+                      //     Get.to(() =>
+                      //         ForgotPasswordScreen()
+                      //     );
+                      //   } else {
+                      //     Get.snackbar('Lỗi xác thực', 'Vui lòng nhập OTP đầy đủ và hợp lệ');
+                      //   }
+                      // },
                       onTap: () {
                         final otp = _otpControllers.map((controller) => controller.text).join();
-                        if (otp.length == 6) {
-                          Get.to(() =>
-                              ChangePasswordScreen()
-                          );
+                        final email = Get.arguments['email']; // truyền email từ VerifyEmailScreen
+                        if (otp.length == 6 && email != null) {
+                          _otpController.verifyOtp(email, otp);
                         } else {
                           Get.snackbar('Lỗi xác thực', 'Vui lòng nhập OTP đầy đủ và hợp lệ');
                         }
                       },
+
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 15),
                         decoration: BoxDecoration(

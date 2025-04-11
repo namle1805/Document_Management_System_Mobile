@@ -1,6 +1,8 @@
 import 'package:dms/common/styles/spacing_styles.dart';
 import 'package:dms/features/authentication/screens/change_password/widgets/change_pass_form.dart';
 import 'package:dms/features/authentication/screens/change_password/widgets/change_pass_header.dart';
+import 'package:dms/features/authentication/screens/forgot_password/widgets/forgot_pass_form.dart';
+import 'package:dms/features/authentication/screens/forgot_password/widgets/forgot_pass_header.dart';
 import 'package:dms/features/authentication/screens/login/widgets/login_form.dart';
 import 'package:dms/features/authentication/screens/login/widgets/login_header.dart';
 import 'package:dms/features/authentication/screens/onboarding/onboarding.dart';
@@ -13,8 +15,8 @@ import 'package:dms/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-class ChangePasswordScreen extends StatelessWidget {
-  const ChangePasswordScreen({super.key});
+class ForgotPasswordScreen extends StatelessWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +46,10 @@ class ChangePasswordScreen extends StatelessWidget {
           child: Column(
             children: [
               /// Logo, Title, Sub-Title
-              ChangePassHeader(),
+              ForgotPassHeader(),
 
               /// Form
-              ChangePassForm(),
+              ForgotPassForm(),
 
               /// Divider
               Row(

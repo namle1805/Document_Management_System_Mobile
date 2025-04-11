@@ -1,10 +1,12 @@
 import 'package:dms/features/authentication/screens/otp/otp_verification.dart';
+import 'package:dms/features/authentication/screens/otp_forgot/forgot_otp_verification.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../../../data/services/auth_services.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
@@ -74,9 +76,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Vui lòng nhập email của bạn';
                     }
-                    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+\$');
-                    if (!emailRegex.hasMatch(value)) {
-                      return 'Please enter a valid email';
+                    if (!value.contains('@')) {
+                      return 'Vui lòng nhập đúng email hoặc username của bạn';
                     }
                     return null;
                   },
@@ -84,9 +85,20 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               ),
               const SizedBox(height: TSizes.spaceBtwInputFields),
               GestureDetector(
-                onTap: () =>
-                    Get.to(() => const OtpVerificationScreen())
-                ,
+                // onTap: () =>
+                //     Get.to(() => const ForgotOtpVerificationScreen())
+                  onTap: () async {
+                    if (_formKey.currentState!.validate()) {
+                      try {
+                        await AuthService.sendOtp(email: _emailController.text.trim());
+                        Get.to(() => ForgotOtpVerificationScreen(), arguments: {'email': _emailController.text.trim()});
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(e.toString())),
+                        );
+                      }
+                    }
+                  },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   decoration: BoxDecoration(

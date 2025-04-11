@@ -3,6 +3,7 @@ import 'package:dms/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 
 class UserDetailPage extends StatelessWidget {
@@ -14,7 +15,7 @@ class UserDetailPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          'Profile',
+          'Thông tin cá nhân',
           style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -121,17 +122,60 @@ class UserDetailPage extends StatelessWidget {
                   // Vai trò
                   InfoItem(
                     icon: Iconsax.user,
-                    title: 'Role',
-                    value: 'Leader',
+                    title: 'Họ và tên',
+                    value: 'Lê Phan Hoài Nam',
+                    iconColor: Colors.black,
+                  ),
+                  SizedBox(height: 16),
+
+                  InfoItem(
+                    icon: Iconsax.user_tag,
+                    title: 'Username',
+                    value: 'NamLPH',
+                    iconColor: Colors.black,
+                  ),
+                  SizedBox(height: 16),
+                  InfoItem(
+                    icon: Iconsax.profile_2user,
+                    title: 'Giới tính',
+                    value: 'Nam',
+                    iconColor: Colors.black,
+                  ),
+                  SizedBox(height: 16),
+                  InfoItem(
+                    icon: Icons.perm_identity,
+                    title: 'CCCD',
+                    value: '045203000585',
+                    iconColor: Colors.black,
+                  ),
+                  SizedBox(height: 16),
+                  InfoItem(
+                    icon: Iconsax.security_user,
+                    title: 'Vị trí',
+                    value: 'Hiệu trưởng',
+                    iconColor: Colors.black,
+                  ),
+                  SizedBox(height: 16),
+                  InfoItem(
+                    icon: Iconsax.security_user,
+                    title: 'Vị trí',
+                    value: 'Hiệu trưởng',
+                    iconColor: Colors.black,
+                  ),
+                  SizedBox(height: 16),
+                  InfoItem(
+                    icon: LucideIcons.building,
+                    title: 'Phòng ban',
+                    value: 'Ban giám hiệu',
                     iconColor: Colors.black,
                   ),
                   SizedBox(height: 16),
                   // Vị trí
                   InfoItem(
                     icon: Iconsax.location,
-                    title: 'Location',
+                    title: 'Địa chỉ',
                     value: 'Bến Nghé, Quận 1, TP.HCM',
-                    iconColor: Color(0xFFFBCB0A),
+                    iconColor: Colors.black,
                   ),
                   SizedBox(height: 16),
                   // Ngày sinh
@@ -139,7 +183,7 @@ class UserDetailPage extends StatelessWidget {
                     icon: Iconsax.clock,
                     title: 'Ngày sinh',
                     value: 'May 18 2003',
-                    iconColor: Color(0xFF37E2D5),
+                    iconColor: Colors.black,
                   ),
                   SizedBox(height: 16),
                   // Email
@@ -147,15 +191,15 @@ class UserDetailPage extends StatelessWidget {
                     icon: Icons.email_outlined,
                     title: 'Email',
                     value: 'namlee180503@gmail.com',
-                    iconColor: Color(0xFFF73D93),
+                    iconColor: Colors.black,
                   ),
                   SizedBox(height: 16),
                   // Số điện thoại
                   InfoItem(
                     icon: Iconsax.call,
-                    title: 'Phone',
+                    title: 'Số điện thoại',
                     value: '+01 1234542856',
-                    iconColor: Color(0xFFEE5007),
+                    iconColor: Colors.black,
                   ),
                 ],
               ),
@@ -166,6 +210,8 @@ class UserDetailPage extends StatelessWidget {
     );
   }
 }
+
+
 
 // Widget cho mỗi mục thông tin
 class InfoItem extends StatelessWidget {
