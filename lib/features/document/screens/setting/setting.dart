@@ -92,7 +92,7 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                   SettingItem(
                     icon: Iconsax.user,
                     title: 'Personal Information',
-                    onTap: () => Get.to(() => UserDetailPage()),
+                    onTap: () => Get.to(() => UserDetailPage(userId: UserManager().id,)),
                   ),
                   SettingItem(
                     icon: Iconsax.global,
@@ -119,10 +119,7 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                             SnackBar(content: Text(e.toString())),
                           );
                         }
-                      }
-
-
-                    ,
+                      },
                   ),
                   SettingItem(
                     icon: Iconsax.setting,
@@ -226,7 +223,6 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
   }
 }
 
-// Widget cho mỗi mục cài đặt
 class SettingItem extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -244,26 +240,32 @@ class SettingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.grey, size: 24),
-            SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: titleColor ?? Colors.black,
-                  fontWeight: FontWeight.w500,
+    return Material(
+      color: Colors.transparent, // Đảm bảo ripple effect hiển thị đúng
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8), // Làm mượt hiệu ứng ripple
+        splashColor: Colors.grey.withOpacity(0.2), // Màu hiệu ứng
+        highlightColor: Colors.grey.withOpacity(0.1), // Màu nhấn giữ
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.grey, size: 24),
+              SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: titleColor ?? Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            if (trailing != null) trailing!,
-          ],
+              if (trailing != null) trailing!,
+            ],
+          ),
         ),
       ),
     );

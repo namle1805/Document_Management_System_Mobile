@@ -1,3 +1,4 @@
+import 'package:dms/features/authentication/controllers/user/user_manager.dart';
 import 'package:dms/features/document/screens/document_list/document_list.dart';
 import 'package:dms/features/document/screens/document_type_list/document_type_list.dart';
 import 'package:dms/features/document/screens/setting/setting.dart';
@@ -34,13 +35,14 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Get.to(() => UpdateSettingsPage());
               },
-              child: CircleAvatar(
-                // radius: 30, // tăng kích thước ảnh avatar
-                backgroundImage: AssetImage(TImages.avatar),
+              child:
+              CircleAvatar(
+                // radius: 40,
+                backgroundImage: (UserManager().avatar != null && UserManager().avatar!.isNotEmpty)
+                    ? NetworkImage(UserManager().avatar!)
+                    : AssetImage('assets/images/home_screen/user.png'),
               ),
             ),
-
-
           ),
         ],
       ),
@@ -51,8 +53,8 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              const Text(
-                'Xin chào Nam',
+              Text(
+                'Xin chào ${UserManager().name.isNotEmpty ? UserManager().name : "bạn"}',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               Text(

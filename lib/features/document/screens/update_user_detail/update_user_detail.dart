@@ -1,6 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 
 class UpdateUserDetailPage extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class UpdateUserDetailPage extends StatefulWidget {
 }
 
 class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
-  String _selectedGender = 'Sir'; // Giá trị mặc định cho giới tính
+  String _selectedGender = 'Sir';
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController(text: 'namlee180503@gmail.com');
@@ -16,6 +17,17 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
   final TextEditingController _phoneController = TextEditingController(text: '+01 1234542856');
   final TextEditingController _dobController = TextEditingController();
 
+  File? _avatarImage;
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _avatarImage = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -37,7 +49,7 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // Quay lại màn hình trước
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -55,39 +67,41 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            // Ảnh đại diện với biểu tượng "add"
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!, width: 1), // Thêm stroke (đường viền)
-                borderRadius: BorderRadius.circular(12), // Bo góc
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start, // Căn giữa nội dung
                 children: [
                   Stack(
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage(
-                          'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no', // Thay bằng URL ảnh thực tế
-                        ),
+                        backgroundImage: _avatarImage != null
+                            ? FileImage(_avatarImage!)
+                            : NetworkImage(
+                          'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
+                        ) as ImageProvider,
                       ),
-                      // Biểu tượng "add" ở góc dưới bên phải
                       Positioned(
                         right: 0,
                         bottom: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 16,
+                        child: GestureDetector(
+                          onTap: _pickImage,
+                          child: Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -112,6 +126,7 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
               ),
             ),
             SizedBox(height: 24),
+
             // Giới tính
             Text(
               'Gender',
@@ -145,7 +160,7 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
             ),
             SizedBox(height: 24),
 
-            // Tên
+            // Ngày sinh
             Text(
               'Ngày sinh & Địa chi',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -158,19 +173,6 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
                   initialDate: DateTime.now(),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
-                  builder: (context, child) {
-                    return Theme(
-                      data: Theme.of(context).copyWith(
-                        dialogBackgroundColor: Colors.white,
-                        colorScheme: ColorScheme.light(
-                          primary: Colors.blue, // Màu cho nút chọn
-                          onPrimary: Colors.white, // Màu chữ trên nút
-                          onSurface: Colors.black, // Màu chữ ngày
-                        ),
-                      ),
-                      child: child!,
-                    );
-                  },
                 );
 
                 if (pickedDate != null) {
@@ -204,10 +206,9 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
             ),
             SizedBox(height: 24),
 
-            // Nút "Save"
             ElevatedButton(
               onPressed: () {
-                // Xử lý khi nhấn nút "Save"
+                // Xử lý khi nhấn "Save"
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,

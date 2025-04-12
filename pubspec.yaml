@@ -25,6 +25,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^24.2.9
   lucide_icons: ^0.257.0
   shared_preferences: ^2.3.2
+  image_picker: ^1.1.2
 
 
   # Icons
