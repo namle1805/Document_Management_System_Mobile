@@ -1,4 +1,4 @@
-import 'package:dms/features/authentication/screens/change_password/change_password.dart';
+import 'package:dms/features/authentication/controllers/user/user_manager.dart';
 import 'package:dms/features/authentication/screens/login/login.dart';
 import 'package:dms/features/authentication/screens/otp/otp_verification.dart';
 import 'package:dms/features/document/screens/user_detail/user_detail.dart';
@@ -6,9 +6,8 @@ import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../../../data/services/auth_services.dart';
 import '../../../../utils/constants/colors.dart';
-
-
 
 
 class UpdateSettingsPage extends StatefulWidget {
@@ -53,18 +52,22 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage(
-                      'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no', // Thay bằng URL ảnh thực tế
-                    ),
+                    backgroundImage: (UserManager().avatar != null && UserManager().avatar!.isNotEmpty)
+                        ? NetworkImage(UserManager().avatar!)
+                        : AssetImage('assets/images/home_screen/user.png'),
                   ),
+
+
                   SizedBox(height: 16),
                   Text(
-                    'Nam Le',
+                    UserManager().name,
+                    // 'Nam Le',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'namlee180503@gmail.com',
+                    // 'namlee180503@gmail.com',
+                    UserManager().email,
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
@@ -105,7 +108,21 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                   SettingItem(
                     icon: Iconsax.password_check,
                     title: 'Thay đổi mật khẩu',
-                    onTap: () => Get.to(() => OtpVerificationScreen()),
+                    // onTap: () => Get.to(() => OtpVerificationScreen())
+                    onTap: () async {
+
+                        try {
+                          await AuthService.sendOtp(email: UserManager().email);
+                          Get.to(() => OtpVerificationScreen(), arguments: {'email': UserManager().email});
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())),
+                          );
+                        }
+                      }
+
+
+                    ,
                   ),
                   SettingItem(
                     icon: Iconsax.setting,

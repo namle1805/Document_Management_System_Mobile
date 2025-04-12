@@ -121,4 +121,36 @@ class AuthService {
       throw Exception(data['message'] ?? 'Password change failed');
     }
   }
+
+  static Future<ChangePasswordResponse> changePassword({
+    required String email,
+    required String otpCode,
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Authentication/create-change-password');
+
+    final body = jsonEncode({
+      'email': email,
+      'otpCode': otpCode,
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
+      'confirmPassword': confirmPassword,
+    });
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: body,
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 && data['statusCode'] == 200) {
+      return ChangePasswordResponse.fromJson(data);
+    } else {
+      throw Exception(data['message'] ?? 'Password change failed');
+    }
+  }
 }

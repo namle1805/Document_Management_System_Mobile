@@ -97,7 +97,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                         );
                       }
                     }
-                  },
+                  }
+                  ,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   decoration: BoxDecoration(

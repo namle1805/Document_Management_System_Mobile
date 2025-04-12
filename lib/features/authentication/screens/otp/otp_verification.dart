@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'package:dms/features/authentication/screens/change_password/change_password.dart';
-import 'package:dms/features/authentication/screens/login/login.dart';
-import 'package:dms/features/authentication/screens/success/success_screen.dart';
-import 'package:dms/features/authentication/screens/verify_email/verify_email.dart';
+import 'package:dms/features/authentication/controllers/verify_otp_change_pass/verify_otp_change_pass_controller.dart';
 import 'package:dms/features/document/screens/setting/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +10,7 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
+import '../../controllers/auth/auth_controller.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   const OtpVerificationScreen({super.key});
@@ -26,6 +24,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   int _start = 180;
   final List<TextEditingController> _otpControllers = List.generate(6, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  final OtpControllerChangePass _otpController = Get.put(OtpControllerChangePass());
+
 
   @override
   void initState() {
@@ -168,14 +168,16 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     GestureDetector(
                       onTap: () {
                         final otp = _otpControllers.map((controller) => controller.text).join();
-                        if (otp.length == 6) {
-                          Get.to(() =>
-                              ChangePasswordScreen()
-                          );
+                        final email = Get.arguments['email']; // truyền email từ VerifyEmailScreen
+                        if (otp.length == 6 && email != null) {
+                          AuthController().email = email;
+                          AuthController().otpCode = otp;
+                          _otpController.verifyOtpChangePass(email, otp);
                         } else {
                           Get.snackbar('Lỗi xác thực', 'Vui lòng nhập OTP đầy đủ và hợp lệ');
                         }
                       },
+
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 15),
                         decoration: BoxDecoration(

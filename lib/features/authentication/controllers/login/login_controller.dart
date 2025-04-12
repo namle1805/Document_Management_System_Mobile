@@ -82,6 +82,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../data/services/auth_services.dart';
 import '../../../../navigation_menu.dart';
+import '../../models/login_response.dart';
+import '../user/user_manager.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -102,10 +104,16 @@ class LoginController extends GetxController {
         password: password,
         fcmToken: 'dummy_fcm_token',
       );
-      final user = result['user'];
-      final token = result['token'];
 
-      print('✅ Đăng nhập thành công: ${user.fullName}');
+      final user = result['user'] as UserDto;
+      final token = result['token'] as String;
+
+      // 👉 Lưu thông tin user và token vào UserManager
+      UserManager().setUser(user, token);
+
+      print('✅ Đăng nhập thành công: ${UserManager().name}');
+      print('Token: ${UserManager().token}');
+
       Get.offAll(() => NavigationMenu());
     } catch (e) {
       Get.snackbar('Lỗi đăng nhập', e.toString(),
@@ -114,6 +122,7 @@ class LoginController extends GetxController {
       isLoading.value = false;
     }
   }
+
 
   void handleLogin() {
     final email = emailController.text.trim();

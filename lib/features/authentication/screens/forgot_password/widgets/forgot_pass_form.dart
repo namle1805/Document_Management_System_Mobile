@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../../data/services/auth_services.dart';
 import '../../../../../utils/constants/sizes.dart';
+import '../../../../../utils/constants/text_strings.dart';
 import '../../../controllers/auth/auth_controller.dart';
 import '../../login/login.dart';
 
@@ -15,6 +17,8 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
   final _formKey = GlobalKey<FormState>();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
 
   void _submit() async {
     final email = AuthController().email;
@@ -38,7 +42,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message)),
+        SnackBar(content: Text('Thay đổi mật khẩu thành công')),
       );
 
       Navigator.pushReplacement(
@@ -60,15 +64,35 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
         children: [
           TextFormField(
             controller: _newPasswordController,
-            obscureText: true,
-            decoration: const InputDecoration(labelText: 'Mật khẩu mới'),
-          ),
+            obscureText: _obscureNew,
+            decoration: InputDecoration(
+              labelText: TTexts.new_password,
+              prefixIcon: const Icon(Iconsax.password_check),
+              suffixIcon: IconButton(
+                icon: Icon(_obscureNew ? Iconsax.eye_slash : Iconsax.eye),
+                onPressed: () {
+                  setState(() {
+                    _obscureNew = !_obscureNew;
+                  });
+                },
+              ),
+            ),),
           const SizedBox(height: 16),
           TextFormField(
             controller: _confirmPasswordController,
-            obscureText: true,
-            decoration: const InputDecoration(labelText: 'Nhập lại mật khẩu'),
-          ),
+            obscureText: _obscureConfirm,
+            decoration: InputDecoration(
+              labelText: TTexts.conPassword,
+              prefixIcon: const Icon(Iconsax.password_check),
+              suffixIcon: IconButton(
+                icon: Icon(_obscureConfirm ? Iconsax.eye_slash : Iconsax.eye),
+                onPressed: () {
+                  setState(() {
+                    _obscureConfirm = !_obscureConfirm;
+                  });
+                },
+              ),
+            ),),
           const SizedBox(height: 24),
           SizedBox(
               width: double.infinity,
