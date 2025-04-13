@@ -1,5 +1,42 @@
-import 'package:flutter/material.dart';
+class RoleDto {
+  final String roleId;
+  final String roleName;
+  final String? createdDate;
 
+  RoleDto({
+    required this.roleId,
+    required this.roleName,
+    this.createdDate,
+  });
+
+  factory RoleDto.fromJson(Map<String, dynamic> json) {
+    return RoleDto(
+      roleId: json['roleId'],
+      roleName: json['roleName'],
+      createdDate: json['createdDate'],
+    );
+  }
+}
+
+class DivisionDto {
+  final String divisionId;
+  final String divisionName;
+  final bool isDeleted;
+
+  DivisionDto({
+    required this.divisionId,
+    required this.divisionName,
+    required this.isDeleted,
+  });
+
+  factory DivisionDto.fromJson(Map<String, dynamic> json) {
+    return DivisionDto(
+      divisionId: json['divisionId'],
+      divisionName: json['divisionName'],
+      isDeleted: json['isDeleted'],
+    );
+  }
+}
 
 class UserDto {
   final String userId;
@@ -7,7 +44,20 @@ class UserDto {
   final String userName;
   final String email;
   final String phoneNumber;
+  final String address;
   final String? avatar;
+  final String gender;
+  final String identityCard;
+  final String createdAt;
+  final String updatedAt;
+  final String dateOfBirth;
+  final String position;
+  final String? fcmToken;
+  final List<RoleDto> roles;
+  final bool isDeleted;
+  final bool isEnable;
+  final String divisionId;
+  final DivisionDto divisionDto;
 
   UserDto({
     required this.userId,
@@ -15,7 +65,20 @@ class UserDto {
     required this.userName,
     required this.email,
     required this.phoneNumber,
+    required this.address,
     this.avatar,
+    required this.gender,
+    required this.identityCard,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.dateOfBirth,
+    required this.position,
+    this.fcmToken,
+    required this.roles,
+    required this.isDeleted,
+    required this.isEnable,
+    required this.divisionId,
+    required this.divisionDto,
   });
 
   factory UserDto.fromJson(Map<String, dynamic> json) {
@@ -25,29 +88,22 @@ class UserDto {
       userName: json['userName'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
+      address: json['address'],
       avatar: json['avatar'],
-    );
-  }
-}
-
-
-class LoginResponse {
-  final UserDto user;
-  final String token;
-  final String refreshToken;
-
-  LoginResponse({
-    required this.user,
-    required this.token,
-    required this.refreshToken,
-  });
-
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    final content = json['content'];
-    return LoginResponse(
-      user: UserDto.fromJson(content['userDto']),
-      token: content['token'],
-      refreshToken: content['refreshToken'],
+      gender: json['gender'],
+      identityCard: json['identityCard'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      dateOfBirth: json['dateOfBirth'],
+      position: json['position'],
+      fcmToken: json['fcmToken'],
+      roles: (json['roles'] as List)
+          .map((roleJson) => RoleDto.fromJson(roleJson))
+          .toList(),
+      isDeleted: json['isDeleted'],
+      isEnable: json['isEnable'],
+      divisionId: json['divisionId'],
+      divisionDto: DivisionDto.fromJson(json['divisionDto']),
     );
   }
 }

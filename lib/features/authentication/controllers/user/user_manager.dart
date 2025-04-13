@@ -17,6 +17,9 @@ class UserManager {
   String get name => _user?.fullName ?? '';
   String get email => _user?.email ?? '';
   String get phone => _user?.phoneNumber ?? '';
+  String get address => _user?.address ?? '';
+  String get dateOfBirth => _user?.dateOfBirth ?? '';
+  String get gender => _user?.gender ?? '';
   String? get avatar => _user?.avatar;
 
   void setUser(UserDto user, String token) {

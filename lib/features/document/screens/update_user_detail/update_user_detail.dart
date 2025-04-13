@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:dms/data/services/user_service.dart';
+import 'package:dms/features/authentication/controllers/user/user_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -9,13 +11,64 @@ class UpdateUserDetailPage extends StatefulWidget {
 }
 
 class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
-  String _selectedGender = 'Sir';
+
+  bool _isLoading = false;
+
+  Future<void> _handleUpdateUser() async {
+    final userId = UserManager().id;
+
+    if (_avatarImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vui lòng chọn ảnh đại diện")));
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    final avatarUrl = await UserApi.uploadAvatar(_avatarImage!, userId);
+
+    if (avatarUrl == null) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Lỗi tải ảnh")));
+      return;
+    }
+
+    final gender = _selectedGender == 'Nam' ? 'MALE' : 'FEMALE';
+    final address = _addressController.text;
+    final dob = DateFormat('yyyy-MM-ddTHH:mm:ss').format(DateFormat('dd/MM/yyyy').parse(_dobController.text));
+
+    final success = await UserApi.updateUser(
+      userId: userId,
+      address: address,
+      dateOfBirth: dob,
+      gender: gender,
+      avatarUrl: avatarUrl,
+    );
+
+    setState(() => _isLoading = false);
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cập nhật thành công")));
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cập nhật thất bại")));
+    }
+  }
+
+
+
+  // String _selectedGender = 'Sir';
+  // String _selectedGender = UserManager().gender;
+  String _selectedGender = UserManager().gender == 'MALE' ? 'Nam' : 'Nữ';
+
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController(text: 'namlee180503@gmail.com');
-  final TextEditingController _addressController = TextEditingController(text: 'Bến Nghé, Quận 1, TP.HCM');
+  final TextEditingController _addressController = TextEditingController(text: UserManager().address);
   final TextEditingController _phoneController = TextEditingController(text: '+01 1234542856');
-  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController(text: UserManager().dateOfBirth);
+
+
+
 
   File? _avatarImage;
 
@@ -28,6 +81,8 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
       });
     }
   }
+
+
 
   @override
   void dispose() {
@@ -83,7 +138,7 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
                         backgroundImage: _avatarImage != null
                             ? FileImage(_avatarImage!)
                             : NetworkImage(
-                          'https://lh3.googleusercontent.com/a/ACg8ocI6cVpQdHFNblzJUq_5RBKcYxIbXDeGwP4ETCbiJLDslfMDek8J=s576-c-no',
+                          UserManager().avatar.toString(),
                         ) as ImageProvider,
                       ),
                       Positioned(
@@ -212,22 +267,32 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
             ),
             SizedBox(height: 24),
 
-            ElevatedButton(
-              onPressed: () {
-                // Xử lý khi nhấn "Save"
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                minimumSize: Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                'Save',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // Xử lý khi nhấn "Save"
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.black,
+            //     minimumSize: Size(double.infinity, 50),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(12),
+            //     ),
+            //   ),
+            //   child: Text(
+            //     'Save',
+            //     style: TextStyle(fontSize: 16, color: Colors.white),
+            //   ),
+            // ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _isLoading ? null : _handleUpdateUser,
+                child: _isLoading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text('Cập nhật thông tin'),
               ),
             ),
+
           ],
         ),
       ),

@@ -1,13 +1,11 @@
 import 'dart:ui';
-
-import 'package:dms/features/authentication/screens/login/login.dart';
 import 'package:dms/features/document/screens/document_list/document_list.dart';
 import 'package:dms/features/document/screens/view_document/view_document.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-
 import '../../../../utils/constants/colors.dart';
+
 
 class DocumentDetailPage extends StatefulWidget {
   @override
@@ -165,18 +163,18 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
       backgroundColor: Colors.grey[100],
       appBar:
       AppBar(
-        title: Text('Quyết định 53/2015 QĐ-TTg chí...', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white), textAlign: TextAlign.center),
+        title: Text('Quyết định 53/2015 QD-TTg chính sách nội trú học sinh, sinh viên học cao đẳng trung cấp', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white), textAlign: TextAlign.center),
         centerTitle: true,
         backgroundColor: TColors.primary,
         iconTheme: IconThemeData(color: Colors.white),
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {
-              // Xử lý khi nhấn nút ba chấm
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.more_vert, color: Colors.white),
+          //   onPressed: () {
+          //     // Xử lý khi nhấn nút ba chấm
+          //   },
+          // ),
         ],
         leading: IconButton(
           icon: Icon(Iconsax.arrow_left_24),
