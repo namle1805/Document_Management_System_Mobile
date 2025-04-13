@@ -182,7 +182,7 @@ class TaskDetailPage extends StatelessWidget {
                 border: Border.all(color: Colors.grey[300]!),
               ),
               child:  Text(
-                'Soạn thảo nội dung cho công văn của...',
+                'Soạn thảo nội dung cho công văn của thủ tướng chính phủ phù hợp với kế hoạch công văn',
                 style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
@@ -235,87 +235,183 @@ class TaskDetailPage extends StatelessWidget {
             SizedBox(height: 16),
 
             // Thời gian bắt đầu và kết thúc
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Text(
+            //           'Bắt đầu',
+            //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            //         ),
+            //         SizedBox(height: 8),
+            //         Container(
+            //           width: 120,
+            //           padding: EdgeInsets.all(12),
+            //           decoration: BoxDecoration(
+            //             color: TColors.darkerGrey_1,
+            //             borderRadius: BorderRadius.circular(8),
+            //             border: Border.all(color: Colors.grey[300]!),
+            //           ),
+            //           child: Text(
+            //             '09 : 00',
+            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         SizedBox(height: 24),
+            //         Container(
+            //           width: 50,
+            //           padding: EdgeInsets.all(12),
+            //           child: const Text(
+            //             'PM',
+            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+            //             textAlign: TextAlign.center,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         const Text(
+            //           'Kết thúc',
+            //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            //         ),
+            //         SizedBox(height: 8),
+            //         Container(
+            //           width: 120,
+            //           padding: EdgeInsets.all(12),
+            //           decoration: BoxDecoration(
+            //             color: TColors.darkerGrey_1,
+            //             borderRadius: BorderRadius.circular(8),
+            //             border: Border.all(color: Colors.grey[300]!),
+            //           ),
+            //           child: const Text(
+            //             '11 : 00',
+            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         SizedBox(height: 24),
+            //         Container(
+            //           width: 50,
+            //           padding: EdgeInsets.all(12),
+            //           child: const Text(
+            //             'PM',
+            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+            //             textAlign: TextAlign.center,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ],
+            // ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Bắt đầu',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(height: 8),
-                    Container(
-                      width: 120,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: TColors.darkerGrey_1,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[300]!),
+                // Bắt đầu
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Bắt đầu',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                       ),
-                      child: Text(
-                        '09 : 00',
-                        style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: TColors.darkerGrey_1,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey[300]!),
+                              ),
+                              child: const Text(
+                                '09 : 00',
+                                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: TColors.darkerGrey_1,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: const Text(
+                              'PM',
+                              style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 24),
-                    Container(
-                      width: 50,
-                      padding: EdgeInsets.all(12),
-                      child: const Text(
-                        'PM',
-                        style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
+                const SizedBox(width: 16),
+                // Kết thúc
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Kết thúc',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                       ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Kết thúc',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(height: 8),
-                    Container(
-                      width: 120,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: TColors.darkerGrey_1,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[300]!),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: TColors.darkerGrey_1,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey[300]!),
+                              ),
+                              child: const Text(
+                                '11 : 00',
+                                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: TColors.darkerGrey_1,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: const Text(
+                              'PM',
+                              style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text(
-                        '11 : 00',
-                        style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 24),
-                    Container(
-                      width: 50,
-                      padding: EdgeInsets.all(12),
-                      child: const Text(
-                        'PM',
-                        style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
+
             SizedBox(height: 16),
 
             // Mô tả

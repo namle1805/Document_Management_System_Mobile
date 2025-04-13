@@ -69,23 +69,30 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Tiêu đề và nút quay lại
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_circle_left_outlined, color: Colors.black, size: 30,),
+                      icon: Icon(Icons.arrow_circle_left_outlined, color: Colors.black, size: 30),
                       onPressed: () {
-                        Navigator.pop(context); // Đóng dialog
+                        Navigator.pop(context);
                       },
                     ),
-                    Text(
-                      'Danh sách người xem',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        'Danh sách người xem',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        maxLines: 2,
+                      ),
                     ),
-                    SizedBox(width: 48), // Để cân đối với IconButton
+                    SizedBox(width: 48),
                   ],
                 ),
+
                 SizedBox(height: 8),
                 // Danh sách người xem
                 Expanded(

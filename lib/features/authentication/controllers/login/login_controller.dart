@@ -22,7 +22,7 @@ class LoginController extends GetxController {
       final result = await AuthService.login(
         email: email,
         password: password,
-        fcmToken: 'dummy_fcm_token',
+        fcmToken: 'string',
       );
 
       final user = result['user'] as UserDto;

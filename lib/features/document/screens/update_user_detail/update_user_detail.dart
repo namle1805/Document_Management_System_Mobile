@@ -73,7 +73,8 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
                 border: Border.all(color: Colors.grey[300]!, width: 1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
+              child:
+              Row(
                 children: [
                   Stack(
                     children: [
@@ -108,22 +109,27 @@ class _UpdateUserDetailPageState extends State<UpdateUserDetailPage> {
                     ],
                   ),
                   SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Ảnh đại diện',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Cập nhật hình ảnh đại diện \ncủa bạn để cá nhân hóa thông tin.',
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
+                  // Giới hạn chiều rộng văn bản ở đây
+                  Container(
+                    width: 200, // bạn có thể điều chỉnh kích thước này
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Ảnh đại diện',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Cập nhật hình ảnh đại diện của bạn để cá nhân hóa thông tin.',
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
+
             ),
             SizedBox(height: 24),
 
