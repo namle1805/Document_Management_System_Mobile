@@ -67,7 +67,8 @@ class _TaskListPageState extends State<TaskListPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar:
+      AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(

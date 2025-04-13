@@ -85,13 +85,13 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'My Account',
+                    'Tài khoản của tôi',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 16),
                   SettingItem(
                     icon: Iconsax.user,
-                    title: 'Personal Information',
+                    title: 'Thông tin cá nhân',
                     onTap: () => Get.to(() => UserDetailPage(userId: UserManager().id,)),
                   ),
                   SettingItem(
@@ -111,15 +111,15 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                     // onTap: () => Get.to(() => OtpVerificationScreen())
                     onTap: () async {
 
-                        try {
-                          await AuthService.sendOtp(email: UserManager().email);
-                          Get.to(() => OtpVerificationScreen(), arguments: {'email': UserManager().email});
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())),
-                          );
-                        }
-                      },
+                      try {
+                        await AuthService.sendOtp(email: UserManager().email);
+                        Get.to(() => OtpVerificationScreen(), arguments: {'email': UserManager().email});
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(e.toString())),
+                        );
+                      }
+                    },
                   ),
                   SettingItem(
                     icon: Iconsax.setting,
@@ -143,13 +143,13 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Notifications',
+                    'Thông báo',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 16),
                   SettingItem(
                     icon: Iconsax.notification,
-                    title: 'Push Notifications',
+                    title: 'Thông báo đẩy',
                     trailing: Switch(
                       value: _pushNotifications,
                       onChanged: (value) {
@@ -209,7 +209,7 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                   ),
                   SettingItem(
                     icon: Iconsax.logout,
-                    title: 'Log Out',
+                    title: 'Đăng xuất',
                     titleColor: Colors.red,
                     onTap: () => Get.to(() => LoginScreen()),
                   ),

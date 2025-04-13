@@ -1,3 +1,4 @@
+import 'package:dms/features/document/screens/document_list/document_list.dart';
 import 'package:flutter/material.dart';
 import 'package:dms/features/document/screens/document_detail/document_detail.dart';
 import 'package:dms/navigation_menu.dart';
@@ -83,7 +84,7 @@ class SearchDocumentPage extends StatelessWidget {
           },
         ),
         title: Text(
-          'Văn Bản Nghị Định',
+          'Văn bản tìm kiếm',
           style: TextStyle(
             color: Colors.black,
             fontSize: 25,
@@ -92,12 +93,10 @@ class SearchDocumentPage extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.black),
-            onPressed: () {
-              // TODO: Thêm chức năng tìm kiếm ở đây
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.search, color: Colors.black),
+          //   onPressed: () => Get.to(() => DocumentListPage()),
+          // ),
         ],
       ),
 
@@ -113,15 +112,7 @@ class SearchDocumentPage extends StatelessWidget {
                 children: [
                   TextSpan(text: 'Trang Chủ'),
                   TextSpan(text: ' - '),
-                  TextSpan(text: 'Loại Văn Bản'),
-                  TextSpan(text: ' - '),
-                  TextSpan(
-                    text: 'Văn Bản Nghị Định',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                  TextSpan(text: 'Tìm Kiếm Văn Bản'),
                 ],
               ),
             ),

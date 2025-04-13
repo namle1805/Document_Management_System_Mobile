@@ -2,8 +2,8 @@ import 'package:dms/navigation_menu.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../document_list/document_list.dart';
+
 
 class DocumentTypeListPage extends StatefulWidget {
   @override
@@ -17,12 +17,14 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
     'Văn bản đi',
     'Nội bộ toàn trường',
     'Nội bộ phòng ban',
+    'Đã lưu',
   ];
 
   final List<List<String>> tabData = [
     ['Nghị Định', 'Thông Báo', 'Dự Án'],
     ['Nghị Quyết', 'Đề Án', 'Quy Định'],
     ['Họp mặt', 'Hoạt động Đoàn thể', 'Chương trình nội bộ'],
+    ['Kế hoạch phòng ban', 'Báo cáo tháng', 'Biên bản họp'],
     ['Kế hoạch phòng ban', 'Báo cáo tháng', 'Biên bản họp'],
   ];
 
@@ -39,20 +41,20 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Get.to(() => const NavigationMenu()),
         ),
-        title: Text(
+        title: const Text(
           'Văn bản',
           style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(Icons.search_rounded, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_alt_sharp, color: Colors.black),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.search_rounded, color: Colors.black),
+          //   onPressed: () {},
+          // ),
+          // IconButton(
+          //   icon: Icon(Icons.filter_alt_sharp, color: Colors.black),
+          //   onPressed: () {},
+          // ),
         ],
       ),
       body: Column(
@@ -85,13 +87,13 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
             child: Padding(
               padding: const EdgeInsets.all(30.0),
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.2,
-                ),
-                itemCount: currentDocumentTypes.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1.2,
+                  ),
+                  itemCount: currentDocumentTypes.length,
                   itemBuilder: (context, index) {
                     return DocumentTypeItem(
                       title: currentDocumentTypes[index],
@@ -139,70 +141,19 @@ class TabItem extends StatelessWidget {
   }
 }
 
-// Widget cho mỗi loại văn bản
-// class DocumentTypeItem extends StatelessWidget {
-//   final String title;
-//
-//   DocumentTypeItem({required this.title});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: EdgeInsets.all(16),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(12),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.grey.withOpacity(0.1),
-//             spreadRadius: 2,
-//             blurRadius: 5,
-//             offset: Offset(0, 3),
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           const Image(
-//             image: AssetImage(TImages.folder),
-//             width: 70,
-//             height: 70,
-//           ),
-//           SizedBox(height: 20),
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Expanded(
-//                 child: Text(
-//                   title,
-//                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//                   textAlign: TextAlign.left,
-//                   overflow: TextOverflow.ellipsis,
-//                 ),
-//               ),
-//               Icon(Icons.more_vert, size: 20, color: Colors.black),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class DocumentTypeItem extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  DocumentTypeItem({required this.title, required this.onTap});
+  const DocumentTypeItem({super.key, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap, // ← Thêm hành động khi bấm vào
+      onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -211,33 +162,53 @@ class DocumentTypeItem extends StatelessWidget {
               color: Colors.grey.withOpacity(0.1),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Image(
-              image: AssetImage(TImages.folder),
-              width: 70,
-              height: 70,
+            Flexible(
+              child: const Image(
+                image: AssetImage(TImages.folder),
+                width: 60,
+                height: 60,
+                fit: BoxFit.contain,
+              ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 10),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child:
+            //       Text(
+            //         title,
+            //         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            //         textAlign: TextAlign.left,
+            //         overflow: TextOverflow.ellipsis,
+            //         maxLines: 1,
+            //       ),
+            //     ),
+            //     const Icon(Icons.more_vert, size: 18, color: Colors.black),
+            //   ],
+            // ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
                     title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.left,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   ),
                 ),
-                Icon(Icons.more_vert, size: 20, color: Colors.black),
+                const Icon(Icons.more_vert, size: 18, color: Colors.black),
               ],
             ),
+
           ],
         ),
       ),

@@ -1,4 +1,6 @@
+import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 class NotificationListPage extends StatelessWidget {
@@ -66,28 +68,21 @@ class NotificationListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:
+      AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context); // Quay lại màn hình trước
-          },
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Get.to(() => NavigationMenu()),
         ),
-        title: Text(
+        title: const Text(
           'Thông báo',
-          style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.black),
-            onPressed: () {
-              // Xử lý khi nhấn nút tìm kiếm
-            },
-          ),
-        ],
+        centerTitle: true,
       ),
+
       body: ListView.builder(
         padding: EdgeInsets.symmetric(vertical: 8),
         itemCount: notifications.length,

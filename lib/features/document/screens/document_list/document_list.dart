@@ -2,7 +2,9 @@ import 'package:dms/features/document/screens/document_detail/document_detail.da
 import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../utils/constants/image_strings.dart';
+import '../search_document/search_document.dart';
 
 class DocumentListPage extends StatelessWidget {
   final List<Map<String, dynamic>> documents = [
@@ -59,6 +61,8 @@ class DocumentListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _searchController = TextEditingController();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -83,12 +87,12 @@ class DocumentListPage extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.black),
-            onPressed: () {
-              // TODO: Thêm chức năng tìm kiếm ở đây
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.search, color: Colors.black),
+          //   onPressed: () {
+          //     // TODO: Thêm chức năng tìm kiếm ở đây
+          //   },
+          // ),
         ],
       ),
 
@@ -107,7 +111,7 @@ class DocumentListPage extends StatelessWidget {
                   TextSpan(text: 'Loại Văn Bản'),
                   TextSpan(text: ' - '),
                   TextSpan(
-                    text: 'Văn Bản Nghị Định',
+                    text: 'Danh sách văn bản',
                     style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.normal,
@@ -117,6 +121,37 @@ class DocumentListPage extends StatelessWidget {
               ),
             ),
           ),
+
+          Container(
+            // width: 300,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: TextField(
+              controller: _searchController,
+              onSubmitted: (value) {
+                if (value.trim().isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchDocumentPage(searchQuery: value.trim()),
+                    ),
+                  );
+                }
+              },
+              decoration: InputDecoration(
+                hintText: 'Tìm kiếm văn bản',
+                hintStyle: TextStyle(color: Colors.grey),
+                prefixIcon: Icon(Icons.search, color: Colors.black),
+                suffixIcon: Icon(Iconsax.filter_search, color: Colors.black),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+          ),
+
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.all(16),

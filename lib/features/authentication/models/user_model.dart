@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class UserModel {
   final String userId;
   final String fullName;
@@ -33,6 +35,16 @@ class UserModel {
     final content = json['content'];
     final roles = content['roles'] as List<dynamic>;
     final roleName = roles.isNotEmpty ? roles[0]['roleName'] ?? 'Chưa cập nhật' : 'Chưa cập nhật';
+    // Parse ngày sinh và format lại
+    String formattedDate = 'Chưa cập nhật';
+    if (content['dateOfBirth'] != null) {
+      try {
+        final parsedDate = DateTime.parse(content['dateOfBirth']);
+        formattedDate = DateFormat('dd-MM-yyyy').format(parsedDate);
+      } catch (e) {
+        formattedDate = 'Không hợp lệ';
+      }
+    }
 
     return UserModel(
       userId: content['userId'],
@@ -43,7 +55,8 @@ class UserModel {
       address: content['address'] ?? 'Chưa cập nhật',
       gender: content['gender'],
       identityCard: content['identityCard'],
-      dateOfBirth: content['dateOfBirth'],
+      dateOfBirth: formattedDate,
+      // dateOfBirth: content['dateOfBirth'],
       position: content['position'] ?? 'Chưa cập nhật',
       divisionName: content['divisionDto']['divisionName'],
       avatar: content['avatar'] ?? '',

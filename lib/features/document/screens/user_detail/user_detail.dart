@@ -108,7 +108,7 @@ class UserDetailPage extends StatelessWidget {
                               onPressed: () => Get.to(() =>  UpdateUserDetailPage()),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF4B7BE5),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -119,10 +119,10 @@ class UserDetailPage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            IconButton(
-                              icon: const Icon(Icons.more_vert, color: Color(0xFF4B7BE5)),
-                              onPressed: () {},
-                            ),
+                            // IconButton(
+                            //   icon: const Icon(Icons.more_vert, color: Color(0xFF4B7BE5)),
+                            //   onPressed: () {},
+                            // ),
                           ],
                         ),
                       ],
@@ -219,25 +219,22 @@ class UserDetailPage extends StatelessWidget {
   }
 }
 
-
-// Widget cho mỗi mục thông tin
 class InfoItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
-  final Color iconColor; // mới thêm
+  final Color iconColor;
 
   InfoItem({
     required this.icon,
     required this.title,
     required this.value,
-    this.iconColor = Colors.grey, // default
+    this.iconColor = Colors.grey,
   });
 
   @override
   Widget build(BuildContext context) {
-    return
-      Container(
+    return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: TColors.darkerGrey_1,
@@ -253,22 +250,35 @@ class InfoItem extends StatelessWidget {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Đảm bảo nội dung không bị lệch
         children: [
           Icon(icon, color: iconColor, size: 24),
           SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(fontSize: 14, color: TColors.black, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.grey),
-              ),
-            ],
+          Expanded( // Cho phép nội dung chiếm không gian còn lại
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: TColors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey[800],
+                  ),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                ),
+              ],
+            ),
           ),
         ],
       ),
