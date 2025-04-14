@@ -9,10 +9,60 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import '../../../../data/repositories/task_repository.dart';
+import '../../../task/models/task_model.dart';
 import '../search_document/search_document.dart';
 
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  List<Task> allTasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+    fetchTaskData();
+  }
+
+  Future<void> fetchTaskData() async {
+    try {
+      final repo = TaskRepository();
+      final tasks = await repo.fetchTasks();
+      setState(() {
+        allTasks = tasks;
+      });
+    } catch (e) {
+      print("Error fetching tasks: $e");
+    }
+  }
+
+  String convertTaskStatus(String status) {
+    switch (status) {
+      case 'Pending':
+        return 'Đang chờ xác nhận';
+      case 'Revised':
+        return 'Cần chỉnh sửa';
+      case 'InProgress':
+        return 'Đang trong quá trình xử lý';
+      case 'Completed':
+        return 'Đã hoàn thành';
+      default:
+        return 'Không xác định';
+    }
+  }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +70,10 @@ class HomePage extends StatelessWidget {
     final formattedDate = DateFormat('dd MMMM, yyyy', 'vi').format(today);
     final TextEditingController _searchController = TextEditingController();
 
+    final processingTasks = allTasks.where((task) =>
+    task.taskStatus == 'Pending' ||
+        task.taskStatus == 'Revised' ||
+        task.taskStatus == 'InProgress').toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -154,41 +208,6 @@ class HomePage extends StatelessWidget {
 
               SizedBox(height: 16),
 
-              // Nhiệm vụ hôm nay
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Nhiệm vụ hôm nay',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () => Get.to(() => TaskListPage()),
-                    child: const Text(
-                      "Xem thêm",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: Color(0xFF363942),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              const TaskCard(
-                title: 'LANDING PAGE AGENCY CREATIVE',
-                category: 'WEB DESIGN',
-                time: '10:00 - 12:30 am',
-                status: 'Đang xử lý',
-              ),
-              const TaskCard(
-                title: 'REACT JS FOR E-COMMERCE WEB',
-                category: 'WEB DESIGN',
-                time: '08:00 - 10:00 am',
-                status: 'Chờ xác nhận',
-              ),
-              SizedBox(height: 16),
 
               // Văn bản xử lý
               Row(
@@ -212,18 +231,76 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 8),
-              const DocumentCard(
-                title: 'Soạn thảo nội dung cho công ...',
-                time: '9:00 PM - 11:00 PM',
-                progress: 0.64,
-                members: 6,
+              // const DocumentCard(
+              //   title: 'Soạn thảo nội dung cho công ...',
+              //   time: '9:00 PM - 11:00 PM',
+              //   progress: 0.64,
+              //   members: 6,
+              // ),
+              // const DocumentCard(
+              //   title: 'Đánh số & ký chỉ ký số cho văn ...',
+              //   time: '4:00 PM - 5:00 PM',
+              //   progress: 0.46,
+              //   members: 4,
+              // ),
+
+              ...allTasks
+                  .where((task) =>
+              task.taskStatus == 'Pending' ||
+                  task.taskStatus == 'Revised' ||
+                  task.taskStatus == 'InProgress')
+                  .map((task) {
+                double progress = 0;
+                if (task.taskStatus == 'InProgress') {
+                  progress = 0.5;
+                }
+
+                return DocumentCard(
+                  title: task.title ?? '',
+                  time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
+                  progress: progress,
+                  members: 1,
+                  taskId: task.taskId, status: task.taskStatus, // hoặc 1 nếu không có field này
+                );
+              }).toList(),
+
+
+
+              // Nhiệm vụ đã hoàn thành
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Nhiệm vụ đã hoàn thành',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () => Get.to(() => TaskListPage()),
+                    child: const Text(
+                      "Xem thêm",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Color(0xFF363942),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const DocumentCard(
-                title: 'Đánh số & ký chỉ ký số cho văn ...',
-                time: '4:00 PM - 5:00 PM',
-                progress: 0.46,
-                members: 4,
-              ),
+              SizedBox(height: 8),
+              ...allTasks
+                  .where((task) => task.taskStatus == 'Completed')
+                  .take(2)
+                  .map((task) => TaskCard(
+                title: task.title ?? '',
+                category: task.taskType ?? '',
+                time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
+                status: convertTaskStatus(task.taskStatus ?? ''),
+                taskId: task.taskId,
+              )),
+
+
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -357,20 +434,21 @@ class DocumentTypeCard extends StatelessWidget {
   }
 }
 
-
 // Widget cho thẻ Nhiệm vụ
 class TaskCard extends StatelessWidget {
   final String title;
   final String category;
   final String time;
   final String status;
+  final String taskId;
+
 
   const TaskCard({
     super.key,
     required this.title,
     required this.category,
     required this.time,
-    required this.status,
+    required this.status, required this.taskId,
   });
 
   @override
@@ -380,7 +458,7 @@ class TaskCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => TaskDetailPage(
+            builder: (_) => TaskDetailPage(taskId: taskId,
             ),
           ),
         );
@@ -458,12 +536,12 @@ class TaskCard extends StatelessWidget {
   }
 }
 
-
-
 // Widget cho thẻ Văn bản xử lý
 class DocumentCard extends StatelessWidget {
   final String title;
   final String time;
+  final String status;
+  final String taskId;
   final double progress;
   final int members;
 
@@ -471,7 +549,7 @@ class DocumentCard extends StatelessWidget {
     required this.title,
     required this.time,
     required this.progress,
-    required this.members,
+    required this.members, required this.taskId, required this.status,
   });
 
   @override
@@ -479,7 +557,7 @@ class DocumentCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(context,
-        MaterialPageRoute(builder: (_) => TaskDetailPage(
+        MaterialPageRoute(builder: (_) => TaskDetailPage(taskId: taskId,
         ),));
       },
       child: Container(
@@ -524,12 +602,12 @@ class DocumentCard extends StatelessWidget {
                     // Avatars
                     Row(
                       children: List.generate(
-                        3,
+                        1,
                             (index) => Padding(
                           padding: const EdgeInsets.only(right: 4),
                           child: CircleAvatar(
                             radius: 12,
-                            backgroundImage: AssetImage('assets/images/avatar${index + 1}.png'),
+                            backgroundImage: NetworkImage(UserManager().avatar.toString()),
                           ),
                         ),
                       ),
@@ -583,8 +661,8 @@ class DocumentCard extends StatelessWidget {
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text(
-                  '6d',
+                child: Text(
+                  status,
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.white,

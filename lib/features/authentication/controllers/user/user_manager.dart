@@ -21,6 +21,9 @@ class UserManager {
   String get dateOfBirth => _user?.dateOfBirth ?? '';
   String get gender => _user?.gender ?? '';
   String? get avatar => _user?.avatar;
+  String get divisionName => _user?.divisionDto.divisionName ?? '';
+  String get position => _user?.position ?? '';
+
 
   void setUser(UserDto user, String token) {
     _user = user;

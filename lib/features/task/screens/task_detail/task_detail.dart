@@ -1,53 +1,73 @@
+import 'package:dms/features/authentication/controllers/user/user_manager.dart';
 import 'package:dms/features/document/screens/document_detail/document_detail.dart';
 import 'package:dms/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
+
+import '../../../../data/services/task_service.dart';
+import '../../models/task_detail.dart';
+
+class TaskDetailPage extends StatefulWidget {
+  final String taskId;
+  const TaskDetailPage({Key? key, required this.taskId}) : super(key: key);
+
+  @override
+  State<TaskDetailPage> createState() => _TaskDetailPageState();
+}
+
+class _TaskDetailPageState extends State<TaskDetailPage> {
 
 
-class TaskDetailPage extends StatelessWidget {
+  TaskDetail? taskDetail;
+  String? scope;
+  String? workflow;
+  String? step;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDetail();
+  }
+
+
+  void fetchDetail() async {
+    final taskContent = await TaskService.fetchTaskDetail(widget.taskId);
+    setState(() {
+      taskDetail = taskContent?.taskDetail;
+      scope = taskContent?.scope;
+      workflow = taskContent?.workflowName;
+      step = taskContent?.stepAction;
+      isLoading = false;
+    });
+  }
+
+
+  String formatDateTime(String isoString) {
+    final dateTime = DateTime.parse(isoString);
+    return DateFormat('dd/MM/yyyy').format(dateTime);
+  }
+
   final List<Map<String, dynamic>> departments = [
-    {'name': 'Nhân sự', 'color': Colors.pink[50]!},
-    {'name': 'Hành Chính', 'color': Colors.yellow[50]!},
-    {'name': 'Đào tạo', 'color': Colors.green[50]!},
-    {'name': 'Công nghệ thông tin', 'color': Colors.blue[50]!},
-    {'name': 'Lãnh đạo', 'color': Colors.orange[50]!},
-    {'name': 'Thiết kế', 'color': Colors.purple[50]!},
-    {'name': 'Nguồn lực', 'color': Colors.red[50]!},
-    {'name': 'Truyền thông', 'color': Colors.teal[50]!},
+    // {'name': 'Nhân sự', 'color': Colors.pink[50]!},
+    // {'name': 'Hành Chính', 'color': Colors.yellow[50]!},
+    // {'name': 'Đào tạo', 'color': Colors.green[50]!},
+    {'name': '', 'color': Colors.blue[50]!},
+    // {'name': 'Lãnh đạo', 'color': Colors.orange[50]!},
+    // {'name': 'Thiết kế', 'color': Colors.purple[50]!},
+    // {'name': 'Nguồn lực', 'color': Colors.red[50]!},
+    // {'name': 'Truyền thông', 'color': Colors.teal[50]!},
   ];
 
 
   final List<Map<String, dynamic>> viewers = [
     {
-      'name': 'Maria Morgan',
-      'role': 'Nhân viên văn thư',
-      'avatar': 'https://via.placeholder.com/150',
+      'name': '',
+      'role': '',
+      'avatar': '',
       'isOnline': true,
-    },
-    {
-      'name': 'Piter Walberg',
-      'role': 'Nhân viên phòng - CNTT',
-      'avatar': 'https://via.placeholder.com/150',
-      'isOnline': false,
-    },
-    {
-      'name': 'Jessica Gold',
-      'role': 'Trưởng phòng CNTT',
-      'avatar': 'https://via.placeholder.com/150',
-      'isOnline': false,
-    },
-    {
-      'name': 'Michael Word',
-      'role': 'Lãnh đạo',
-      'avatar': 'https://via.placeholder.com/150',
-      'isOnline': true,
-    },
-    {
-      'name': 'Sara Parker',
-      'role': 'Chánh văn phòng',
-      'avatar': 'https://via.placeholder.com/150',
-      'isOnline': false,
     },
   ];
 
@@ -97,7 +117,7 @@ class TaskDetailPage extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 24,
-                                backgroundImage: NetworkImage(viewer['avatar']),
+                                backgroundImage: NetworkImage(UserManager().avatar.toString()),
                               ),
                               if (viewer['isOnline'])
                                 Positioned(
@@ -121,12 +141,12 @@ class TaskDetailPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                viewer['name'],
+                                UserManager().name,
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4),
                               Text(
-                                viewer['role'],
+                                UserManager().position,
                                 style: TextStyle(fontSize: 14, color: Colors.grey),
                               ),
                             ],
@@ -163,7 +183,10 @@ class TaskDetailPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body:isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : taskDetail == null
+          ? const Center(child: Text('Không có dữ liệu')): SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +205,8 @@ class TaskDetailPage extends StatelessWidget {
                 border: Border.all(color: Colors.grey[300]!),
               ),
               child:  Text(
-                'Soạn thảo nội dung cho công văn của thủ tướng chính phủ phù hợp với kế hoạch công văn',
+                // 'Soạn thảo nội dung cho công văn của thủ tướng chính phủ phù hợp với kế hoạch công văn',
+                '${taskDetail!.title}',
                 style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
@@ -193,6 +217,25 @@ class TaskDetailPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
             ),
             SizedBox(height: 8),
+            // Container(
+            //   width: double.infinity,
+            //   padding: EdgeInsets.all(12),
+            //   decoration: BoxDecoration(
+            //     color: TColors.darkerGrey_1,
+            //     borderRadius: BorderRadius.circular(8),
+            //     border: Border.all(color: Colors.grey[300]!),
+            //   ),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text(
+            //         '${taskDetail!.startDate} - ${taskDetail!.endDate}',
+            //         style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+            //       ),
+            //       Icon(Icons.calendar_today, color: Colors.black),
+            //     ],
+            //   ),
+            // ),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(12),
@@ -202,20 +245,26 @@ class TaskDetailPage extends StatelessWidget {
                 border: Border.all(color: Colors.grey[300]!),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Saturday, Feb 22 2025',
-                    style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-                  ),
                   Icon(Icons.calendar_today, color: Colors.black),
+                  SizedBox(width: 16),
+
+                  Expanded(
+                    child: Text(
+                      '${formatDateTime(taskDetail!.startDate)} - ${formatDateTime(taskDetail!.endDate)}',
+                      style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                      softWrap: true,
+                    ),
+                  ),
                 ],
               ),
             ),
+
             SizedBox(height: 16),
 
             Text(
-              'Lý do xử lý',
+              'Phạm vi',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
             ),
             SizedBox(height: 8),
@@ -228,94 +277,30 @@ class TaskDetailPage extends StatelessWidget {
                 border: Border.all(color: Colors.grey[300]!),
               ),
               child: Text(
-                'Văn bản ra',
+               scope!,
                 style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(height: 16),
-
-            // Thời gian bắt đầu và kết thúc
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Text(
-            //           'Bắt đầu',
-            //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            //         ),
-            //         SizedBox(height: 8),
-            //         Container(
-            //           width: 120,
-            //           padding: EdgeInsets.all(12),
-            //           decoration: BoxDecoration(
-            //             color: TColors.darkerGrey_1,
-            //             borderRadius: BorderRadius.circular(8),
-            //             border: Border.all(color: Colors.grey[300]!),
-            //           ),
-            //           child: Text(
-            //             '09 : 00',
-            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         SizedBox(height: 24),
-            //         Container(
-            //           width: 50,
-            //           padding: EdgeInsets.all(12),
-            //           child: const Text(
-            //             'PM',
-            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-            //             textAlign: TextAlign.center,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         const Text(
-            //           'Kết thúc',
-            //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            //         ),
-            //         SizedBox(height: 8),
-            //         Container(
-            //           width: 120,
-            //           padding: EdgeInsets.all(12),
-            //           decoration: BoxDecoration(
-            //             color: TColors.darkerGrey_1,
-            //             borderRadius: BorderRadius.circular(8),
-            //             border: Border.all(color: Colors.grey[300]!),
-            //           ),
-            //           child: const Text(
-            //             '11 : 00',
-            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         SizedBox(height: 24),
-            //         Container(
-            //           width: 50,
-            //           padding: EdgeInsets.all(12),
-            //           child: const Text(
-            //             'PM',
-            //             style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-            //             textAlign: TextAlign.center,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ],
-            // ),
+            Text(
+              'Luồng xử lý',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: TColors.darkerGrey_1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Text(
+                workflow!,
+                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
+            SizedBox(height: 16),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -340,8 +325,12 @@ class TaskDetailPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(color: Colors.grey[300]!),
                               ),
-                              child: const Text(
-                                '09 : 00',
+                              // child: Text(
+                              //   '${taskDetail!.startDate.hour.toString()}',
+                              //   style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                              // ),
+                              child: Text(
+                                '${DateTime.parse(taskDetail!.startDate).hour.toString().padLeft(2, '0')}:${DateTime.parse(taskDetail!.startDate).minute.toString().padLeft(2, '0')}',
                                 style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
                               ),
                             ),
@@ -385,8 +374,8 @@ class TaskDetailPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(color: Colors.grey[300]!),
                               ),
-                              child: const Text(
-                                '11 : 00',
+                              child: Text(
+                                '${DateTime.parse(taskDetail!.endDate).hour.toString().padLeft(2, '0')}:${DateTime.parse(taskDetail!.startDate).minute.toString().padLeft(2, '0')}',
                                 style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
                               ),
                             ),
@@ -428,8 +417,8 @@ class TaskDetailPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
-              child: const Text(
-                'Công văn của phòng hành chính cần soạn thảo nội dung chi tiết',
+              child: Text(
+                '${taskDetail!.description}',
                 style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
@@ -449,11 +438,11 @@ class TaskDetailPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Step 7: Lãnh đạo soạn thảo văn bản',
+                    step!,
                     style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
                   ),
                 ],
@@ -516,7 +505,7 @@ class TaskDetailPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      dept['name'],
+                      UserManager().divisionName,
                       style: TextStyle(fontSize: 14),
                     ),
                   );
@@ -548,3 +537,6 @@ class TaskDetailPage extends StatelessWidget {
     );
   }
 }
+
+
+

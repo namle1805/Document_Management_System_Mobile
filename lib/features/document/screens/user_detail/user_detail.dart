@@ -7,12 +7,29 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../data/services/user_service.dart';
 import '../../../authentication/models/user_model.dart';
 
-
-class UserDetailPage extends StatelessWidget {
+class UserDetailPage extends StatefulWidget {
   final String userId;
 
   const UserDetailPage({required this.userId, super.key});
 
+  @override
+  State<UserDetailPage> createState() => _UserDetailPageState();
+}
+
+class _UserDetailPageState extends State<UserDetailPage> {
+  late Future<UserModel> _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = UserApi.fetchUserDetails(widget.userId);
+  }
+
+  Future<void> _refreshUserData() async {
+    setState(() {
+      _userFuture = UserApi.fetchUserDetails(widget.userId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +40,13 @@ class UserDetailPage extends StatelessWidget {
         elevation: 0,
         title: Text(
           'Thông tin cá nhân',
-          style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
-      body:
-      FutureBuilder<UserModel>(
-        future: UserApi.fetchUserDetails(userId),
+      body: FutureBuilder<UserModel>(
+        future: _userFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -39,182 +56,197 @@ class UserDetailPage extends StatelessWidget {
             return const Center(child: Text('Không có dữ liệu người dùng'));
           } else {
             UserModel user = snapshot.data!;
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    '2209',
-                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                                  ),
-                                  const Text(
-                                    'Văn bản',
-                                    style: TextStyle(fontSize: 14, color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Image.network(
-                                user.avatar.isNotEmpty
-                                    ? user.avatar:
-                                'https://cdn-icons-png.flaticon.com/128/3177/3177440.png',
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: const [
-                                  Text(
-                                    '80',
-                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    '  Văn bản\n đang xử lý',
-                                    style: TextStyle(fontSize: 14, color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          user.fullName ?? 'Chưa có tên',
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          user.roleName?? 'Chưa có vai trò',
-                          style: const TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => Get.to(() =>  UpdateUserDetailPage()),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4B7BE5),
-                                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+            print('Avatar URL: ${user.avatar}');
+            return RefreshIndicator(
+              onRefresh: _refreshUserData,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      '2209',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    const Text(
+                                      'Văn bản',
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.grey),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: const Text(
-                                'Edit profile',
-                                style: TextStyle(fontSize: 16, color: Colors.white),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.network(
+                                  user.avatar.isNotEmpty
+                                      ? user.avatar
+                                      : 'https://cdn-icons-png.flaticon.com/128/3177/3177440.png',
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 16),
-                            // IconButton(
-                            //   icon: const Icon(Icons.more_vert, color: Color(0xFF4B7BE5)),
-                            //   onPressed: () {},
-                            // ),
-                          ],
-                        ),
-                      ],
+                              Expanded(
+                                child: Column(
+                                  children: const [
+                                    Text(
+                                      '80',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      '  Văn bản\n đang xử lý',
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            user.fullName ?? 'Chưa có tên',
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            user.roleName ?? 'Chưa có vai trò',
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () =>
+                                    Get.to(() => UpdateUserDetailPage()),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF4B7BE5),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Edit profile',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              // IconButton(
+                              //   icon: const Icon(Icons.more_vert, color: Color(0xFF4B7BE5)),
+                              //   onPressed: () {},
+                              // ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        InfoItem(
-                          icon: Iconsax.user,
-                          title: 'Họ và tên',
-                          value: user.fullName,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        InfoItem(
-                          icon: Iconsax.user_tag,
-                          title: 'Username',
-                          value: user.userName,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        InfoItem(
-                          icon: Iconsax.profile_2user,
-                          title: 'Giới tính',
-                          value: user.gender,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        InfoItem(
-                          icon: Icons.perm_identity,
-                          title: 'CCCD',
-                          value: user.identityCard,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        InfoItem(
-                          icon: Iconsax.security_user,
-                          title: 'Vị trí',
-                          value: user.position,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        InfoItem(
-                          icon: LucideIcons.building,
-                          title: 'Phòng ban',
-                          value: user.divisionName,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        // Vị trí
-                        InfoItem(
-                          icon: Iconsax.location,
-                          title: 'Địa chỉ',
-                          value: user.address,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        // Ngày sinh
-                        InfoItem(
-                          icon: Iconsax.clock,
-                          title: 'Ngày sinh',
-                          value: user.dateOfBirth,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        // Email
-                        InfoItem(
-                          icon: Icons.email_outlined,
-                          title: 'Email',
-                          value: user.email,
-                          iconColor: Colors.black,
-                        ),
-                        SizedBox(height: 16),
-                        // Số điện thoại
-                        InfoItem(
-                          icon: Iconsax.call,
-                          title: 'Số điện thoại',
-                          value: user.phoneNumber,
-                          iconColor: Colors.black,
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          InfoItem(
+                            icon: Iconsax.user,
+                            title: 'Họ và tên',
+                            value: user.fullName,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          InfoItem(
+                            icon: Iconsax.user_tag,
+                            title: 'Username',
+                            value: user.userName,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          InfoItem(
+                            icon: Iconsax.profile_2user,
+                            title: 'Giới tính',
+                            value: user.gender,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          InfoItem(
+                            icon: Icons.perm_identity,
+                            title: 'CCCD',
+                            value: user.identityCard,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          InfoItem(
+                            icon: Iconsax.security_user,
+                            title: 'Vị trí',
+                            value: user.position,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          InfoItem(
+                            icon: LucideIcons.building,
+                            title: 'Phòng ban',
+                            value: user.divisionName,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          // Vị trí
+                          InfoItem(
+                            icon: Iconsax.location,
+                            title: 'Địa chỉ',
+                            value: user.address,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          // Ngày sinh
+                          InfoItem(
+                            icon: Iconsax.clock,
+                            title: 'Ngày sinh',
+                            value: user.dateOfBirth,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          // Email
+                          InfoItem(
+                            icon: Icons.email_outlined,
+                            title: 'Email',
+                            value: user.email,
+                            iconColor: Colors.black,
+                          ),
+                          SizedBox(height: 16),
+                          // Số điện thoại
+                          InfoItem(
+                            icon: Iconsax.call,
+                            title: 'Số điện thoại',
+                            value: user.phoneNumber,
+                            iconColor: Colors.black,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }
         },
       ),
-
     );
   }
 }
@@ -250,11 +282,13 @@ class InfoItem extends StatelessWidget {
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Đảm bảo nội dung không bị lệch
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Đảm bảo nội dung không bị lệch
         children: [
           Icon(icon, color: iconColor, size: 24),
           SizedBox(width: 16),
-          Expanded( // Cho phép nội dung chiếm không gian còn lại
+          Expanded(
+            // Cho phép nội dung chiếm không gian còn lại
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
