@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import '../../../../data/repositories/document_type_repository.dart';
 import '../../../../data/repositories/task_repository.dart';
 import '../../../task/models/task_model.dart';
+import '../../models/document_type.dart';
 import '../search_document/search_document.dart';
 
 
@@ -24,12 +26,15 @@ class _HomePageState extends State<HomePage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   List<Task> allTasks = [];
+  List<DocumentType> _documentTypes = [];
+
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
     fetchTaskData();
+    fetchDocumentTypes();
   }
 
   Future<void> fetchTaskData() async {
@@ -41,6 +46,18 @@ class _HomePageState extends State<HomePage> {
       });
     } catch (e) {
       print("Error fetching tasks: $e");
+    }
+  }
+
+  Future<void> fetchDocumentTypes() async {
+    try {
+      final repo = DocumentTypeRepository();
+      final data = await repo.fetchDocumentTypes();
+      setState(() {
+        _documentTypes = data;
+      });
+    } catch (e) {
+      print("Lỗi khi lấy danh sách document types: $e");
     }
   }
 
@@ -143,68 +160,49 @@ class _HomePageState extends State<HomePage> {
               ),
 
 
-              // Loại văn bản
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Loại văn bản',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () => Get.to(() => DocumentTypeListPage()),
-                    child: const Text(
-                      "Xem thêm",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: Color(0xFF363942),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
+              // // Loại văn bản
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     const Text(
+              //       'Loại văn bản',
+              //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              //     ),
+              //     TextButton(
+              //       onPressed: () => Get.to(() => DocumentTypeListPage()),
+              //       child: const Text(
+              //         "Xem thêm",
+              //         style: TextStyle(
+              //           fontWeight: FontWeight.w500,
+              //           fontSize: 16,
+              //           color: Color(0xFF363942),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // SizedBox(height: 8),
 
+              SizedBox(height: 16),
+              Text('Loại văn bản', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => DocumentListPage());
-                      },
-                      child:  DocumentTypeCard(
-                        title: 'Quyết định',
-                        count: 12,
-                        progress: 0.1,
-                        members: 6,
-                      ),),
-                    SizedBox(width: 12),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => DocumentListPage());
-                      },
-                      child:  DocumentTypeCard(
-                        title: 'Quy chế',
-                        count: 24,
-                        progress: 0.2,
-                        members: 12,
-                      ),),
-                    SizedBox(width: 12),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => DocumentListPage());
-                      },
-                      child:  DocumentTypeCard(
-                        title: 'Thông báo',
-                        count: 8,
-                        progress: 0.5,
-                        members: 3,
-                      ),),
-                  ],
+                  children: _documentTypes.map((doc) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: DocumentTypeCard(
+                        title: doc.name,
+                        count: 10,          // hoặc đếm thực tế nếu có
+                        progress: 0.6,      // gán tạm
+                        members: 3,         // tạm gán
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
+
 
               SizedBox(height: 16),
 
