@@ -179,11 +179,9 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
         leading: IconButton(
           icon: Icon(Iconsax.arrow_left_24),
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => DocumentListPage()),
-            );
+            Navigator.pop(context);
           },
+
         ),
       ),
       body: SingleChildScrollView(

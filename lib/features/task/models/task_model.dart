@@ -7,6 +7,10 @@ class Task {
   final String taskStatus;
   final String taskType;
 
+  final String scope;
+  final String workflowName;
+  final String stepAction;
+
   Task({
     required this.taskId,
     required this.title,
@@ -15,17 +19,25 @@ class Task {
     required this.endDate,
     required this.taskStatus,
     required this.taskType,
+    required this.scope,
+    required this.workflowName,
+    required this.stepAction,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
+    final taskDto = json['taskDto'];
+
     return Task(
-      taskId: json['taskId'],
-      title: json['title'],
-      description: json['description'],
-      startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
-      taskStatus: json['taskStatus'],
-      taskType: json['taskType'],
+      taskId: taskDto['taskId'],
+      title: taskDto['title'],
+      description: taskDto['description'],
+      startDate: DateTime.parse(taskDto['startDate']),
+      endDate: DateTime.parse(taskDto['endDate']),
+      taskStatus: taskDto['taskStatus'],
+      taskType: taskDto['taskType'],
+      scope: json['scope'] ?? '',
+      workflowName: json['workflowName'] ?? '',
+      stepAction: json['stepAction'] ?? '',
     );
   }
 }

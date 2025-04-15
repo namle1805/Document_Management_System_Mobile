@@ -1,6 +1,4 @@
 import 'package:dms/features/authentication/controllers/user/user_manager.dart';
-import 'package:dms/features/document/screens/document_list/document_list.dart';
-import 'package:dms/features/document/screens/document_type_list/document_type_list.dart';
 import 'package:dms/features/document/screens/setting/setting.dart';
 import 'package:dms/features/task/screens/task_detail/task_detail.dart';
 import 'package:dms/features/task/screens/task_list/task_list.dart';
@@ -75,9 +73,6 @@ class _HomePageState extends State<HomePage> {
         return 'Không xác định';
     }
   }
-
-
-
 
 
 
@@ -258,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                   time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
                   progress: progress,
                   members: 1,
-                  taskId: task.taskId, status: task.taskStatus, // hoặc 1 nếu không có field này
+                  taskId: task.taskId, status: convertTaskStatus(task.taskStatus ?? ''), workflow: task.workflowName,
                 );
               }).toList(),
 
@@ -539,6 +534,7 @@ class DocumentCard extends StatelessWidget {
   final String title;
   final String time;
   final String status;
+  final String workflow;
   final String taskId;
   final double progress;
   final int members;
@@ -547,7 +543,7 @@ class DocumentCard extends StatelessWidget {
     required this.title,
     required this.time,
     required this.progress,
-    required this.members, required this.taskId, required this.status,
+    required this.members, required this.taskId, required this.status, required this.workflow,
   });
 
   @override
@@ -590,9 +586,9 @@ class DocumentCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
 
-                    // "Thành viên" label
-                    const Text(
-                      'Thành viên',
+                    // "workflow" label
+                     Text(
+                      workflow,
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     const SizedBox(height: 6),
@@ -627,25 +623,31 @@ class DocumentCard extends StatelessWidget {
                 ),
 
                 // Right: Progress circle
-                Stack(
-                  alignment: Alignment.center,
+                Column(
                   children: [
-                    SizedBox(
-                      width: 52,
-                      height: 52,
-                      child: CircularProgressIndicator(
-                        value: progress,
-                        strokeWidth: 5,
-                        backgroundColor: Colors.grey.shade300,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
-                      ),
-                    ),
-                    Text(
-                      '${(progress * 100).toInt()}%',
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    const SizedBox(height: 16), // <-- Add spacing here
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          width: 52,
+                          height: 52,
+                          child: CircularProgressIndicator(
+                            value: progress,
+                            strokeWidth: 5,
+                            backgroundColor: Colors.grey.shade300,
+                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
+                          ),
+                        ),
+                        Text(
+                          '${(progress * 100).toInt()}%',
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+
               ],
             ),
 

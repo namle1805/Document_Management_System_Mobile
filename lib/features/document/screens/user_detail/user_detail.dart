@@ -206,7 +206,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                             iconColor: Colors.black,
                           ),
                           SizedBox(height: 16),
-                          // Vị trí
                           InfoItem(
                             icon: Iconsax.location,
                             title: 'Địa chỉ',
@@ -214,7 +213,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                             iconColor: Colors.black,
                           ),
                           SizedBox(height: 16),
-                          // Ngày sinh
                           InfoItem(
                             icon: Iconsax.clock,
                             title: 'Ngày sinh',
@@ -222,7 +220,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                             iconColor: Colors.black,
                           ),
                           SizedBox(height: 16),
-                          // Email
                           InfoItem(
                             icon: Icons.email_outlined,
                             title: 'Email',
@@ -230,7 +227,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                             iconColor: Colors.black,
                           ),
                           SizedBox(height: 16),
-                          // Số điện thoại
                           InfoItem(
                             icon: Iconsax.call,
                             title: 'Số điện thoại',
