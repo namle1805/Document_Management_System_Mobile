@@ -24,6 +24,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   String? scope;
   String? workflow;
   String? step;
+  String? documentType;
+  String? createdBy;
   bool isLoading = true;
 
   @override
@@ -40,6 +42,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       scope = taskContent?.scope;
       workflow = taskContent?.workflowName;
       step = taskContent?.stepAction;
+      documentType = taskContent?.documentTypeName;
+      createdBy = taskContent?.userNameCreateTask;
       isLoading = false;
     });
   }
@@ -88,14 +92,20 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Danh sách người xem',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  const Expanded(
+                    child: Text(
+                      'Danh sách người xem',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: 2,
+                    ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close),
+                    icon: Icon(Icons.close, color: Colors.black, size: 30),
                     onPressed: () {
-                      Navigator.pop(context); // Đóng bottom sheet
+                      Navigator.pop(context);
                     },
                   ),
                 ],
@@ -211,31 +221,54 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
             ),
             SizedBox(height: 16),
+            // Mô tả
+            const Text(
+              'Mô tả',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: TColors.darkerGrey_1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Text(
+                '${taskDetail!.description}',
+                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
+            SizedBox(height: 16),
 
+            // Loại văn bản
+            const Text(
+              'Loại văn bản',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: TColors.darkerGrey_1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Text(
+                '${documentType}',
+                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
+            SizedBox(height: 16),
+
+            // Ngày
             const Text(
               'Ngày',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
             ),
             SizedBox(height: 8),
-            // Container(
-            //   width: double.infinity,
-            //   padding: EdgeInsets.all(12),
-            //   decoration: BoxDecoration(
-            //     color: TColors.darkerGrey_1,
-            //     borderRadius: BorderRadius.circular(8),
-            //     border: Border.all(color: Colors.grey[300]!),
-            //   ),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text(
-            //         '${taskDetail!.startDate} - ${taskDetail!.endDate}',
-            //         style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-            //       ),
-            //       Icon(Icons.calendar_today, color: Colors.black),
-            //     ],
-            //   ),
-            // ),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(12),
@@ -260,48 +293,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ],
               ),
             ),
-
             SizedBox(height: 16),
 
-            Text(
-              'Phạm vi',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            ),
-            SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: TColors.darkerGrey_1,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Text(
-               scope!,
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Luồng xử lý',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            ),
-            SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: TColors.darkerGrey_1,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Text(
-                workflow!,
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-              ),
-            ),
-            SizedBox(height: 16),
-
+            // Thời gian bắt đầu - kết thúc
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -400,12 +394,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
               ],
             ),
-
             SizedBox(height: 16),
 
-            // Mô tả
-            const Text(
-              'Mô tả',
+            Text(
+              'Phạm vi',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
             ),
             SizedBox(height: 8),
@@ -418,7 +410,50 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 border: Border.all(color: Colors.grey[300]!),
               ),
               child: Text(
-                '${taskDetail!.description}',
+               scope!,
+                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Luồng xử lý',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: TColors.darkerGrey_1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Text(
+                workflow!,
+                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
+            SizedBox(height: 16),
+
+
+
+
+            // Nhiệm vụ chính
+            const Text(
+              'Nhiệm vụ chính',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: TColors.darkerGrey_1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Text(
+                '${taskDetail!.taskType}',
                 style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
@@ -443,6 +478,33 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 children: [
                   Text(
                     step!,
+                    style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+
+
+            // Người tạo
+            Text(
+              'Người tạo',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: TColors.darkerGrey_1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child:  Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    createdBy!,
                     style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
                   ),
                 ],

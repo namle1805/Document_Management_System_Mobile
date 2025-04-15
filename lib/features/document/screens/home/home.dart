@@ -242,6 +242,7 @@ class _HomePageState extends State<HomePage> {
               task.taskStatus == 'Pending' ||
                   task.taskStatus == 'Revised' ||
                   task.taskStatus == 'InProgress')
+              .take(2)
                   .map((task) {
                 double progress = 0;
                 if (task.taskStatus == 'InProgress') {
@@ -256,7 +257,6 @@ class _HomePageState extends State<HomePage> {
                   taskId: task.taskId, status: convertTaskStatus(task.taskStatus ?? ''), workflow: task.workflowName,
                 );
               }).toList(),
-
 
 
               // Nhiệm vụ đã hoàn thành

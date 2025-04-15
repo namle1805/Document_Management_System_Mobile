@@ -60,12 +60,14 @@ class TaskContent {
   final String scope;
   final String workflowName;
   final String stepAction;
+  final String documentTypeName;
+  final String userNameCreateTask;
 
   TaskContent({
     required this.taskDetail,
     required this.scope,
     required this.workflowName,
-    required this.stepAction,
+    required this.stepAction,    required this.documentTypeName,    required this.userNameCreateTask,
   });
 
   factory TaskContent.fromJson(Map<String, dynamic> json) {
@@ -73,7 +75,7 @@ class TaskContent {
       taskDetail: TaskDetail.fromJson(json['taskDto']),
       scope: json['scope'],
       workflowName: json['workflowName'],
-      stepAction: json['stepAction'],
+      stepAction: json['stepAction'], documentTypeName: json['documentTypeName'], userNameCreateTask: json['userNameCreateTask'],
     );
   }
 }
