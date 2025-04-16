@@ -11,6 +11,8 @@ import '../../../../data/repositories/document_type_repository.dart';
 import '../../../../data/repositories/task_repository.dart';
 import '../../../task/models/task_model.dart';
 import '../../models/document_type.dart';
+import '../document_list/document_belong_type_list.dart';
+import '../document_list/document_list.dart';
 import '../search_document/search_document.dart';
 
 
@@ -154,30 +156,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-
-              // // Loại văn bản
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     const Text(
-              //       'Loại văn bản',
-              //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              //     ),
-              //     TextButton(
-              //       onPressed: () => Get.to(() => DocumentTypeListPage()),
-              //       child: const Text(
-              //         "Xem thêm",
-              //         style: TextStyle(
-              //           fontWeight: FontWeight.w500,
-              //           fontSize: 16,
-              //           color: Color(0xFF363942),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // SizedBox(height: 8),
-
               SizedBox(height: 16),
               Text('Loại văn bản', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
@@ -190,8 +168,8 @@ class _HomePageState extends State<HomePage> {
                       child: DocumentTypeCard(
                         title: doc.name,
                         count: 10,          // hoặc đếm thực tế nếu có
-                        progress: 0.6,      // gán tạm
-                        members: 3,         // tạm gán
+                        progress: doc.percent,      // gán tạm
+                        members: 1, avatar: UserManager().avatar.toString(), documentTypeId: '', workFlowId: '', typeName: '',         // tạm gán
                       ),
                     );
                   }).toList(),
@@ -305,6 +283,10 @@ class _HomePageState extends State<HomePage> {
 // Widget cho thẻ Loại văn bản
 class DocumentTypeCard extends StatelessWidget {
   final String title;
+  final String avatar;
+  final String documentTypeId;
+  final String workFlowId;
+  final String typeName;
   final int count;
   final double progress;
   final int members;
@@ -313,115 +295,274 @@ class DocumentTypeCard extends StatelessWidget {
     required this.title,
     required this.count,
     required this.progress,
-    required this.members,
+    required this.members, required this.avatar, required this.documentTypeId, required this.workFlowId, required this.typeName,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF2DB4F4), Color(0xFFB2EBF2)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DocumentsListPage(workFlowId:'' , documentTypeId: '', typeName: '',
+            ),
+          ),
+        );
+      },
+      child: Container(
+        width: 200,
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2DB4F4), Color(0xFFB2EBF2)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              spreadRadius: 2,
+              offset: Offset(0, 6),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            spreadRadius: 2,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            '$count văn bản',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 13,
-            ),
-          ),
-          SizedBox(height: 20),
-          // Progress Bar + Percentage
-          Row(
-            children: [
-              Text(
-                '${(progress * 100).toInt()}%',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
               ),
-              SizedBox(width: 8),
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: progress,
-                    minHeight: 5,
-                    backgroundColor: Colors.white24,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            SizedBox(height: 4),
+            Text(
+              '$count văn bản',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+              ),
+            ),
+            SizedBox(height: 20),
+            // Progress Bar + Percentage
+            Row(
+              children: [
+                Text(
+                  '${(progress * 100).toInt()}%',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-          // Members Avatar
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 12,
-                    backgroundImage: AssetImage(TImages.avatar),
-                  ),
-                  Positioned(
-                    left: 16,
-                    child: CircleAvatar(
-                      radius: 12,
-                      backgroundImage: AssetImage(TImages.avatar),
+                SizedBox(width: 8),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 5,
+                      backgroundColor: Colors.white24,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(width: 8),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            // Members Avatar
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 12,
+                      backgroundImage: NetworkImage(avatar),
+                    ),
+                    // Positioned(
+                    //   left: 16,
+                    //   child: CircleAvatar(
+                    //     radius: 12,
+                    //     backgroundImage: AssetImage(TImages.avatar),
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(width: 8),
+                // Container(
+                //   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(20),
+                //   ),
+                //   child: Text(
+                //     '+$members',
+                //     style: TextStyle(
+                //       fontSize: 12,
+                //       color: Color(0xFF2DB4F4),
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                // ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Widget cho thẻ Văn bản xử lý
+class DocumentCard extends StatelessWidget {
+  final String title;
+  final String time;
+  final String status;
+  final String workflow;
+  final String taskId;
+  final double progress;
+  final int members;
+
+  const DocumentCard({
+    required this.title,
+    required this.time,
+    required this.progress,
+    required this.members, required this.taskId, required this.status, required this.workflow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => TaskDetailPage(taskId: taskId,
+            ),));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Color(0xFFE7F0EF),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Stack(
+          children: [
+            // Main content
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left content
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    SizedBox(
+                      width: 180,
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+
+                    // "workflow" label
+                    Text(
+                      workflow,
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 6),
+
+                    // Avatars
+                    Row(
+                      children: List.generate(
+                        1,
+                            (index) => Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: CircleAvatar(
+                            radius: 12,
+                            backgroundImage: NetworkImage(UserManager().avatar.toString()),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Time
+                    Row(
+                      children: [
+                        const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
+                        const SizedBox(width: 4),
+                        Text(
+                          time,
+                          style: const TextStyle(fontSize: 13, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+                // Right: Progress circle
+                Column(
+                  children: [
+                    const SizedBox(height: 16), // <-- Add spacing here
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          width: 52,
+                          height: 52,
+                          child: CircularProgressIndicator(
+                            value: progress,
+                            strokeWidth: 5,
+                            backgroundColor: Colors.grey.shade300,
+                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
+                          ),
+                        ),
+                        Text(
+                          '${(progress * 100).toInt()}%',
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+
+            // Top-right badge
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  '+$members',
+                  status,
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF2DB4F4),
-                    fontWeight: FontWeight.bold,
+                    fontSize: 11,
+                    color: Colors.white,
                   ),
                 ),
               ),
-            ],
-          )
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -529,150 +670,4 @@ class TaskCard extends StatelessWidget {
   }
 }
 
-// Widget cho thẻ Văn bản xử lý
-class DocumentCard extends StatelessWidget {
-  final String title;
-  final String time;
-  final String status;
-  final String workflow;
-  final String taskId;
-  final double progress;
-  final int members;
 
-  const DocumentCard({
-    required this.title,
-    required this.time,
-    required this.progress,
-    required this.members, required this.taskId, required this.status, required this.workflow,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context,
-        MaterialPageRoute(builder: (_) => TaskDetailPage(taskId: taskId,
-        ),));
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Color(0xFFE7F0EF),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Stack(
-          children: [
-            // Main content
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Left content
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title
-                    SizedBox(
-                      width: 180,
-                      child: Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        maxLines: 1,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-
-                    // "workflow" label
-                     Text(
-                      workflow,
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Avatars
-                    Row(
-                      children: List.generate(
-                        1,
-                            (index) => Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundImage: NetworkImage(UserManager().avatar.toString()),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Time
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
-                        const SizedBox(width: 4),
-                        Text(
-                          time,
-                          style: const TextStyle(fontSize: 13, color: Colors.black54),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                // Right: Progress circle
-                Column(
-                  children: [
-                    const SizedBox(height: 16), // <-- Add spacing here
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: 52,
-                          height: 52,
-                          child: CircularProgressIndicator(
-                            value: progress,
-                            strokeWidth: 5,
-                            backgroundColor: Colors.grey.shade300,
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
-                          ),
-                        ),
-                        Text(
-                          '${(progress * 100).toInt()}%',
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-              ],
-            ),
-
-            // Top-right badge
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  status,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

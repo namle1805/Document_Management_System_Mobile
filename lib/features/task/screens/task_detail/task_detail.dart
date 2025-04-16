@@ -580,7 +580,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
             // Nút "Xem chi tiết văn bản"
             ElevatedButton(
-              onPressed: () => Get.to(() => DocumentDetailPage()),
+              onPressed: () => Get.to(() => DocumentDetailPage(workFlowId: '', documentId: '',)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 minimumSize: Size(double.infinity, 50),

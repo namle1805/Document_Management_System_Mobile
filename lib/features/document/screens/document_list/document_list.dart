@@ -9,28 +9,26 @@ import '../../models/document_list.dart';
 import '../search_document/search_document.dart';
 
 
-class DocumentListPage extends StatefulWidget {
-  final String workFlowId;
+class DocumentsListPage extends StatefulWidget {
   final String documentTypeId;
+  final String workFlowId;
   final String typeName;
 
-  const DocumentListPage({
-    required this.workFlowId,
-    required this.documentTypeId,
-    required this.typeName,
+  const DocumentsListPage({
+    required this.documentTypeId, required this.workFlowId, required this.typeName,
   });
 
   @override
-  _DocumentListPageState createState() => _DocumentListPageState();
+  _DocumentsListPageState createState() => _DocumentsListPageState();
 }
 
-class _DocumentListPageState extends State<DocumentListPage> {
+class _DocumentsListPageState extends State<DocumentsListPage> {
   late Future<List<DocumentModel>> futureDocuments;
 
   @override
   void initState() {
     super.initState();
-    futureDocuments = DocumentService().fetchDocuments(widget.workFlowId, widget.documentTypeId);
+    futureDocuments = DocumentService().fetchDocumentsHome(widget.documentTypeId);
   }
 
   @override
@@ -52,7 +50,7 @@ class _DocumentListPageState extends State<DocumentListPage> {
           },
         ),
         title: Text(
-        "Văn Bản ${widget.typeName}",
+          "Văn Bản ${widget.typeName}",
           style: TextStyle(
             color: Colors.black,
             fontSize: 25,
@@ -73,7 +71,7 @@ class _DocumentListPageState extends State<DocumentListPage> {
         children: [
           // ... thanh breadcrumbs + search giữ nguyên
 
-                    Container(
+          Container(
             color: Colors.white,
             padding: EdgeInsets.symmetric(vertical: 8),
             alignment: Alignment.center,
@@ -96,7 +94,7 @@ class _DocumentListPageState extends State<DocumentListPage> {
               ),
             ),
           ),
-                    Container(
+          Container(
             // width: 300,
             width: MediaQuery.of(context).size.width * 0.8,
             child: TextField(
@@ -148,7 +146,7 @@ class _DocumentListPageState extends State<DocumentListPage> {
                       title: doc.documentName,
                       date: _formatDate(doc.createdDate),
                       size: doc.size ?? "Chưa rõ",
-                      iconColor: Colors.red[100]!,
+                      iconColor: Colors.red[100]!, workFlowId: widget.workFlowId, documentId: doc.id,
                     );
                   },
                 );
@@ -200,6 +198,8 @@ class DocumentItem extends StatelessWidget {
   final String title;
   final String date;
   final String size;
+  final String workFlowId;
+  final String documentId;
   final Color iconColor;
 
   const DocumentItem({
@@ -208,7 +208,7 @@ class DocumentItem extends StatelessWidget {
     required this.title,
     required this.date,
     required this.size,
-    required this.iconColor,
+    required this.iconColor, required this.workFlowId, required this.documentId,
   });
 
   String _getIconAsset() {
@@ -233,7 +233,7 @@ class DocumentItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 👉 Chuyển đến trang chi tiết
-        Get.to(() => DocumentDetailPage(
+        Get.to(() => DocumentDetailPage(workFlowId: workFlowId, documentId: documentId,
         ));
       },
       child: Container(

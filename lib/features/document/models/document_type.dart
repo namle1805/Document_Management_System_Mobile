@@ -1,19 +1,24 @@
 class DocumentType {
   final String id;
   final String name;
-  final bool isDeleted;
+  final double percent;
+  final bool? documentResponseMobiles;
 
   DocumentType({
     required this.id,
     required this.name,
-    required this.isDeleted,
+    required this.percent,
+     this.documentResponseMobiles,
   });
 
   factory DocumentType.fromJson(Map<String, dynamic> json) {
     return DocumentType(
       id: json['documentTypeId'],
       name: json['documentTypeName'],
-      isDeleted: json['isDeleted'],
+      percent: (json['percent'] as num).toDouble(),
+      documentResponseMobiles: json['documentResponseMobiles'] == null
+          ? null
+          : json['documentResponseMobiles'] as bool,
     );
   }
 }

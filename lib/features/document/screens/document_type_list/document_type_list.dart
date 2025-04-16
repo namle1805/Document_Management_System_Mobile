@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../authentication/controllers/user/user_manager.dart';
 import '../../models/document_type_model.dart';
-import '../document_list/document_list.dart';
+import '../document_list/document_belong_type_list.dart';
 import 'package:http/http.dart' as http;
 
 

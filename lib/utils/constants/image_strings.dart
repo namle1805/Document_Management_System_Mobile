@@ -13,6 +13,7 @@ class TImages {
 
   // -- Home Images
   static const String avatar = "assets/images/home_screen/avatar.jpg";
+  static const String user = "assets/images/home_screen/user.png";
 
   // -- Document Logos
   static const String docx = "assets/images/document_logo_images/docx.png";
