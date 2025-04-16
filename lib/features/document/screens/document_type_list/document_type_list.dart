@@ -1,36 +1,69 @@
+import 'dart:convert';
+
 import 'package:dms/navigation_menu.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../authentication/controllers/user/user_manager.dart';
+import '../../models/document_type_model.dart';
 import '../document_list/document_list.dart';
+import 'package:http/http.dart' as http;
 
 
 class DocumentTypeListPage extends StatefulWidget {
   @override
   State<DocumentTypeListPage> createState() => _DocumentTypeListPageState();
 }
+
+
 class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
   int selectedTabIndex = 0;
+  List<Workflow> workflows = [];
+  bool isLoading = true;
 
-  final List<String> tabs = [
-    'Văn bản đến',
-    'Văn bản đi',
-    'Nội bộ toàn trường',
-    'Nội bộ phòng ban',
-    'Đã lưu',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    fetchWorkflows();
+  }
 
-  final List<List<String>> tabData = [
-    ['Nghị Định', 'Thông Báo', 'Dự Án'],
-    ['Nghị Quyết', 'Đề Án', 'Quy Định'],
-    ['Họp mặt', 'Hoạt động Đoàn thể', 'Chương trình nội bộ'],
-    ['Kế hoạch phòng ban', 'Báo cáo tháng', 'Biên bản họp'],
-    ['Kế hoạch phòng ban', 'Báo cáo tháng', 'Biên bản họp'],
-  ];
+  Future<void> fetchWorkflows() async {
+    try {
+      final response = await http.get(
+        Uri.parse("http://nghetrenghetre.xyz:5290/api/Document/view-all-type-documents-by-workflow-mobile"),
+        headers: {
+          "Authorization": 'Bearer ${UserManager().token}'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List content = data['content'];
+
+        setState(() {
+          workflows = content
+              .map((e) => Workflow.fromJson(e))
+              .where((e) => e.workFlowName != null)
+              .toList();
+          isLoading = false;
+        });
+      } else {
+        print("Lỗi khi fetch API: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Lỗi khi fetch API: $e");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    final currentDocumentTypes = tabData[selectedTabIndex];
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final currentWorkflow = workflows[selectedTabIndex];
+    final currentDocumentTypes = currentWorkflow.documentTypes;
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -38,35 +71,22 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Get.to(() => const NavigationMenu()),
         ),
-        title: const Text(
-          'Văn bản',
-          style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
-        ),
+        title: const Text('Văn bản', style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold)),
         centerTitle: true,
-        actions: [
-          // IconButton(
-          //   icon: Icon(Icons.search_rounded, color: Colors.black),
-          //   onPressed: () {},
-          // ),
-          // IconButton(
-          //   icon: Icon(Icons.filter_alt_sharp, color: Colors.black),
-          //   onPressed: () {},
-          // ),
-        ],
       ),
       body: Column(
         children: [
-          // Tab
+          // Tab từ workflows
           Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: List.generate(tabs.length, (index) {
+                children: List.generate(workflows.length, (index) {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
@@ -74,7 +94,7 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
                       });
                     },
                     child: TabItem(
-                      title: tabs[index],
+                      title: workflows[index].workFlowName,
                       isSelected: selectedTabIndex == index,
                     ),
                   );
@@ -82,29 +102,32 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
               ),
             ),
           ),
+
           // Danh sách loại văn bản
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(30.0),
               child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.2,
-                  ),
-                  itemCount: currentDocumentTypes.length,
-                  itemBuilder: (context, index) {
-                    return DocumentTypeItem(
-                      title: currentDocumentTypes[index],
-                      onTap: () {
-                        // Điều hướng đến trang DocumentListPage khi nhấn
-                        Get.to(() => DocumentListPage(
-                        ));
-                      },
-                    );
-                  }
+                itemCount: currentDocumentTypes.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.2,
+                ),
+                itemBuilder: (context, index) {
+                  final docType = currentDocumentTypes[index];
+                  return DocumentTypeItem(
+                    title: docType.documentTypeName,
+                    onTap: () {
+                      Get.to(() => DocumentListPage(
+                        workFlowId: currentWorkflow.workFlowId!,
+                        documentTypeId: docType.documentTypeId, typeName: docType.documentTypeName,
+                      ));
 
+                    },
+                  );
+                },
               ),
             ),
           ),
@@ -114,7 +137,7 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
   }
 }
 
-// Widget cho tab
+
 class TabItem extends StatelessWidget {
   final String title;
   final bool isSelected;
@@ -178,21 +201,6 @@ class DocumentTypeItem extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child:
-            //       Text(
-            //         title,
-            //         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            //         textAlign: TextAlign.left,
-            //         overflow: TextOverflow.ellipsis,
-            //         maxLines: 1,
-            //       ),
-            //     ),
-            //     const Icon(Icons.more_vert, size: 18, color: Colors.black),
-            //   ],
-            // ),
             Row(
               children: [
                 Expanded(

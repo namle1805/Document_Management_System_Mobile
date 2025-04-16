@@ -1,63 +1,37 @@
+import 'package:dms/data/services/document_service.dart';
 import 'package:dms/features/document/screens/document_detail/document_detail.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../utils/constants/image_strings.dart';
+import '../../models/document_list.dart';
 import '../search_document/search_document.dart';
 
-class DocumentListPage extends StatelessWidget {
-  final List<Map<String, dynamic>> documents = [
-    {
-      'type': 'DOCX',
-      'title': 'Quy định chi tiết một số điều...',
-      'date': '29 Oct 2024',
-      'size': '329.4 MB',
-      'iconColor': Colors.blue[100],
-    },
-    {
-      'type': 'DOCX',
-      'title': 'Quy định chi tiết một số điều...',
-      'date': '29 Oct 2024',
-      'size': '329.4 MB',
-      'iconColor': Colors.blue[100],
-    },
-    {
-      'type': 'PDF',
-      'title': 'Nghị định liên quan đến điều...',
-      'date': '28 Oct 2024',
-      'size': '122 MB',
-      'iconColor': Colors.red[100],
-    },
-    {
-      'type': 'PDF',
-      'title': 'Quy định phụ cấp đặc thù...',
-      'date': '28 Oct 2024',
-      'size': '122 MB',
-      'iconColor': Colors.red[100],
-    },
-    {
-      'type': 'XLS',
-      'title': 'Quy định xử phạt vi phạm hành...',
-      'date': '25 Oct 2024',
-      'size': '2.4 MB',
-      'iconColor': Colors.green[100],
-    },
-    {
-      'type': 'SVG',
-      'title': 'Quy định về kiểm định chất...',
-      'date': '24 Oct 2024',
-      'size': '11 MB',
-      'iconColor': Colors.yellow[100],
-    },
-    {
-      'type': 'DOCX',
-      'title': 'Nghị định hướng dẫn Luật giao...',
-      'date': '19 Oct 2024',
-      'size': '84.9 MB',
-      'iconColor': Colors.blue[100],
-    },
-  ];
+
+class DocumentListPage extends StatefulWidget {
+  final String workFlowId;
+  final String documentTypeId;
+  final String typeName;
+
+  const DocumentListPage({
+    required this.workFlowId,
+    required this.documentTypeId,
+    required this.typeName,
+  });
+
+  @override
+  _DocumentListPageState createState() => _DocumentListPageState();
+}
+
+class _DocumentListPageState extends State<DocumentListPage> {
+  late Future<List<DocumentModel>> futureDocuments;
+
+  @override
+  void initState() {
+    super.initState();
+    futureDocuments = DocumentService().fetchDocuments(widget.workFlowId, widget.documentTypeId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +52,7 @@ class DocumentListPage extends StatelessWidget {
           },
         ),
         title: Text(
-          'Văn Bản Nghị Định',
+        "Văn Bản ${widget.typeName}",
           style: TextStyle(
             color: Colors.black,
             fontSize: 25,
@@ -95,10 +69,11 @@ class DocumentListPage extends StatelessWidget {
           // ),
         ],
       ),
-
       body: Column(
         children: [
-          Container(
+          // ... thanh breadcrumbs + search giữ nguyên
+
+                    Container(
             color: Colors.white,
             padding: EdgeInsets.symmetric(vertical: 8),
             alignment: Alignment.center,
@@ -121,8 +96,7 @@ class DocumentListPage extends StatelessWidget {
               ),
             ),
           ),
-
-          Container(
+                    Container(
             // width: 300,
             width: MediaQuery.of(context).size.width * 0.8,
             child: TextField(
@@ -151,19 +125,32 @@ class DocumentListPage extends StatelessWidget {
               ),
             ),
           ),
-
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(16),
-              itemCount: documents.length,
-              itemBuilder: (context, index) {
-                final doc = documents[index];
-                return DocumentItem(
-                  type: doc['type'],
-                  title: doc['title'],
-                  date: doc['date'],
-                  size: doc['size'],
-                  iconColor: doc['iconColor'],
+            child: FutureBuilder<List<DocumentModel>>(
+              future: futureDocuments,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("Lỗi: ${snapshot.error}"));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text("Không có văn bản nào"));
+                }
+
+                final documents = snapshot.data!;
+                return ListView.builder(
+                  padding: EdgeInsets.all(16),
+                  itemCount: documents.length,
+                  itemBuilder: (context, index) {
+                    final doc = documents[index];
+                    return DocumentItem(
+                      type: "PDF", // hoặc bạn có thể viết logic để đoán loại file từ tên
+                      title: doc.documentName,
+                      date: _formatDate(doc.createdDate),
+                      size: doc.size ?? "Chưa rõ",
+                      iconColor: Colors.red[100]!,
+                    );
+                  },
                 );
               },
             ),
@@ -171,6 +158,20 @@ class DocumentListPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')} "
+        "${_monthName(date.month)} "
+        "${date.year}";
+  }
+
+  String _monthName(int month) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[month - 1];
   }
 }
 
