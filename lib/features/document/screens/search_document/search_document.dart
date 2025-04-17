@@ -1,141 +1,124 @@
-import 'package:dms/features/document/screens/document_list/document_belong_type_list.dart';
+import 'package:dms/data/services/document_service.dart';
 import 'package:flutter/material.dart';
 import 'package:dms/features/document/screens/document_detail/document_detail.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../../utils/constants/image_strings.dart';
+import '../../models/document_list.dart';
 
-class SearchDocumentPage extends StatelessWidget {
-
+class SearchDocumentPage extends StatefulWidget {
   final String searchQuery;
 
-  final List<Map<String, dynamic>> allDocuments = [
-    {
-      'type': 'DOCX',
-      'title': 'Quy định chi tiết một số điều...',
-      'date': '29 Oct 2024',
-      'size': '329.4 MB',
-      'iconColor': Colors.blue[100],
-    },
-    {
-      'type': 'DOCX',
-      'title': 'Quy định chi tiết một số điều...',
-      'date': '29 Oct 2024',
-      'size': '329.4 MB',
-      'iconColor': Colors.blue[100],
-    },
-    {
-      'type': 'PDF',
-      'title': 'Nghị định liên quan đến điều...',
-      'date': '28 Oct 2024',
-      'size': '122 MB',
-      'iconColor': Colors.red[100],
-    },
-    {
-      'type': 'PDF',
-      'title': 'Quy định phụ cấp đặc thù...',
-      'date': '28 Oct 2024',
-      'size': '122 MB',
-      'iconColor': Colors.red[100],
-    },
-    {
-      'type': 'XLS',
-      'title': 'Quy định xử phạt vi phạm hành...',
-      'date': '25 Oct 2024',
-      'size': '2.4 MB',
-      'iconColor': Colors.green[100],
-    },
-    {
-      'type': 'SVG',
-      'title': 'Quy định về kiểm định chất...',
-      'date': '24 Oct 2024',
-      'size': '11 MB',
-      'iconColor': Colors.yellow[100],
-    },
-    {
-      'type': 'DOCX',
-      'title': 'Nghị định hướng dẫn Luật giao...',
-      'date': '19 Oct 2024',
-      'size': '84.9 MB',
-      'iconColor': Colors.blue[100],
-    },
-  ];
+  const SearchDocumentPage({super.key, required this.searchQuery});
 
-  SearchDocumentPage({super.key, required this.searchQuery});
+  @override
+  State<SearchDocumentPage> createState() => _SearchDocumentPageState();
+}
+
+class _SearchDocumentPageState extends State<SearchDocumentPage> {
+  late Future<List<DocumentModel>> futureDocuments;
+
+
+  @override
+  void initState() {
+    super.initState();
+    futureDocuments = DocumentService().fetchSearchDocuments(widget.searchQuery);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> filteredDocuments = allDocuments.where((doc) {
-      final title = doc['title'].toString().toLowerCase();
-      return title.contains(searchQuery.toLowerCase());
-    }).toList();
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => NavigationMenu()),
-            );
-          },
-        ),
-        title: Text(
-          'Văn bản tìm kiếm',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          // IconButton(
-          //   icon: Icon(Icons.search, color: Colors.black),
-          //   onPressed: () => Get.to(() => DocumentListPage()),
-          // ),
-        ],
-      ),
-
+      appBar: _buildAppBar(context),
       body: Column(
         children: [
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: 8),
-            alignment: Alignment.center,
-            child: RichText(
-              text: TextSpan(
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-                children: [
-                  TextSpan(text: 'Trang Chủ'),
-                  TextSpan(text: ' - '),
-                  TextSpan(text: 'Tìm Kiếm Văn Bản'),
-                ],
-              ),
-            ),
-          ),
+          _buildBreadcrumbs(),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(16),
-              itemCount: filteredDocuments.length,
-              itemBuilder: (context, index) {
-                final doc = filteredDocuments[index];
-                return DocumentItem(
-                  type: doc['type'],
-                  title: doc['title'],
-                  date: doc['date'],
-                  size: doc['size'],
-                  iconColor: doc['iconColor'],
+            child: FutureBuilder<List<DocumentModel>>(
+              future: futureDocuments,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Lỗi: ${snapshot.error}'));
+                }
+
+                final documents = snapshot.data!;
+                if (documents.isEmpty) {
+                  return Center(child: Text('Không tìm thấy văn bản nào.'));
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.all(16),
+                  itemCount: documents.length,
+                  itemBuilder: (context, index) {
+                    final doc = documents[index];
+                    final formattedDate = DateFormat('yyyy-MM-dd').format(doc.createdDate);
+                    return DocumentItem(
+                      type: "PDF",
+                      title: doc.documentName,
+                      // date: doc.createdDate.split('T')[0],
+                      date: DateFormat('yyyy-MM-dd').format(doc.createdDate),
+                      size: doc.size ?? 'Không rõ',
+                      iconColor: Colors.red[100]!,
+                    );
+                  },
                 );
               },
             ),
           ),
-
         ],
       ),
+    );
+  }
+
+  String _getTypeFromName(String name) {
+    final ext = name.split('.').last.toUpperCase();
+    return ext;
+  }
+
+  Widget _buildBreadcrumbs() {
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(vertical: 8),
+      alignment: Alignment.center,
+      child: RichText(
+        text: TextSpan(
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+          children: [
+            TextSpan(text: 'Trang Chủ'),
+            TextSpan(text: ' - '),
+            TextSpan(text: 'Tìm Kiếm Văn Bản'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => NavigationMenu()),
+          );
+        },
+      ),
+      title: Text(
+        'Văn bản tìm kiếm',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      centerTitle: true,
     );
   }
 }

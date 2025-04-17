@@ -7,15 +7,7 @@ import '../../features/document/models/document_list.dart';
 class DocumentService {
   static const String baseUrl = 'http://nghetrenghetre.xyz:5290';
 
-  // Future<dynamic> get(String endpoint) async {
-  //   final response = await http.get(Uri.parse('$baseUrl$endpoint'));
-  //
-  //   if (response.statusCode == 200) {
-  //     return json.decode(response.body);
-  //   } else {
-  //     throw Exception('Lỗi khi gọi API: ${response.statusCode}');
-  //   }
-  // }
+
 
   Future<dynamic> get(String url, {Map<String, String>? headers}) async {
     final uri = Uri.parse(baseUrl + url);
@@ -45,8 +37,8 @@ class DocumentService {
       throw Exception("Failed to load documents: ${response.statusCode}");
     }
   }
-  Future<List<DocumentModel>> fetchDocumentsHome(String documentType) async {
 
+  Future<List<DocumentModel>> fetchDocumentsHome(String documentType) async {
     final response = await http.get(
         Uri.parse("http://nghetrenghetre.xyz:5290/api/Document/view-all-documents-by-document-type-mobile?documentTypeId=$documentType"),
         headers: {
@@ -56,12 +48,43 @@ class DocumentService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final List content = data['content'];
-      return content.map((e) => DocumentModel.fromJson(e)).toList();
+      final List<List<dynamic>> content = List<List<dynamic>>.from(data['content']);
+
+      // Làm phẳng mảng 2 chiều
+      final flattenedList = content.expand((sublist) => sublist).toList();
+
+      return flattenedList.map((e) => DocumentModel.fromJson(e)).toList();
     } else {
       throw Exception("Failed to load documents: ${response.statusCode}");
     }
   }
+
+
+  Future<List<DocumentModel>> fetchSearchDocuments(String query) async {
+    final response = await http.get(
+        Uri.parse("http://nghetrenghetre.xyz:5290/api/Document/view-document-by-name?documentName=$query"),
+        headers: {
+          "Authorization": 'Bearer ${UserManager().token}'
+        }
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> outerList = data['content'];
+      final List<DocumentModel> documents = [];
+
+      for (var innerList in outerList) {
+        for (var docJson in innerList) {
+          documents.add(DocumentModel.fromJson(docJson));
+        }
+      }
+      return documents;
+    } else {
+      throw Exception('Failed to load documents');
+    }
+  }
+
+
 
   static Future<DocumentDetail?> fetchDocumentDetail({
     required String documentId,

@@ -25,6 +25,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   String? workflow;
   String? step;
   String? documentType;
+  String? documentId;
+  String? workflowId;
   String? createdBy;
   bool isLoading = true;
 
@@ -42,6 +44,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       scope = taskContent?.scope;
       workflow = taskContent?.workflowName;
       step = taskContent?.stepAction;
+      workflowId = taskContent?.workflowId;
+      documentId = taskContent?.documentId;
       documentType = taskContent?.documentTypeName;
       createdBy = taskContent?.userNameCreateTask;
       isLoading = false;
@@ -580,7 +584,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
             // Nút "Xem chi tiết văn bản"
             ElevatedButton(
-              onPressed: () => Get.to(() => DocumentDetailPage(workFlowId: '', documentId: '',)),
+              onPressed: () => Get.to(() => DocumentDetailPage(workFlowId: workflowId!, documentId: documentId!)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 minimumSize: Size(double.infinity, 50),
