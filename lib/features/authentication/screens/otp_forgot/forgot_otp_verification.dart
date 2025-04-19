@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../../../data/services/auth_services.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
@@ -155,12 +156,30 @@ class _OtpVerificationScreenState extends State<ForgotOtpVerificationScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
-                          child: const Text(
+                          onPressed: _start == 0 ? () async {
+                            try {
+                              final email = Get.arguments['email']; // Lấy email từ arguments
+                              await AuthService.sendOtp(email: email);
+                              setState(() {
+                                _start = 180;
+                                _timer.cancel();
+                                startTimer();
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Đã gửi lại mã OTP đến $email')),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Lỗi: ${e.toString()}')),
+                              );
+                            }
+                          } : null, // Chỉ bật nút khi hết thời gian
+                          child: Text(
                             TTexts.resendOTP,
-                            style: TextStyle(color: Colors.red),
+                            style: TextStyle(color: _start == 0 ? Colors.red : Colors.grey),
                           ),
                         ),
+
                       ],
                     ),
                     const SizedBox(height: TSizes.spaceBtwItems),

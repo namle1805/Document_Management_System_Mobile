@@ -85,7 +85,10 @@ class TLoginForm extends StatelessWidget {
                 /// Remember Me
                 Row(
                   children: [
-                    Checkbox(value: true, onChanged: (value) {}),
+                    Obx(() => Checkbox(
+                      value: controller.isRememberMe.value,
+                      onChanged: controller.toggleRememberMe,
+                    )),
                     const Text(TTexts.rememberMe),
                   ],
                 ),
