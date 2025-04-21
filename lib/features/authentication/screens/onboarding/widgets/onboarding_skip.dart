@@ -19,7 +19,7 @@ class OnBoardingSkip extends StatelessWidget {
       child: TextButton(onPressed: () =>
           Get.to(() => const LoginScreen())
           // OnBoardingController.instance.skipPage()
-          , child:  Text('Skip',
+          , child:  Text('Bỏ qua',
               style: GoogleFonts.getFont("Roboto Condensed", fontWeight: FontWeight.w700, color: Colors.black, fontSize: 18)
           )),
     );
