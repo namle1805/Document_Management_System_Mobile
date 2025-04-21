@@ -1,3 +1,4 @@
+import 'package:dms/utils/token_manager/token_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../data/services/auth_services.dart';
@@ -91,10 +92,11 @@ class LoginController extends GetxController {
   Future<void> login(String email, String password) async {
     isLoading.value = true;
     try {
+      String fcmToken = TokenManager().fcmToken!;
       final result = await AuthService.login(
         email: email,
         password: password,
-        fcmToken: 'string',
+        fcmToken: fcmToken,
       );
 
       final user = result['user'] as UserDto;
@@ -117,6 +119,7 @@ class LoginController extends GetxController {
 
       print('✅ Đăng nhập thành công: ${UserManager().name}');
       print('Token: ${UserManager().token}');
+      print('fcmToken: ${fcmToken}');
 
       Get.offAll(() => NavigationMenu());
     } catch (e) {
