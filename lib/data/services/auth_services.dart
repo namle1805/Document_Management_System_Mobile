@@ -35,7 +35,7 @@ class AuthService {
           'token': token,
         };
       } else {
-        throw Exception('Đăng nhập thất bại: ${data['message']}');
+        throw Exception('Đăng nhập thất bại: Tên đăng nhập hoặc mật khẩu không đúng!');
       }
     } else {
       throw Exception('Đăng nhập thất bại: ${response.statusCode}');

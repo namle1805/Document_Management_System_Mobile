@@ -27,6 +27,8 @@ class _HomePageState extends State<HomePage> {
   DateTime? _selectedDay;
   List<Task> allTasks = [];
   List<DocumentType> _documentTypes = [];
+  bool isLoading = true;
+
 
 
   @override
@@ -37,6 +39,30 @@ class _HomePageState extends State<HomePage> {
     fetchDocumentTypes();
   }
 
+  // Future<void> fetchTaskData() async {
+  //   try {
+  //     final repo = TaskRepository();
+  //     final tasks = await repo.fetchTasks();
+  //     setState(() {
+  //       allTasks = tasks;
+  //     });
+  //   } catch (e) {
+  //     print("Error fetching tasks: $e");
+  //   }
+  // }
+  //
+  // Future<void> fetchDocumentTypes() async {
+  //   try {
+  //     final repo = DocumentTypeRepository();
+  //     final data = await repo.fetchDocumentTypes();
+  //     setState(() {
+  //       _documentTypes = data;
+  //     });
+  //   } catch (e) {
+  //     print("Lỗi khi lấy danh sách document types: $e");
+  //   }
+  // }
+
   Future<void> fetchTaskData() async {
     try {
       final repo = TaskRepository();
@@ -46,6 +72,10 @@ class _HomePageState extends State<HomePage> {
       });
     } catch (e) {
       print("Error fetching tasks: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -58,8 +88,13 @@ class _HomePageState extends State<HomePage> {
       });
     } catch (e) {
       print("Lỗi khi lấy danh sách document types: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
+
 
   String convertTaskStatus(String status) {
     switch (status) {
@@ -88,7 +123,13 @@ class _HomePageState extends State<HomePage> {
     task.taskStatus == 'Pending' ||
         task.taskStatus == 'Revised' ||
         task.taskStatus == 'InProgress').toList();
-
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -386,31 +427,9 @@ class DocumentTypeCard extends StatelessWidget {
                       radius: 12,
                       backgroundImage: NetworkImage(avatar),
                     ),
-                    // Positioned(
-                    //   left: 16,
-                    //   child: CircleAvatar(
-                    //     radius: 12,
-                    //     backgroundImage: AssetImage(TImages.avatar),
-                    //   ),
-                    // ),
                   ],
                 ),
                 SizedBox(width: 8),
-                // Container(
-                //   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(20),
-                //   ),
-                //   child: Text(
-                //     '+$members',
-                //     style: TextStyle(
-                //       fontSize: 12,
-                //       color: Color(0xFF2DB4F4),
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
               ],
             )
           ],

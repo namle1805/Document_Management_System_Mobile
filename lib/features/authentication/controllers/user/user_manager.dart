@@ -12,7 +12,6 @@ class UserManager {
 
   UserDto? get user => _user;
   String? get token => _token;
-
   String get id => _user?.userId ?? '';
   String get name => _user?.fullName ?? '';
   String get email => _user?.email ?? '';
