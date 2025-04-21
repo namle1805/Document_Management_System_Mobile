@@ -21,7 +21,7 @@ class OnBoardingDotNavigation extends StatelessWidget {
       right: 0,
       child: Center(
         child: SmoothPageIndicator(
-          count: 3,
+          count: 1,
           controller: controller.pageController,
           onDotClicked: controller.dotNavigationClick,
           effect: ExpandingDotsEffect(activeDotColor: dark ? TColors.light : TColors.primary, dotHeight: 6, dotWidth: 6),

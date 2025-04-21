@@ -6,7 +6,7 @@ class TTexts {
   static const String onBoardingTitle2 = "Get The Best Deal";
   static const String onBoardingTitle3 = "Explore Local Attractions";
 
-  static const String onBoardingSubTitle1 = "Create your dream trip with ease. Choose a destination, find the perfect place to stay, and create an itinerary that suits your preferences.";
+  static const String onBoardingSubTitle1 = "Quản lý, tra cứu và xử lý văn bản mọi lúc, mọi nơi – đơn giản, hiệu quả. Thông tin được mã hóa và đồng bộ với hệ thống nội bộ – an toàn, tiện lợi.";
   static const String onBoardingSubTitle2 = "Save time and money by finding the best travel deals. We provide a range of exclusive promotions and discounts to make your trip more affordable.";
   static const String onBoardingSubTitle3 = "Discover the beauty of local places you may never have visited. Experience local life and enjoy authentic experiences in each destination.";
 
@@ -29,7 +29,7 @@ class TTexts {
   static const String male = "Male";
   static const String feMale = "Female";
   static const String others = "Others";
-  static const String rememberMe = "Remember Me";
+  static const String rememberMe = "Ghi nhớ tài khoản";
   static const String forgotPassword = "Quên mật khẩu?";
   static const String signIn = "Đăng nhập";
   static const String createAccount = "Create Account";

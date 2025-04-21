@@ -34,7 +34,7 @@ class OnBoardingNextButton extends StatelessWidget {
             ),
           ),
           child: const Text(
-            'Get Started',
+            'Bắt đầu',
             style: TextStyle(color: Colors.white),
           ),
         ),

@@ -53,24 +53,24 @@ class OnBoardingScreen extends StatelessWidget {
                 title: TTexts.onBoardingTitle1,
                 subTitle: TTexts.onBoardingSubTitle1,
               ),
-              OnBoardingPage(
-                image: TImages.onBoardingImage,
-                title: TTexts.onBoardingTitle2,
-                subTitle: TTexts.onBoardingSubTitle2,
-              ),
-              OnBoardingPage(
-                image: TImages.onBoardingImage,
-                title: TTexts.onBoardingTitle3,
-                subTitle: TTexts.onBoardingSubTitle3,
-              ),
+              // OnBoardingPage(
+              //   image: TImages.onBoardingImage,
+              //   title: TTexts.onBoardingTitle2,
+              //   subTitle: TTexts.onBoardingSubTitle2,
+              // ),
+              // OnBoardingPage(
+              //   image: TImages.onBoardingImage,
+              //   title: TTexts.onBoardingTitle3,
+              //   subTitle: TTexts.onBoardingSubTitle3,
+              // ),
             ],
           ),
 
-          /// Skip Button
-          const OnBoardingSkip(),
-
-          /// Dot Navigation SmoothPageIndicator
-          const OnBoardingDotNavigation(),
+          // /// Skip Button
+          // const OnBoardingSkip(),
+          //
+          // /// Dot Navigation SmoothPageIndicator
+          // const OnBoardingDotNavigation(),
 
           /// Circular Button
           const OnBoardingNextButton(),
