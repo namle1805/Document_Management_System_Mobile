@@ -3,12 +3,16 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
+import '../../features/authentication/controllers/user/user_manager.dart';
 import '../../features/authentication/models/user_model.dart';
 
 class UserApi {
   static Future<UserModel> fetchUserDetails(String userId) async {
     final response = await http.get(
       Uri.parse('http://nghetrenghetre.xyz:5290/api/User/view-profile-user?userId=$userId'),
+        headers: {
+          'Authorization': 'Bearer ${UserManager().token}',
+        }
     );
 
     if (response.statusCode == 200) {
@@ -21,7 +25,7 @@ class UserApi {
 
   static Future<String?> uploadAvatar(File file, String userId) async {
     final uri = Uri.parse("http://nghetrenghetre.xyz:5290/api/User/update-avatar/$userId");
-    var request = http.MultipartRequest('POST', uri);
+    var request = http.MultipartRequest('POST', uri,);
     request.fields['userId'] = userId;
 
     request.files.add(await http.MultipartFile.fromPath(
