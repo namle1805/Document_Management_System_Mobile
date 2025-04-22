@@ -1,4 +1,6 @@
 import 'package:dms/features/authentication/controllers/user/user_manager.dart';
+import 'package:dms/features/document/screens/document_detail/document_detail.dart';
+import 'package:dms/features/task/screens/task_detail/task_detail.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -98,59 +100,86 @@ class _NotificationListPageState extends State<NotificationListPage> {
           ? Center(child: CircularProgressIndicator())
           : RefreshIndicator(
         onRefresh: _loadNotifications,
-        child: ListView.builder(
+        child: notifications.isEmpty
+            ? ListView(
+          children: [
+            SizedBox(height: 100),
+            Center(child: Text("Không có thông báo nào")),
+          ],
+        )
+            : ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 8),
-          itemCount: notifications.length,
+          itemCount: notifications.length, // ✅ THÊM DÒNG NÀY
           itemBuilder: (context, index) {
             final notification = notifications[index];
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 28,
-                    backgroundImage: NetworkImage(UserManager().avatar.toString()),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          notification.title,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: notification.isRead ? Colors.grey : Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              formatTime(notification.createdAt),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            if (!notification.isRead)
-                              IconButton(
-                                icon: Icon(Icons.mark_email_read),
-                                onPressed: () => _markAsRead(notification.id),
-                              ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Divider(),
-                        ),
-                      ],
+            return GestureDetector(
+              onTap: () {
+                _markAsRead(notification.id); // Đánh dấu đã đọc
+
+                if (notification.type.toLowerCase() == 'document') {
+                  if (notification.documentId != null && notification.workflowId != null) {
+                    Get.to(() => DocumentDetailPage(
+                      workFlowId: notification.workflowId!,
+                      documentId: notification.documentId!,
+                    ));
+                  }
+                } else if (notification.type.toLowerCase() == 'task') {
+                  if (notification.taskId != null) {
+                    Get.to(() => TaskDetailPage(
+                      taskId: notification.taskId!,
+                    ));
+                  }
+                } else {
+                  // Optional: Xử lý type khác nếu cần
+                  Get.snackbar("Không hỗ trợ", "Loại thông báo không xác định");
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundImage: NetworkImage(UserManager().avatar.toString()),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            notification.title,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: notification.isRead ? Colors.grey : Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                formatTime(notification.createdAt),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              if (!notification.isRead)
+                                Icon(Icons.mark_email_read, color: Colors.blue),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Divider(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },

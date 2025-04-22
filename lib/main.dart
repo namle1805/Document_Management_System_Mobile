@@ -1,5 +1,6 @@
 import 'package:dms/Service/notification_service.dart';
 import 'package:dms/api/firebase_api.dart';
+import 'package:dms/data/services/notification_service.dart';
 import 'package:dms/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

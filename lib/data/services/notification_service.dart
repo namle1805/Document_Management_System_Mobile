@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import '../../features/authentication/controllers/user/user_manager.dart';
 import '../../features/document/models/notification_model.dart';
 
 class NotificationService {
   static const String baseUrl = 'http://nghetrenghetre.xyz:5290/api/Notification/';
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
   // Lấy danh sách thông báo
   Future<List<NotificationModel>> getNotifications(String userId, int page, int limit) async {
@@ -34,5 +37,32 @@ class NotificationService {
     if (response.statusCode != 200) {
       throw Exception('Failed to mark notification as read');
     }
+  }
+
+
+
+  static Future<void> init() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+    InitializationSettings(android: initializationSettingsAndroid);
+
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  static void showNotification({required String title, required String body}) {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'default_channel_id',
+      'Default Channel',
+      channelDescription: 'This channel is used for default notifications.',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails notificationDetails =
+    NotificationDetails(android: androidDetails);
+
+    _notificationsPlugin.show(0, title, body, notificationDetails);
   }
 }
