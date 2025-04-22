@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../models/login_response.dart';
 
 class UserManager {
@@ -32,6 +36,16 @@ class UserManager {
   void clear() {
     _user = null;
     _token = null;
+  }
+  Future<void> loadFromStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final userJson = prefs.getString('user');
+
+    if (token != null && userJson != null) {
+      final user = UserDto.fromJson(jsonDecode(userJson));
+      setUser(user, token);
+    }
   }
 
   bool get isLoggedIn => _user != null && _token != null;

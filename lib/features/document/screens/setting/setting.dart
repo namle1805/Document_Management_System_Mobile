@@ -6,6 +6,7 @@ import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/services/auth_services.dart';
 import '../../../../utils/constants/colors.dart';
 
@@ -211,7 +212,7 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                     icon: Iconsax.logout,
                     title: 'Đăng xuất',
                     titleColor: Colors.red,
-                    onTap: () => Get.to(() => LoginScreen()),
+                    onTap: logout,
                   ),
                 ],
               ),
@@ -221,6 +222,15 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
       ),
     );
   }
+}
+Future<void> logout() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('isLoggedIn');
+  await prefs.remove('token');
+  await prefs.remove('user');
+  UserManager().clear();
+  // Điều hướng về màn hình đăng nhập
+  Get.offAll(() => LoginScreen());
 }
 
 class SettingItem extends StatelessWidget {

@@ -24,7 +24,7 @@ dependencies:
   table_calendar: ^3.0.9
   syncfusion_flutter_pdfviewer: ^24.2.9
   lucide_icons: ^0.257.0
-  shared_preferences: ^2.3.2
+  shared_preferences: ^2.5.3
   image_picker: ^1.1.2
   flutter_launcher_icons: ^0.14.3
   http_parser: ^4.0.2
