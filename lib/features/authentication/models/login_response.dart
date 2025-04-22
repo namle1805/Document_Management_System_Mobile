@@ -16,6 +16,13 @@ class RoleDto {
       createdDate: json['createdDate'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'roleId': roleId,
+      'roleName': roleName,
+      'createdDate': createdDate,
+    };
+  }
 }
 
 class DivisionDto {
@@ -35,6 +42,14 @@ class DivisionDto {
       divisionName: json['divisionName'],
       isDeleted: json['isDeleted'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'divisionId': divisionId,
+      'divisionName': divisionName,
+      'isDeleted': isDeleted,
+    };
   }
 }
 
@@ -105,5 +120,28 @@ class UserDto {
       divisionId: json['divisionId'],
       divisionDto: DivisionDto.fromJson(json['divisionDto']),
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'fullName': fullName,
+      'userName': userName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'address': address,
+      'avatar': avatar,
+      'gender': gender,
+      'identityCard': identityCard,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'dateOfBirth': dateOfBirth,
+      'position': position,
+      'fcmToken': fcmToken,
+      'roles': roles.map((role) => role.toJson()).toList(),
+      'isDeleted': isDeleted,
+      'isEnable': isEnable,
+      'divisionId': divisionId,
+      'divisionDto': divisionDto.toJson(),
+    };
   }
 }

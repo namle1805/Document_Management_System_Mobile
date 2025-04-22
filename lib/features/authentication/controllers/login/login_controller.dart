@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dms/utils/token_manager/token_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -104,9 +106,13 @@ class LoginController extends GetxController {
 
       /// Lưu thông tin user vào UserManager
       UserManager().setUser(user, token);
-
-      /// Lưu hoặc xóa thông tin đăng nhập dựa trên checkbox
       final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('token', token);
+      final userJson = jsonEncode(user);
+      await prefs.setString('user', userJson);
+      /// Lưu hoặc xóa thông tin đăng nhập dựa trên checkbox
+      //final prefs = await SharedPreferences.getInstance();
       if (isRememberMe.value) {
         await prefs.setString('email', email);
         await prefs.setString('password', password);
@@ -127,6 +133,9 @@ class LoginController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+  Future<void> saveLoginStatus(String token) async {
+
   }
 
   void handleLogin() {

@@ -168,7 +168,10 @@ class _NotificationListPageState extends State<NotificationListPage> {
                                 ),
                               ),
                               if (!notification.isRead)
-                                Icon(Icons.mark_email_read, color: Colors.blue),
+                                GestureDetector(
+                                  onTap: () => _markAsRead(notification.id),
+                                  child: Icon(Icons.mark_email_read, color: Colors.blue),
+                                ),
                             ],
                           ),
                           Padding(
