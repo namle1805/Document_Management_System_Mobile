@@ -43,5 +43,12 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [  HomePage(), NotificationListPage(), TaskListPage(), DocumentTypeListPage()];
+  // final screens = [  HomePage(), NotificationListPage(), TaskListPage(), DocumentTypeListPage()];
+  final List<Widget> screens = [
+    HomePage(),
+    NotificationListPage(),
+    TaskListPage(),
+    DocumentTypeListPage(),
+  ];
+
 }

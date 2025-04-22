@@ -39,29 +39,6 @@ class _HomePageState extends State<HomePage> {
     fetchDocumentTypes();
   }
 
-  // Future<void> fetchTaskData() async {
-  //   try {
-  //     final repo = TaskRepository();
-  //     final tasks = await repo.fetchTasks();
-  //     setState(() {
-  //       allTasks = tasks;
-  //     });
-  //   } catch (e) {
-  //     print("Error fetching tasks: $e");
-  //   }
-  // }
-  //
-  // Future<void> fetchDocumentTypes() async {
-  //   try {
-  //     final repo = DocumentTypeRepository();
-  //     final data = await repo.fetchDocumentTypes();
-  //     setState(() {
-  //       _documentTypes = data;
-  //     });
-  //   } catch (e) {
-  //     print("Lỗi khi lấy danh sách document types: $e");
-  //   }
-  // }
 
   Future<void> fetchTaskData() async {
     try {
@@ -94,6 +71,13 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
+  Future<void> _refreshData() async {
+    // Gọi API hoặc reload dữ liệu ở đây
+    await fetchDocumentTypes(); // Ví dụ: gọi lại API lấy loại văn bản
+    await fetchTaskData();         // Ví dụ: gọi lại danh sách nhiệm vụ
+
+    setState(() {}); // Cập nhật giao diện sau khi load lại
+  }
 
 
   String convertTaskStatus(String status) {
@@ -113,11 +97,21 @@ class _HomePageState extends State<HomePage> {
 
 
 
+
+
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
     final formattedDate = DateFormat('dd MMMM, yyyy', 'vi').format(today);
     final TextEditingController _searchController = TextEditingController();
+    final completedTasks = allTasks
+        .where((task) => task.taskStatus == 'Completed')
+        .toList();
+
+    final pendingTasks = allTasks.where((task) =>
+    task.taskStatus == 'Pending' ||
+        task.taskStatus == 'Revised' ||
+        task.taskStatus == 'InProgress').toList();
 
     final processingTasks = allTasks.where((task) =>
     task.taskStatus == 'Pending' ||
@@ -155,7 +149,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+    body: RefreshIndicator(
+    onRefresh: _refreshData,
+    child: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -243,39 +240,57 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 8),
-              // const DocumentCard(
-              //   title: 'Soạn thảo nội dung cho công ...',
-              //   time: '9:00 PM - 11:00 PM',
-              //   progress: 0.64,
-              //   members: 6,
-              // ),
-              // const DocumentCard(
-              //   title: 'Đánh số & ký chỉ ký số cho văn ...',
-              //   time: '4:00 PM - 5:00 PM',
-              //   progress: 0.46,
-              //   members: 4,
-              // ),
+              //
+              // ...allTasks
+              //     .where((task) =>
+              // task.taskStatus == 'Pending' ||
+              //     task.taskStatus == 'Revised' ||
+              //     task.taskStatus == 'InProgress')
+              // .take(2)
+              //     .map((task) {
+              //   double progress = 0;
+              //   if (task.taskStatus == 'InProgress') {
+              //     progress = 0.5;
+              //   }
+              //
+              //   return DocumentCard(
+              //     title: task.title ?? '',
+              //     time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
+              //     progress: progress,
+              //     members: 1,
+              //     taskId: task.taskId, status: convertTaskStatus(task.taskStatus ?? ''), workflow: task.workflowName,
+              //   );
+              // }).toList(),
 
-              ...allTasks
-                  .where((task) =>
-              task.taskStatus == 'Pending' ||
-                  task.taskStatus == 'Revised' ||
-                  task.taskStatus == 'InProgress')
-              .take(2)
-                  .map((task) {
-                double progress = 0;
-                if (task.taskStatus == 'InProgress') {
-                  progress = 0.5;
-                }
+              pendingTasks.isEmpty
+                  ? const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    'Không có văn bản xử lý',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              )
+                  : Column(
+                children: pendingTasks.take(2).map((task) {
+                  double progress = 0;
+                  if (task.taskStatus == 'InProgress') {
+                    progress = 0.5;
+                  }
 
-                return DocumentCard(
-                  title: task.title ?? '',
-                  time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
-                  progress: progress,
-                  members: 1,
-                  taskId: task.taskId, status: convertTaskStatus(task.taskStatus ?? ''), workflow: task.workflowName,
-                );
-              }).toList(),
+                  return DocumentCard(
+                    title: task.title ?? '',
+                    time:
+                    '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
+                    progress: progress,
+                    members: 1,
+                    taskId: task.taskId,
+                    status: convertTaskStatus(task.taskStatus ?? ''),
+                    workflow: task.workflowName,
+                  );
+                }).toList(),
+              ),
 
 
               // Nhiệm vụ đã hoàn thành
@@ -300,16 +315,33 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 8),
-              ...allTasks
-                  .where((task) => task.taskStatus == 'Completed')
-                  .take(2)
-                  .map((task) => TaskCard(
-                title: task.title ?? '',
-                category: task.taskType ?? '',
-                time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
-                status: convertTaskStatus(task.taskStatus ?? ''),
-                taskId: task.taskId,
-              )),
+              // ...allTasks
+              //     .where((task) => task.taskStatus == 'Completed')
+              //     .take(2)
+              //     .map((task) => TaskCard(
+              //   title: task.title ?? '',
+              //   category: task.taskType ?? '',
+              //   time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
+              //   status: convertTaskStatus(task.taskStatus ?? ''),
+              //   taskId: task.taskId,
+              // )),
+
+              completedTasks.isEmpty
+                  ? const Center(
+                child: Text(
+                  'Không có nhiệm vụ hoàn thành',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              )
+                  : Column(
+                children: completedTasks.take(2).map((task) => TaskCard(
+                  title: task.title ?? '',
+                  category: task.taskType ?? '',
+                  time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
+                  status: convertTaskStatus(task.taskStatus ?? ''),
+                  taskId: task.taskId,
+                )).toList(),
+              ),
 
 
               const SizedBox(height: 16),
@@ -317,7 +349,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
 

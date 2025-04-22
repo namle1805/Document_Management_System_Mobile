@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:dms/features/document/screens/notification/notification_model.dart';
+import 'package:dms/features/document/models/notification_model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 

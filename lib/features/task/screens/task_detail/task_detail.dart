@@ -63,7 +63,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     // {'name': 'Hành Chính', 'color': Colors.yellow[50]!},
     // {'name': 'Đào tạo', 'color': Colors.green[50]!},
     {'name': '', 'color': Colors.blue[50]!},
-    // {'name': 'Lãnh đạo', 'color': Colors.orange[50]!},
+    // {'name': '', 'color': Colors.orange[50]!},
     // {'name': 'Thiết kế', 'color': Colors.purple[50]!},
     // {'name': 'Nguồn lực', 'color': Colors.red[50]!},
     // {'name': 'Truyền thông', 'color': Colors.teal[50]!},
@@ -78,6 +78,21 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       'isOnline': true,
     },
   ];
+
+  String convertTaskType(String? taskType) {
+    switch (taskType) {
+      case 'Create':
+        return 'Khởi tạo văn bản';
+      case 'Browse':
+        return 'Duyệt văn bản';
+      case 'Sign':
+        return 'Ký điện tử';
+      case 'View':
+        return 'Xem văn bản';
+      default:
+        return 'Không xác định';
+    }
+  }
 
   // Hàm hiển thị bottom sheet
   void _showViewersList(BuildContext context) {
@@ -221,10 +236,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               child:  Text(
                 // 'Soạn thảo nội dung cho công văn của thủ tướng chính phủ phù hợp với kế hoạch công văn',
                 '${taskDetail!.title}',
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(height: 16),
+
             // Mô tả
             const Text(
               'Mô tả',
@@ -241,10 +257,31 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               child: Text(
                 '${taskDetail!.description}',
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(height: 16),
+
+            // Nhiệm vụ chính
+            const Text(
+              'Nhiệm vụ chính',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: TColors.darkerGrey_1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Text(
+                '${convertTaskType(taskDetail!.taskType)}',
+                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
+
 
             // Loại văn bản
             const Text(
@@ -262,7 +299,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               child: Text(
                 '${documentType}',
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(height: 16),
@@ -289,8 +326,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
                   Expanded(
                     child: Text(
-                      '${formatDateTime(taskDetail!.startDate)} - ${formatDateTime(taskDetail!.endDate)}',
-                      style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                      '${formatDateTime(taskDetail!.startDate)}        -        ${formatDateTime(taskDetail!.endDate)}',
+                      style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
                       softWrap: true,
                     ),
                   ),
@@ -329,23 +366,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                               // ),
                               child: Text(
                                 '${DateTime.parse(taskDetail!.startDate).hour.toString().padLeft(2, '0')}:${DateTime.parse(taskDetail!.startDate).minute.toString().padLeft(2, '0')}',
-                                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                                style: TextStyle(fontSize: 20, color: TColors.black, fontWeight: FontWeight.w600), textAlign: TextAlign.center,
                               ),
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: TColors.darkerGrey_1,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            child: const Text(
-                              'PM',
-                              style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-                            ),
-                          ),
                         ],
                       ),
                     ],
@@ -374,23 +399,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                               ),
                               child: Text(
                                 '${DateTime.parse(taskDetail!.endDate).hour.toString().padLeft(2, '0')}:${DateTime.parse(taskDetail!.startDate).minute.toString().padLeft(2, '0')}',
-                                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                                style: TextStyle(fontSize: 20, color: TColors.black, fontWeight: FontWeight.w600), textAlign: TextAlign.center,
                               ),
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: TColors.darkerGrey_1,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            child: const Text(
-                              'PM',
-                              style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-                            ),
-                          ),
                         ],
                       ),
                     ],
@@ -415,7 +428,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               child: Text(
                scope!,
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(height: 16),
@@ -434,7 +447,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               child: Text(
                 workflow!,
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(height: 16),
@@ -458,7 +471,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               child: Text(
                 '${taskDetail!.taskType}',
-                style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(height: 16),
@@ -482,7 +495,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 children: [
                   Text(
                     step!,
-                    style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -509,7 +522,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 children: [
                   Text(
                     createdBy!,
-                    style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -538,7 +551,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   children: [
                     Text(
                       'Xem chi tiết',
-                      style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w500),
                     ),
                     Icon(Iconsax.arrow_right_3, color: Colors.grey),
                   ],
@@ -572,7 +585,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     ),
                     child: Text(
                       UserManager().divisionName,
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 18),
                     ),
                   );
                 }).toList(),
