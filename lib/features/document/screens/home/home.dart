@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
         .toList();
 
     final pendingTasks = allTasks.where((task) =>
-    task.taskStatus == 'Pending' ||
+    task.taskStatus == 'Waiting' ||
         task.taskStatus == 'Revised' ||
         task.taskStatus == 'InProgress').toList();
 
@@ -240,11 +240,11 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 8),
-              //
+
               // ...allTasks
               //     .where((task) =>
-              // task.taskStatus == 'Pending' ||
               //     task.taskStatus == 'Revised' ||
+              //     task.taskStatus == 'Waiting' ||
               //     task.taskStatus == 'InProgress')
               // .take(2)
               //     .map((task) {
@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
               //     taskId: task.taskId, status: convertTaskStatus(task.taskStatus ?? ''), workflow: task.workflowName,
               //   );
               // }).toList(),
-
+              //
               pendingTasks.isEmpty
                   ? const Center(
                 child: Padding(

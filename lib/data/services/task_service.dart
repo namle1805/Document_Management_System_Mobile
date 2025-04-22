@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../features/authentication/controllers/user/user_manager.dart';
 import '../../features/task/models/task_detail.dart';
 
 class TaskService {
   static const String baseUrl = 'http://nghetrenghetre.xyz:5290/api';
 
-  static Future<http.Response> get(String endpoint) async {
+  static Future<http.Response> get(String endpoint, {Map<String, String>? headers}) async {
     final url = Uri.parse('$baseUrl/$endpoint');
-    return await http.get(url);
+    return await http.get(url, headers: headers);
   }
 
 
@@ -36,7 +37,9 @@ class TaskService {
     final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Task/view-task-by-id?id=$taskId');
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer ${UserManager().token}',
+      });
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
