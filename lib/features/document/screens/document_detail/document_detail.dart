@@ -969,7 +969,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewDocumentSignaturePage(imageUrl: document.documentUrl),
+                                builder: (context) => ViewDocumentSignaturePage(imageUrl: document.documentUrl, documentName: document.documentName),
                               ),
                             );
                           },
