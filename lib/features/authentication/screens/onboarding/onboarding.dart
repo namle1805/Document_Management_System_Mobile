@@ -73,7 +73,16 @@ class OnBoardingScreen extends StatelessWidget {
           // const OnBoardingDotNavigation(),
 
           /// Circular Button
-          const OnBoardingNextButton(),
+          // const OnBoardingNextButton(),
+          // Circular Button
+          Positioned(
+            bottom: 40, // 👈 tăng khoảng cách với phần trên
+            right: 20,
+            left: 20,
+            child: OnBoardingNextButton(),
+          ),
+
+
         ],
       ),
     );

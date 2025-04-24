@@ -297,9 +297,13 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Nhiệm vụ đã hoàn thành',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      'Nhiệm vụ đã hoàn thành',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis, // Tránh tràn ra ngoài nếu quá dài
+                      softWrap: true, // Cho phép xuống dòng khi cần
+                    ),
                   ),
                   TextButton(
                     onPressed: () => Get.to(() => TaskListPage()),

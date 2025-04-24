@@ -14,6 +14,8 @@ class UserModel {
   final String divisionName;
   final String avatar;
   final String roleName;
+  final String sign;
+  final String signDigital;
 
   UserModel({
     required this.userId,
@@ -29,6 +31,8 @@ class UserModel {
     required this.divisionName,
     required this.avatar,
     required this.roleName,
+    required this.sign,
+    required this.signDigital,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -54,6 +58,8 @@ class UserModel {
       phoneNumber: content['phoneNumber'],
       address: content['address'] ?? 'Chưa cập nhật',
       gender: content['gender'],
+      sign: content['sign'],
+      signDigital: content['signDigital'],
       identityCard: content['identityCard'],
       dateOfBirth: formattedDate,
       // dateOfBirth: content['dateOfBirth'],

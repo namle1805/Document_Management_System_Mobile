@@ -26,7 +26,10 @@ class UserApi {
   static Future<String?> uploadAvatar(File file, String userId) async {
     final uri = Uri.parse("http://nghetrenghetre.xyz:5290/api/User/update-avatar/$userId");
     var request = http.MultipartRequest('POST', uri,);
+    request.headers['Authorization'] = 'Bearer ${UserManager().token}';
+
     request.fields['userId'] = userId;
+
 
     request.files.add(await http.MultipartFile.fromPath(
       'file',
@@ -62,10 +65,16 @@ class UserApi {
       "avatar": avatarUrl
     });
 
-    final response = await http.post(uri,
-        headers: {'Content-Type': 'application/json'},
-        body: body);
+    final response = await http.post(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${UserManager().token}', // Thêm Authorization header
+      },
+      body: body,
+    );
 
     return response.statusCode == 200;
   }
+
 }

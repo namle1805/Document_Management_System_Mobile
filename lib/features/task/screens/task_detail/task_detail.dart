@@ -89,6 +89,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         return 'Ký điện tử';
       case 'View':
         return 'Xem văn bản';
+      case 'Upload':
+        return 'Tải văn bản lên';
+      case 'CreateUpload':
+        return 'Khởi tạo và tải văn bản lên';
       default:
         return 'Không xác định';
     }
