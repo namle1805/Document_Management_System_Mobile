@@ -1,9 +1,9 @@
   import 'dart:async';
   import 'package:flutter/material.dart';
   import 'package:iconsax/iconsax.dart';
-  import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
   import '../../../authentication/controllers/user/user_manager.dart';
   import '../document_sign_confirm/document_list.dart';
+  import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 
 
   class ViewDocumentSignaturePage extends StatefulWidget {
@@ -21,8 +21,9 @@
   }
 
   class _ViewDocumentSignaturePageState extends State<ViewDocumentSignaturePage> {
-    final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
-    final PdfViewerController _pdfViewerController = PdfViewerController();
+    final Completer<PDFViewController> _pdfViewController = Completer<PDFViewController>();
+    int _currentPage = 1;
+    int? _totalPages;
 
     // Quản lý trạng thái chữ ký
     Offset? _signaturePosition; // Vị trí chữ ký (trung tâm của ảnh)
@@ -35,11 +36,11 @@
     final double _defaultSignatureHeight = 50;
 
     // Biến để lưu kích thước trang PDF
-    Size _currentPageSize = const Size(595, 842); // Mặc định A4 (đơn vị: points)
+    Size _currentPageSize = const Size(595, 842); // Kích thước mặc định A4 (đơn vị: points)
     double _zoomLevel = 1.0;
     Offset _scrollOffset = Offset.zero;
 
-    // Tọa độ llx, lly, urx, ury
+    // Tọa độ llx, lly, urx, ury (trong hệ tọa độ PDF)
     double? _llx, _lly, _urx, _ury;
 
     // Lấy kích thước widget hiển thị PDF
@@ -54,7 +55,6 @@
       super.initState();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _updatePageSize();
-        // Bắt đầu kiểm tra vị trí cuộn định kỳ
         _startScrollCheckTimer();
       });
     }
@@ -65,34 +65,36 @@
       super.dispose();
     }
 
-    // Kiểm tra vị trí cuộn định kỳ
+    // Kiểm tra vị trí cuộn và trang hiện tại định kỳ
     void _startScrollCheckTimer() {
-      _scrollCheckTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-        final newScrollOffset = _pdfViewerController.scrollOffset;
-        if (newScrollOffset != _scrollOffset) {
-          setState(() {
-            _scrollOffset = newScrollOffset;
-          });
-          _updatePageSize();
+      _scrollCheckTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) async {
+        try {
+          final controller = await _pdfViewController.future;
+          final newPage = (await controller.getCurrentPage())! + 1;
+          if (newPage != _currentPage) {
+            setState(() {
+              _currentPage = newPage;
+            });
+            _updatePageSize();
+          }
+        } catch (e) {
+          print('Error checking page: $e');
         }
       });
     }
 
-    // Lấy kích thước widget chứa PDF và cập nhật thông tin
+    // Cập nhật kích thước trang PDF và thông tin liên quan
     void _updatePageSize() {
-      final pdfViewerState = _pdfViewerKey.currentState;
       final containerRenderBox = _pdfContainerKey.currentContext?.findRenderObject() as RenderBox?;
-      if (pdfViewerState != null && containerRenderBox != null) {
+      if (containerRenderBox != null) {
         setState(() {
           _pdfContainerSize = containerRenderBox.size;
-          _zoomLevel = _pdfViewerController.zoomLevel;
-          _scrollOffset = _pdfViewerController.scrollOffset;
-          _updateSignatureBounds();
+          _restrictSignatureBounds();
         });
       }
     }
 
-    // Hàm giới hạn vị trí và kích thước chữ ký
+    // Giới hạn vị trí và kích thước chữ ký trên màn hình
     void _restrictSignatureBounds() {
       if (_signaturePosition == null || _pdfContainerSize == Size.zero) return;
 
@@ -121,7 +123,7 @@
       _updateSignatureBounds();
     }
 
-    // Tính toán tọa độ llx, lly, urx, ury
+    // Tính toán tọa độ llx, lly, urx, ury trong hệ tọa độ PDF
     void _updateSignatureBounds() {
       if (_signaturePosition == null || _pdfContainerSize == Size.zero) return;
 
@@ -131,17 +133,21 @@
       final screenUrx = _signaturePosition!.dx + _signatureWidth / 2;
       final screenUry = _signaturePosition!.dy - _signatureHeight / 2;
 
-      // Chuyển đổi sang hệ tọa độ PDF
-      // Giả định kích thước trang PDF là _currentPageSize (mặc định A4: 595x842 points)
-      // Tọa độ màn hình được ánh xạ tỷ lệ với tọa độ PDF
-      final pdfWidthRatio = _currentPageSize.width / _pdfContainerSize.width;
-      final pdfHeightRatio = _currentPageSize.height / _pdfContainerSize.height;
+      // Tính tỷ lệ giữa kích thước hiển thị trên màn hình và kích thước thực tế của trang PDF
+      final pdfWidthRatio = _currentPageSize.width / (_pdfContainerSize.width / _zoomLevel);
+      final pdfHeightRatio = _currentPageSize.height / (_pdfContainerSize.height / _zoomLevel);
+
+      // Ánh xạ tọa độ từ hệ tọa độ màn hình sang hệ tọa độ PDF
+      final pdfLlx = (screenLlx + _scrollOffset.dx) * pdfWidthRatio;
+      final pdfLly = (_pdfContainerSize.height - screenLly + _scrollOffset.dy) * pdfHeightRatio;
+      final pdfUrx = (screenUrx + _scrollOffset.dx) * pdfWidthRatio;
+      final pdfUry = (_pdfContainerSize.height - screenUry + _scrollOffset.dy) * pdfHeightRatio;
 
       setState(() {
-        _llx = (screenLlx - _scrollOffset.dx) * pdfWidthRatio;
-        _lly = (_pdfContainerSize.height - screenLly - _scrollOffset.dy) * pdfHeightRatio;
-        _urx = (screenUrx - _scrollOffset.dx) * pdfWidthRatio;
-        _ury = (_pdfContainerSize.height - screenUry - _scrollOffset.dy) * pdfHeightRatio;
+        _llx = pdfLlx.clamp(0, _currentPageSize.width);
+        _lly = pdfLly.clamp(0, _currentPageSize.height);
+        _urx = pdfUrx.clamp(0, _currentPageSize.width);
+        _ury = pdfUry.clamp(0, _currentPageSize.height);
       });
     }
 
@@ -167,7 +173,11 @@
                   onTap: () {
                     setState(() {
                       _isSignatureVisible = true;
-                      _signaturePosition = const Offset(50, 50);
+                      // Đặt chữ ký ở góc dưới bên trái của trang PDF
+                      _signaturePosition = Offset(
+                        _pdfContainerSize.width * 0.1, // 10% từ bên trái
+                        _pdfContainerSize.height * 0.9, // 10% từ dưới lên
+                      );
                       _signatureWidth = _defaultSignatureWidth;
                       _signatureHeight = _defaultSignatureHeight;
                     });
@@ -200,10 +210,10 @@
     }
 
     // Hàm xử lý khi chạm vào PDF để đặt chữ ký
-    void _onPdfTap(BuildContext context, PdfGestureDetails details) {
+    void _onPdfTap(Offset position) {
       if (_isSignatureVisible) {
         setState(() {
-          _signaturePosition = details.position;
+          _signaturePosition = position;
         });
         _restrictSignatureBounds();
       }
@@ -212,14 +222,13 @@
     // Hàm xử lý khi nhấn nút "Hoàn thành"
     void _onComplete() {
       if (_isSignatureVisible && _signaturePosition != null) {
-        final currentPage = _pdfViewerController.pageNumber;
-        // In các giá trị ra console
         print('llx: ${_llx ?? 0}');
         print('lly: ${_lly ?? 0}');
         print('urx: ${_urx ?? 0}');
         print('ury: ${_ury ?? 0}');
-        print('currentPage: $currentPage');
+        print('currentPage: $_currentPage');
 
+        // Điều hướng đến trang xác nhận
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -228,7 +237,7 @@
               // lly: _lly ?? 0,
               // urx: _urx ?? 0,
               // ury: _ury ?? 0,
-              // currentPage: currentPage,
+              // currentPage: _currentPage,
               // documentName: widget.documentName,
             ),
           ),
@@ -268,28 +277,36 @@
             // Hiển thị PDF
             Container(
               key: _pdfContainerKey,
-              child: SfPdfViewer.network(
-                widget.imageUrl,
-                key: _pdfViewerKey,
-                controller: _pdfViewerController,
-                headers: {
-                  'Authorization': 'Bearer ${UserManager().token}',
+              child: GestureDetector(
+                onTapDown: (details) {
+                  _onPdfTap(details.localPosition);
                 },
-                onTap: (details) {
-                  _onPdfTap(context, details);
-                },
-                onDocumentLoaded: (details) {
-                  _updatePageSize();
-                },
-                onZoomLevelChanged: (details) {
-                  setState(() {
-                    _zoomLevel = _pdfViewerController.zoomLevel;
-                  });
-                  _updatePageSize();
-                },
-                onPageChanged: (details) {
-                  _updatePageSize();
-                },
+                child: PDF(
+                  enableSwipe: true,
+                  swipeHorizontal: false,
+                  autoSpacing: false,
+                  pageFling: false,
+                  onPageChanged: (page, total) {
+                    setState(() {
+                      _currentPage = page! + 1;
+                      _totalPages = total;
+                    });
+                    _updatePageSize();
+                  },
+                  onViewCreated: (controller) {
+                    _pdfViewController.complete(controller);
+                  },
+                  onError: (error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error loading PDF: $error')),
+                    );
+                  },
+                ).cachedFromUrl(
+                  widget.imageUrl,
+                  headers: {'Authorization': 'Bearer ${UserManager().token}'},
+                  placeholder: (progress) => const Center(child: CircularProgressIndicator()),
+                  errorWidget: (error) => Center(child: Text('Failed to load PDF: $error')),
+                ),
               ),
             ),
             // Hiển thị hình ảnh chữ ký nếu đã chọn
@@ -303,7 +320,6 @@
                     GestureDetector(
                       onScaleUpdate: (details) {
                         setState(() {
-                          // Kéo thả ảnh
                           _signaturePosition = Offset(
                             _signaturePosition!.dx + details.focalPointDelta.dx,
                             _signaturePosition!.dy + details.focalPointDelta.dy,
@@ -318,14 +334,13 @@
                         fit: BoxFit.contain,
                       ),
                     ),
-                    // Nút điều khiển ở góc dưới bên phải để phóng to/thu nhỏ theo chiều chéo
+                    // Nút điều khiển ở góc dưới bên phải để phóng to/thu nhỏ
                     Positioned(
                       right: 0,
                       bottom: 0,
                       child: GestureDetector(
                         onPanUpdate: (details) {
                           setState(() {
-                            // Tính toán thay đổi kích thước dựa trên khoảng cách kéo theo chiều chéo
                             double deltaX = details.delta.dx;
                             double deltaY = details.delta.dy;
                             double delta = (deltaX + deltaY) / 2;
@@ -377,22 +392,23 @@
                         ),
                       ),
                     ),
-                    // Hiển thị tọa độ llx, lly, urx, ury (chỉ để debug)
-                    // Positioned(
-                    //   left: 0,
-                    //   top: 0,
-                    //   child: Container(
-                    //     padding: const EdgeInsets.all(4),
-                    //     color: Colors.black54,
-                    //     child: Text(
-                    //       'llx: ${_llx?.toStringAsFixed(2) ?? 'N/A'}\n'
-                    //           'lly: ${_lly?.toStringAsFixed(2) ?? 'N/A'}\n'
-                    //           'urx: ${_urx?.toStringAsFixed(2) ?? 'N/A'}\n'
-                    //           'ury: ${_ury?.toStringAsFixed(2) ?? 'N/A'}',
-                    //       style: const TextStyle(color: Colors.white, fontSize: 10),
-                    //     ),
-                    //   ),
-                    // ),
+                    // Hiển thị tọa độ llx, lly, urx, ury và trang hiện tại
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        color: Colors.black54,
+                        child: Text(
+                          'Page: $_currentPage\n'
+                              'llx: ${_llx?.toStringAsFixed(2) ?? 'N/A'}\n'
+                              'lly: ${_lly?.toStringAsFixed(2) ?? 'N/A'}\n'
+                              'urx: ${_urx?.toStringAsFixed(2) ?? 'N/A'}\n'
+                              'ury: ${_ury?.toStringAsFixed(2) ?? 'N/A'}',
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -423,3 +439,5 @@
       );
     }
   }
+
+
