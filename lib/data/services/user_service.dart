@@ -9,7 +9,7 @@ import '../../features/authentication/models/user_model.dart';
 class UserApi {
   static Future<UserModel> fetchUserDetails(String userId) async {
     final response = await http.get(
-      Uri.parse('http://nghetrenghetre.xyz:5290/api/User/view-profile-user?userId=$userId'),
+      Uri.parse('http://103.90.227.64:5290/api/User/view-profile-user?userId=$userId'),
         headers: {
           'Authorization': 'Bearer ${UserManager().token}',
         }
@@ -24,7 +24,7 @@ class UserApi {
 
 
   static Future<String?> uploadAvatar(File file, String userId) async {
-    final uri = Uri.parse("http://nghetrenghetre.xyz:5290/api/User/update-avatar/$userId");
+    final uri = Uri.parse("http://103.90.227.64:5290/api/User/update-avatar/$userId");
     var request = http.MultipartRequest('POST', uri,);
     request.headers['Authorization'] = 'Bearer ${UserManager().token}';
 
@@ -55,7 +55,7 @@ class UserApi {
     required String gender,
     required String avatarUrl,
   }) async {
-    final uri = Uri.parse("http://nghetrenghetre.xyz:5290/api/User/update-user");
+    final uri = Uri.parse("http://103.90.227.64:5290/api/User/update-user");
 
     final body = jsonEncode({
       "userId": userId,

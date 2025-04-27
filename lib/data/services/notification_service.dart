@@ -10,13 +10,13 @@ import '../../features/document/models/notification_model.dart';
 import 'package:get/get.dart';
 
 class NotificationService {
-  static const String baseUrl = 'http://nghetrenghetre.xyz:5290/api/Notification/';
+  static const String baseUrl = 'http://103.90.227.64:5290/api/Notification/';
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
   // Lấy danh sách thông báo
   Future<List<NotificationModel>> getNotifications(String userId, int page, int limit) async {
-    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Notification/view-notifications-by-user-id?userId=$userId&page=$page&limit=$limit');
+    final url = Uri.parse('http://103.90.227.64:5290/api/Notification/view-notifications-by-user-id?userId=$userId&page=$page&limit=$limit');
 
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${UserManager().token}',
@@ -33,7 +33,7 @@ class NotificationService {
 
   // Đánh dấu thông báo là đã đọc
   Future<void> markNotificationAsRead(String notificationId) async {
-    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Notification/update-mark-notification-as-read?notificationId=$notificationId');
+    final url = Uri.parse('http://103.90.227.64:5290/api/Notification/update-mark-notification-as-read?notificationId=$notificationId');
 
     final response = await http.post(url, headers: {
       'Authorization': 'Bearer ${UserManager().token}',
@@ -94,7 +94,7 @@ class NotificationService {
           }else{
             Get.to(() => DocumentDetailPage(
               documentId: data['documentId']!,
-              workFlowId: data['workflowId']!,
+              workFlowId: data['workflowId']!, sizes: [], size: '', date: '', taskId: '',
             ));
           }
 

@@ -26,6 +26,8 @@ class UserManager {
   String? get avatar => _user?.avatar;
   String get divisionName => _user?.divisionDto.divisionName ?? '';
   String get position => _user?.position ?? '';
+  String? get sign => _user?.sign;
+  String? get signDigital => _user?.signDigital;
 
 
   void setUser(UserDto user, String token) {

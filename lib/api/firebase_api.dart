@@ -66,7 +66,7 @@ class FirebaseApi {
       }else{
         Get.to(() => DocumentDetailPage(
           documentId: documentId,
-          workFlowId: workflowId,
+          workFlowId: workflowId, sizes: [], size: '', date: '', taskId: '',
         ));
       }
 
@@ -94,7 +94,7 @@ class FirebaseApi {
     if (type.toString().toLowerCase() == 'document' && documentId != null && workflowId != null) {
       Get.to(() => DocumentDetailPage(
         documentId: documentId,
-        workFlowId: workflowId,
+        workFlowId: workflowId, sizes: [], size: '', date: '', taskId: '',
       ));
     } else if (type.toString().toLowerCase() == 'task' && taskId != null) {
       Get.to(() => TaskDetailPage(taskId: taskId));

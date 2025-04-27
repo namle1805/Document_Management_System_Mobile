@@ -308,39 +308,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ),
             SizedBox(height: 16),
 
-            // Ngày
-            const Text(
-              'Ngày',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            ),
-            SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: TColors.darkerGrey_1,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.calendar_today, color: Colors.black),
-                  SizedBox(width: 16),
 
-                  Expanded(
-                    child: Text(
-                      '${formatDateTime(taskDetail!.startDate)}        -        ${formatDateTime(taskDetail!.endDate)}',
-                      style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
-                      softWrap: true,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+
+            // Thời gian bắt đầu
             SizedBox(height: 16),
-
-            // Thời gian bắt đầu - kết thúc
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -364,10 +335,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(color: Colors.grey[300]!),
                               ),
-                              // child: Text(
-                              //   '${taskDetail!.startDate.hour.toString()}',
-                              //   style: TextStyle(fontSize: 16, color: TColors.black, fontWeight: FontWeight.w600),
-                              // ),
                               child: Text(
                                 '${DateTime.parse(taskDetail!.startDate).hour.toString().padLeft(2, '0')}:${DateTime.parse(taskDetail!.startDate).minute.toString().padLeft(2, '0')}',
                                 style: TextStyle(fontSize: 20, color: TColors.black, fontWeight: FontWeight.w600), textAlign: TextAlign.center,
@@ -380,8 +347,46 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 16),
                 // Kết thúc
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: TColors.darkerGrey_1,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey[300]!),
+                              ),
+                              child: Text(
+                                '${formatDateTime(taskDetail!.startDate)}',
+                                style: TextStyle(fontSize: 20, color: TColors.black, fontWeight: FontWeight.w600), textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            // Thời gian kết thúc
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Thời gian
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,7 +407,39 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                                 border: Border.all(color: Colors.grey[300]!),
                               ),
                               child: Text(
-                                '${DateTime.parse(taskDetail!.endDate).hour.toString().padLeft(2, '0')}:${DateTime.parse(taskDetail!.startDate).minute.toString().padLeft(2, '0')}',
+                                '${DateTime.parse(taskDetail!.endDate).hour.toString().padLeft(2, '0')}:${DateTime.parse(taskDetail!.endDate).minute.toString().padLeft(2, '0')}',
+                                style: TextStyle(fontSize: 20, color: TColors.black, fontWeight: FontWeight.w600), textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // Kết thúc
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: TColors.darkerGrey_1,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey[300]!),
+                              ),
+                              child: Text(
+                                  '${formatDateTime(taskDetail!.endDate)}',
                                 style: TextStyle(fontSize: 20, color: TColors.black, fontWeight: FontWeight.w600), textAlign: TextAlign.center,
                               ),
                             ),
@@ -601,7 +638,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
             // Nút "Xem chi tiết văn bản"
             ElevatedButton(
-              onPressed: () => Get.to(() => DocumentDetailPage(workFlowId: workflowId!, documentId: documentId!)),
+              onPressed: () => Get.to(() => DocumentDetailPage(workFlowId: workflowId!, documentId: documentId!, sizes: [], size: '', date: '', taskId: taskDetail!.taskId,)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 minimumSize: Size(double.infinity, 50),

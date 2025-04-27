@@ -489,132 +489,135 @@ class DocumentCard extends StatelessWidget {
     required this.title,
     required this.time,
     required this.progress,
-    required this.members, required this.taskId, required this.status, required this.workflow,
+    required this.members,
+    required this.taskId,
+    required this.status,
+    required this.workflow,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => TaskDetailPage(taskId: taskId,
-            ),));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TaskDetailPage(taskId: taskId),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Color(0xFFE7F0EF),
+          color: const Color(0xFFE7F0EF),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Stack(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Main content
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Left content
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title
-                    SizedBox(
-                      width: 180,
-                      child: Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        maxLines: 1,
-                      ),
+            // Left content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(height: 6),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
 
-                    // "workflow" label
-                    Text(
-                      workflow,
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 6),
+                  // Workflow label
+                  Text(
+                    workflow,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
 
-                    // Avatars
-                    Row(
-                      children: List.generate(
-                        1,
-                            (index) => Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundImage: NetworkImage(UserManager().avatar.toString()),
-                          ),
+                  // Avatars
+                  Row(
+                    children: List.generate(
+                      1,
+                          (index) => Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundImage: NetworkImage(UserManager().avatar.toString()),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                  ),
+                  const SizedBox(height: 10),
 
-                    // Time
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
-                        const SizedBox(width: 4),
-                        Text(
+                  // Time
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
                           time,
                           style: const TextStyle(fontSize: 13, color: Colors.black54),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                // Right: Progress circle
-                Column(
-                  children: [
-                    const SizedBox(height: 16), // <-- Add spacing here
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: 52,
-                          height: 52,
-                          child: CircularProgressIndicator(
-                            value: progress,
-                            strokeWidth: 5,
-                            backgroundColor: Colors.grey.shade300,
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
-                          ),
-                        ),
-                        Text(
-                          '${(progress * 100).toInt()}%',
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-              ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
 
-            // Top-right badge
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  status,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.white,
+            const SizedBox(width: 8),
+
+            // Right: Status above Progress circle
+            Column(
+              children: [
+                // Status badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    status,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 20), // Khoảng cách giữa status và progress
+                // Progress circle
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 52,
+                      height: 52,
+                      child: CircularProgressIndicator(
+                        value: progress,
+                        strokeWidth: 5,
+                        backgroundColor: Colors.grey.shade300,
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
+                      ),
+                    ),
+                    Text(
+                      '${(progress * 100).toInt()}%',
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -622,6 +625,152 @@ class DocumentCard extends StatelessWidget {
     );
   }
 }
+// class DocumentCard extends StatelessWidget {
+//   final String title;
+//   final String time;
+//   final String status;
+//   final String workflow;
+//   final String taskId;
+//   final double progress;
+//   final int members;
+//
+//   const DocumentCard({
+//     required this.title,
+//     required this.time,
+//     required this.progress,
+//     required this.members, required this.taskId, required this.status, required this.workflow,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         Navigator.push(context,
+//             MaterialPageRoute(builder: (_) => TaskDetailPage(taskId: taskId,
+//             ),));
+//       },
+//       child: Container(
+//         margin: const EdgeInsets.only(bottom: 12),
+//         padding: const EdgeInsets.all(16),
+//         decoration: BoxDecoration(
+//           color: Color(0xFFE7F0EF),
+//           borderRadius: BorderRadius.circular(16),
+//         ),
+//         child: Stack(
+//           children: [
+//             // Main content
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 // Left content
+//                 Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     // Title
+//                     SizedBox(
+//                       width: 180,
+//                       child: Text(
+//                         title,
+//                         style: const TextStyle(
+//                           fontSize: 15,
+//                           fontWeight: FontWeight.w600,
+//                           overflow: TextOverflow.ellipsis,
+//                         ),
+//                         maxLines: 1,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 6),
+//
+//                     // "workflow" label
+//                     Text(
+//                       workflow,
+//                       style: TextStyle(fontSize: 12, color: Colors.grey),
+//                     ),
+//                     const SizedBox(height: 6),
+//
+//                     // Avatars
+//                     Row(
+//                       children: List.generate(
+//                         1,
+//                             (index) => Padding(
+//                           padding: const EdgeInsets.only(right: 4),
+//                           child: CircleAvatar(
+//                             radius: 12,
+//                             backgroundImage: NetworkImage(UserManager().avatar.toString()),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                     const SizedBox(height: 10),
+//
+//                     // Time
+//                     Row(
+//                       children: [
+//                         const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
+//                         const SizedBox(width: 4),
+//                         Text(
+//                           time,
+//                           style: const TextStyle(fontSize: 13, color: Colors.black54),
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 ),
+//
+//                 // Right: Progress circle
+//                 Column(
+//                   children: [
+//                     const SizedBox(height: 16), // <-- Add spacing here
+//                     Stack(
+//                       alignment: Alignment.center,
+//                       children: [
+//                         SizedBox(
+//                           width: 52,
+//                           height: 52,
+//                           child: CircularProgressIndicator(
+//                             value: progress,
+//                             strokeWidth: 5,
+//                             backgroundColor: Colors.grey.shade300,
+//                             valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
+//                           ),
+//                         ),
+//                         Text(
+//                           '${(progress * 100).toInt()}%',
+//                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 ),
+//
+//               ],
+//             ),
+//
+//             // Top-right badge
+//             Positioned(
+//               top: 0,
+//               right: 0,
+//               child: Container(
+//                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+//                 decoration: BoxDecoration(
+//                   color: Colors.black,
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//                 child: Text(
+//                   status,
+//                   style: TextStyle(
+//                     fontSize: 11,
+//                     color: Colors.white,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // Widget cho thẻ Nhiệm vụ
 class TaskCard extends StatelessWidget {

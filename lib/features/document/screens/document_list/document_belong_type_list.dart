@@ -235,7 +235,7 @@ class DocumentItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 👉 Chuyển đến trang chi tiết
-        Get.to(() => DocumentDetailPage(workFlowId: workFlowId, documentId: documentId,
+        Get.to(() => DocumentDetailPage(workFlowId: workFlowId, documentId: documentId, sizes: [], size: size, date: date, taskId: '',
         ));
       },
       child: Container(

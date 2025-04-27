@@ -73,6 +73,8 @@ class UserDto {
   final bool isEnable;
   final String divisionId;
   final DivisionDto divisionDto;
+  final String? sign;
+  final String? signDigital;
 
   UserDto({
     required this.userId,
@@ -94,6 +96,8 @@ class UserDto {
     required this.isEnable,
     required this.divisionId,
     required this.divisionDto,
+    required this.sign,
+    required this.signDigital,
   });
 
   factory UserDto.fromJson(Map<String, dynamic> json) {
@@ -119,6 +123,8 @@ class UserDto {
       isEnable: json['isEnable'],
       divisionId: json['divisionId'],
       divisionDto: DivisionDto.fromJson(json['divisionDto']),
+      sign: json['sign'],
+      signDigital: json['signDigital'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -142,6 +148,8 @@ class UserDto {
       'isEnable': isEnable,
       'divisionId': divisionId,
       'divisionDto': divisionDto.toJson(),
+      'sign': sign,
+      'signDigital': signDigital,
     };
   }
 }

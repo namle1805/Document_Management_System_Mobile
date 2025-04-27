@@ -1,443 +1,414 @@
-  import 'dart:async';
-  import 'package:flutter/material.dart';
-  import 'package:iconsax/iconsax.dart';
-  import '../../../authentication/controllers/user/user_manager.dart';
-  import '../document_sign_confirm/document_list.dart';
-  import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'package:iconsax/iconsax.dart';
+import '../../../authentication/controllers/user/user_manager.dart';
+import '../../models/document_detail.dart';
+import '../document_sign_confirm/document_list_confirm.dart';
+
+class ViewDocumentSignaturePage extends StatefulWidget {
+  final String imageUrl;
+  final String documentId;
+  final String size;
+  final String documentName;
+  final List<SizeInfo> sizes;
+  final String date;
+  final String taskId;
 
 
-  class ViewDocumentSignaturePage extends StatefulWidget {
-    final String imageUrl;
-    final String documentName;
+  const ViewDocumentSignaturePage({
+    Key? key,
+    required this.imageUrl,
+    required this.documentName,
+    required this.sizes, required this.documentId, required this.size, required this.date, required this.taskId,
+  }) : super(key: key);
 
-    const ViewDocumentSignaturePage({
-      Key? key,
-      required this.imageUrl,
-      required this.documentName,
-    }) : super(key: key);
+  @override
+  State<ViewDocumentSignaturePage> createState() => _ViewDocumentSignaturePageState();
+}
 
-    @override
-    _ViewDocumentSignaturePageState createState() => _ViewDocumentSignaturePageState();
+class _ViewDocumentSignaturePageState extends State<ViewDocumentSignaturePage> {
+  final Completer<PDFViewController> _pdfViewController = Completer<PDFViewController>();
+  final GlobalKey _pdfContainerKey = GlobalKey();
+
+  Offset? _signaturePosition;
+  double _signatureWidth = 100;
+  double _signatureHeight = 50;
+  bool _isSignatureVisible = false;
+  String? _signatureImageUrl;
+
+  int _currentPage = 1;
+  int? _totalPages;
+
+  Size _currentPageSize = const Size(595, 842); // A4 default
+  Size _pdfContainerSize = Size.zero;
+
+  // double? _llx, _lly, _urx, _ury;
+  int? _llx, _lly, _urx, _ury;
+  // For resizing
+  bool _isResizingTopRight = false;
+  bool _isResizingBottomRight = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updatePageSize();
+    });
   }
 
-  class _ViewDocumentSignaturePageState extends State<ViewDocumentSignaturePage> {
-    final Completer<PDFViewController> _pdfViewController = Completer<PDFViewController>();
-    int _currentPage = 1;
-    int? _totalPages;
-
-    // Quản lý trạng thái chữ ký
-    Offset? _signaturePosition; // Vị trí chữ ký (trung tâm của ảnh)
-    double _signatureWidth = 100; // Chiều rộng hiện tại của ảnh
-    double _signatureHeight = 50; // Chiều cao hiện tại của ảnh
-    bool _isSignatureVisible = false; // Hiển thị chữ ký hay không
-
-    // Kích thước mặc định ban đầu của ảnh
-    final double _defaultSignatureWidth = 100;
-    final double _defaultSignatureHeight = 50;
-
-    // Biến để lưu kích thước trang PDF
-    Size _currentPageSize = const Size(595, 842); // Kích thước mặc định A4 (đơn vị: points)
-    double _zoomLevel = 1.0;
-    Offset _scrollOffset = Offset.zero;
-
-    // Tọa độ llx, lly, urx, ury (trong hệ tọa độ PDF)
-    double? _llx, _lly, _urx, _ury;
-
-    // Lấy kích thước widget hiển thị PDF
-    final GlobalKey _pdfContainerKey = GlobalKey();
-    Size _pdfContainerSize = Size.zero;
-
-    // Timer để kiểm tra vị trí cuộn định kỳ
-    Timer? _scrollCheckTimer;
-
-    @override
-    void initState() {
-      super.initState();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _updatePageSize();
-        _startScrollCheckTimer();
-      });
-    }
-
-    @override
-    void dispose() {
-      _scrollCheckTimer?.cancel();
-      super.dispose();
-    }
-
-    // Kiểm tra vị trí cuộn và trang hiện tại định kỳ
-    void _startScrollCheckTimer() {
-      _scrollCheckTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) async {
-        try {
-          final controller = await _pdfViewController.future;
-          final newPage = (await controller.getCurrentPage())! + 1;
-          if (newPage != _currentPage) {
-            setState(() {
-              _currentPage = newPage;
-            });
-            _updatePageSize();
-          }
-        } catch (e) {
-          print('Error checking page: $e');
-        }
-      });
-    }
-
-    // Cập nhật kích thước trang PDF và thông tin liên quan
-    void _updatePageSize() {
-      final containerRenderBox = _pdfContainerKey.currentContext?.findRenderObject() as RenderBox?;
-      if (containerRenderBox != null) {
-        setState(() {
-          _pdfContainerSize = containerRenderBox.size;
-          _restrictSignatureBounds();
-        });
-      }
-    }
-
-    // Giới hạn vị trí và kích thước chữ ký trên màn hình
-    void _restrictSignatureBounds() {
-      if (_signaturePosition == null || _pdfContainerSize == Size.zero) return;
-
-      // Tính kích thước hiển thị của trang PDF trên màn hình (sau khi áp dụng zoom)
-      final displayPageWidth = _pdfContainerSize.width;
-      final displayPageHeight = _pdfContainerSize.height;
-
-      // Tính giới hạn vị trí để chữ ký không vượt ra ngoài trang PDF
-      final minX = _signatureWidth / 2;
-      final maxX = displayPageWidth - _signatureWidth / 2;
-      final minY = _signatureHeight / 2;
-      final maxY = displayPageHeight - _signatureHeight / 2;
-
-      // Giới hạn vị trí
-      double newX = _signaturePosition!.dx.clamp(minX, maxX);
-      double newY = _signaturePosition!.dy.clamp(minY, maxY);
-
-      // Cập nhật vị trí nếu cần
-      if (newX != _signaturePosition!.dx || newY != _signaturePosition!.dy) {
-        setState(() {
-          _signaturePosition = Offset(newX, newY);
-        });
-      }
-
-      // Cập nhật tọa độ llx, lly, urx, ury
-      _updateSignatureBounds();
-    }
-
-    // Tính toán tọa độ llx, lly, urx, ury trong hệ tọa độ PDF
-    void _updateSignatureBounds() {
-      if (_signaturePosition == null || _pdfContainerSize == Size.zero) return;
-
-      // Tính vị trí góc dưới bên trái và trên bên phải trong hệ tọa độ màn hình
-      final screenLlx = _signaturePosition!.dx - _signatureWidth / 2;
-      final screenLly = _signaturePosition!.dy + _signatureHeight / 2;
-      final screenUrx = _signaturePosition!.dx + _signatureWidth / 2;
-      final screenUry = _signaturePosition!.dy - _signatureHeight / 2;
-
-      // Tính tỷ lệ giữa kích thước hiển thị trên màn hình và kích thước thực tế của trang PDF
-      final pdfWidthRatio = _currentPageSize.width / (_pdfContainerSize.width / _zoomLevel);
-      final pdfHeightRatio = _currentPageSize.height / (_pdfContainerSize.height / _zoomLevel);
-
-      // Ánh xạ tọa độ từ hệ tọa độ màn hình sang hệ tọa độ PDF
-      final pdfLlx = (screenLlx + _scrollOffset.dx) * pdfWidthRatio;
-      final pdfLly = (_pdfContainerSize.height - screenLly + _scrollOffset.dy) * pdfHeightRatio;
-      final pdfUrx = (screenUrx + _scrollOffset.dx) * pdfWidthRatio;
-      final pdfUry = (_pdfContainerSize.height - screenUry + _scrollOffset.dy) * pdfHeightRatio;
-
+  void _updatePageSize() {
+    final containerRenderBox = _pdfContainerKey.currentContext?.findRenderObject() as RenderBox?;
+    if (containerRenderBox != null) {
       setState(() {
-        _llx = pdfLlx.clamp(0, _currentPageSize.width);
-        _lly = pdfLly.clamp(0, _currentPageSize.height);
-        _urx = pdfUrx.clamp(0, _currentPageSize.width);
-        _ury = pdfUry.clamp(0, _currentPageSize.height);
+        _pdfContainerSize = containerRenderBox.size;
+        if (_currentPage - 1 >= 0 && _currentPage - 1 < widget.sizes.length) {
+          _currentPageSize = Size(
+            widget.sizes[_currentPage - 1].width ?? 595,
+            widget.sizes[_currentPage - 1].height ?? 842,
+          );
+        } else {
+          debugPrint('Invalid page index: $_currentPage, sizes length: ${widget.sizes.length}');
+          _currentPageSize = const Size(595, 842);
+        }
+        debugPrint('PDF Container Size: $_pdfContainerSize');
+        debugPrint('Current Page: $_currentPage, Page Size: $_currentPageSize');
+        _restrictSignatureBounds();
+      });
+    } else {
+      debugPrint('Container RenderBox is null');
+    }
+  }
+
+  void _restrictSignatureBounds() {
+    if (_signaturePosition == null || _pdfContainerSize == Size.zero) return;
+
+    // Restrict signature within PDF page boundaries
+    final minX = _signatureWidth / 2;
+    final maxX = _pdfContainerSize.width - _signatureWidth / 2;
+    final minY = _signatureHeight / 2; // Ensure signature doesn't go above top edge
+    final maxY = _pdfContainerSize.height - _signatureHeight / 2; // Ensure signature stays within bottom edge
+
+    double newX = _signaturePosition!.dx.clamp(minX, maxX);
+    double newY = _signaturePosition!.dy.clamp(minY, maxY);
+
+    if (newX != _signaturePosition!.dx || newY != _signaturePosition!.dy) {
+      setState(() {
+        _signaturePosition = Offset(newX, newY);
       });
     }
 
-    // Hàm hiển thị popup chọn chữ ký
-    void _showSignaturePopup() {
-      showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    _updateSignatureBounds();
+  }
+
+  void _updateSignatureBounds() {
+    if (_signaturePosition == null || _pdfContainerSize == Size.zero) return;
+
+    final scaleX = _currentPageSize.width / _pdfContainerSize.width;
+    final scaleY = _currentPageSize.height / _pdfContainerSize.height;
+
+    final centerX = _signaturePosition!.dx;
+    final centerY = _signaturePosition!.dy;
+
+    final pdfCenterX = centerX * scaleX;
+    final pdfCenterY = (_pdfContainerSize.height - centerY) * scaleY;
+
+    final halfWidth = (_signatureWidth / 2) * scaleX;
+    final halfHeight = (_signatureHeight / 2) * scaleY;
+
+    final pdfLlx = pdfCenterX - halfWidth;
+    final pdfLly = pdfCenterY - halfHeight;
+    final pdfUrx = pdfCenterX + halfWidth;
+    final pdfUry = pdfCenterY + halfHeight;
+
+    setState(() {
+      // _llx = pdfLlx.clamp(0, _currentPageSize.width).toDouble();
+      // _lly = pdfLly.clamp(0, _currentPageSize.height).toDouble();
+      // _urx = pdfUrx.clamp(0, _currentPageSize.width).toDouble();
+      // _ury = pdfUry.clamp(0, _currentPageSize.height).toDouble();
+      _llx = pdfLlx.clamp(0, _currentPageSize.width).round();
+      _lly = pdfLly.clamp(0, _currentPageSize.height).round();
+      _urx = pdfUrx.clamp(0, _currentPageSize.width).round();
+      _ury = pdfUry.clamp(0, _currentPageSize.height).round();
+
+      debugPrint('Signature Bounds - Page: $_currentPage, llx: $_llx, lly: $_lly, urx: $_urx, ury: $_ury');
+    });
+  }
+
+  void _placeSignature(Offset position) {
+    setState(() {
+      _isSignatureVisible = true;
+      _signatureImageUrl = UserManager().signDigital;
+      _signatureWidth = 100;
+      _signatureHeight = 50;
+      _signaturePosition = position;
+    });
+    _restrictSignatureBounds();
+  }
+
+  void _onPdfTap(Offset position) {
+    if (!_isSignatureVisible) {
+      _placeSignature(position);
+    } else {
+      setState(() {
+        _signaturePosition = position;
+      });
+      _restrictSignatureBounds();
+    }
+  }
+
+  void _onComplete() {
+    if (_isSignatureVisible && _signaturePosition != null) {
+      debugPrint('Signature Coordinates - llx: $_llx, lly: $_lly');
+      debugPrint('Signature Coordinates - urx: $_urx, ury: $_ury');
+      debugPrint('Current Page: $_currentPage');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DocumentListSignConfirmPage(documentName: widget.documentName, createdDate: widget.date, documentId: widget.documentId, size: widget.size, llx: _llx!, lly: _lly!, urx: _urx!, ury: _ury!, currentPage: _currentPage, taskId: widget.taskId, ),
         ),
-        builder: (BuildContext context) {
-          return Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Chọn chữ ký số",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isSignatureVisible = true;
-                      // Đặt chữ ký ở góc dưới bên trái của trang PDF
-                      _signaturePosition = Offset(
-                        _pdfContainerSize.width * 0.1, // 10% từ bên trái
-                        _pdfContainerSize.height * 0.9, // 10% từ dưới lên
-                      );
-                      _signatureWidth = _defaultSignatureWidth;
-                      _signatureHeight = _defaultSignatureHeight;
-                    });
-                    _updatePageSize();
-                    Navigator.pop(context);
-                  },
-                  child: Image.network(
-                    'https://chukydep.vn/Upload/post/chu-ky-ten-nam.jpg',
-                    width: 150,
-                    height: 75,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Hủy"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng chọn và đặt chữ ký trước khi hoàn thành.'),
+          duration: Duration(seconds: 3),
+        ),
       );
     }
+  }
 
-    // Hàm xử lý khi chạm vào PDF để đặt chữ ký
-    void _onPdfTap(Offset position) {
-      if (_isSignatureVisible) {
-        setState(() {
-          _signaturePosition = position;
-        });
-        _restrictSignatureBounds();
-      }
-    }
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final pdfAspectRatio = _currentPageSize.width / _currentPageSize.height;
 
-    // Hàm xử lý khi nhấn nút "Hoàn thành"
-    void _onComplete() {
-      if (_isSignatureVisible && _signaturePosition != null) {
-        print('llx: ${_llx ?? 0}');
-        print('lly: ${_lly ?? 0}');
-        print('urx: ${_urx ?? 0}');
-        print('ury: ${_ury ?? 0}');
-        print('currentPage: $_currentPage');
+    // Calculate available height for PDF container
+    const appBarHeight = kToolbarHeight; // AppBar height
+    const bottomNavHeight = 100.0; // Approximate height of bottomNavigationBar
+    final availableHeight = screenSize.height - appBarHeight - bottomNavHeight;
+    final pdfWidth = screenSize.width;
+    final pdfHeight = pdfWidth / pdfAspectRatio;
 
-        // Điều hướng đến trang xác nhận
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DocumentListSignConfirmPage(
-              // llx: _llx ?? 0,
-              // lly: _lly ?? 0,
-              // urx: _urx ?? 0,
-              // ury: _ury ?? 0,
-              // currentPage: _currentPage,
-              // documentName: widget.documentName,
-            ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Vui lòng chọn và đặt chữ ký trước khi hoàn thành.'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-    }
-
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.documentName,
-            style: const TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.blue,
-          iconTheme: const IconThemeData(color: Colors.white),
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Iconsax.arrow_left_24),
-            onPressed: () {
-              Navigator.pop(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.documentName, style: const TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final controller = await _pdfViewController.future;
+              final page = await controller.getCurrentPage();
+              debugPrint('Manually checked page: ${page! + 1}');
             },
+            icon: const Icon(Icons.info),
           ),
-        ),
-        body: Stack(
-          children: [
-            // Hiển thị PDF
-            Container(
-              key: _pdfContainerKey,
-              child: GestureDetector(
-                onTapDown: (details) {
-                  _onPdfTap(details.localPosition);
-                },
-                child: PDF(
-                  enableSwipe: true,
-                  swipeHorizontal: false,
-                  autoSpacing: false,
-                  pageFling: false,
-                  onPageChanged: (page, total) {
-                    setState(() {
-                      _currentPage = page! + 1;
-                      _totalPages = total;
-                    });
-                    _updatePageSize();
-                  },
-                  onViewCreated: (controller) {
-                    _pdfViewController.complete(controller);
-                  },
-                  onError: (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error loading PDF: $error')),
-                    );
-                  },
-                ).cachedFromUrl(
-                  widget.imageUrl,
-                  headers: {'Authorization': 'Bearer ${UserManager().token}'},
-                  placeholder: (progress) => const Center(child: CircularProgressIndicator()),
-                  errorWidget: (error) => Center(child: Text('Failed to load PDF: $error')),
+        ],
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 20), // Push PDF frame down
+                Container(
+                  width: pdfWidth,
+                  height: pdfHeight,
+                  child: AspectRatio(
+                    aspectRatio: pdfAspectRatio,
+                    child: Container(
+                      key: _pdfContainerKey,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1),
+                      ),
+                      child: GestureDetector(
+                        onTapDown: (details) {
+                          _onPdfTap(details.localPosition);
+                        },
+                        child: PDF(
+                          swipeHorizontal: false,
+                          fitPolicy: FitPolicy.BOTH,
+                          onPageChanged: (page, total) {
+                            setState(() {
+                              _currentPage = page! + 1;
+                              _totalPages = total;
+                            });
+                            _updatePageSize();
+                          },
+                          onViewCreated: (PDFViewController controller) {
+                            _pdfViewController.complete(controller);
+                            controller.getPageCount().then((count) {
+                              setState(() {
+                                _totalPages = count;
+                              });
+                            });
+                            controller.getCurrentPage().then((page) {
+                              setState(() {
+                                _currentPage = (page ?? 0) + 1;
+                              });
+                              _updatePageSize();
+                            });
+                          },
+                        ).cachedFromUrl(
+                          widget.imageUrl,
+                          headers: {'Authorization': 'Bearer ${UserManager().token}'},
+                          placeholder: (progress) => const Center(child: CircularProgressIndicator()),
+                          errorWidget: (error) => Center(child: Text(error.toString())),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20), // Ensure bottom content is visible
+              ],
             ),
-            // Hiển thị hình ảnh chữ ký nếu đã chọn
-            if (_isSignatureVisible && _signaturePosition != null)
-              Positioned(
-                left: _signaturePosition!.dx - (_signatureWidth / 2),
-                top: _signaturePosition!.dy - (_signatureHeight / 2),
-                child: Stack(
-                  children: [
-                    // Ảnh chữ ký với khả năng kéo thả
-                    GestureDetector(
-                      onScaleUpdate: (details) {
-                        setState(() {
-                          _signaturePosition = Offset(
-                            _signaturePosition!.dx + details.focalPointDelta.dx,
-                            _signaturePosition!.dy + details.focalPointDelta.dy,
-                          );
-                        });
-                        _restrictSignatureBounds();
-                      },
+          ),
+          if (_isSignatureVisible && _signaturePosition != null && _signatureImageUrl != null)
+            Positioned(
+              left: _signaturePosition!.dx - _signatureWidth / 2,
+              top: _signaturePosition!.dy - _signatureHeight / 2 + 20, // Adjust for top padding
+              child: Stack(
+                children: [
+                  // Signature Image with Blue Frame
+                  GestureDetector(
+                    onPanUpdate: (details) {
+                      setState(() {
+                        _signaturePosition = _signaturePosition! + details.delta;
+                      });
+                      _restrictSignatureBounds();
+                    },
+                    child: Container(
+                      width: _signatureWidth,
+                      height: _signatureHeight,
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.2), // Light blue background
+                        border: Border.all(color: Colors.blue, width: 2), // Blue frame
+                      ),
                       child: Image.network(
-                        'https://chukydep.vn/Upload/post/chu-ky-ten-nam.jpg',
+                        _signatureImageUrl!,
                         width: _signatureWidth,
                         height: _signatureHeight,
                         fit: BoxFit.contain,
                       ),
                     ),
-                    // Nút điều khiển ở góc dưới bên phải để phóng to/thu nhỏ
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: GestureDetector(
-                        onPanUpdate: (details) {
+                  ),
+                  // Top-right corner (red X) for removing or resizing
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: GestureDetector(
+                      onPanStart: (_) {
+                        setState(() {
+                          _isResizingTopRight = true;
+                        });
+                      },
+                      onPanUpdate: (details) {
+                        if (_isResizingTopRight) {
                           setState(() {
-                            double deltaX = details.delta.dx;
-                            double deltaY = details.delta.dy;
-                            double delta = (deltaX + deltaY) / 2;
-                            _signatureWidth = (_signatureWidth + delta).clamp(50, 300);
-                            _signatureHeight = (_signatureHeight + delta * (_defaultSignatureHeight / _defaultSignatureWidth)).clamp(25, 150);
+                            _signatureWidth += details.delta.dx;
+                            _signatureHeight -= details.delta.dy;
+                            _signatureWidth = _signatureWidth.clamp(50, 300);
+                            _signatureHeight = _signatureHeight.clamp(25, 150);
                           });
                           _restrictSignatureBounds();
-                        },
-                        child: Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.7),
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: const Icon(
-                            Icons.open_with,
-                            size: 12,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Nút xóa chữ ký
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isSignatureVisible = false;
-                            _signaturePosition = null;
-                            _signatureWidth = _defaultSignatureWidth;
-                            _signatureHeight = _defaultSignatureHeight;
-                            _llx = null;
-                            _lly = null;
-                            _urx = null;
-                            _ury = null;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.close, color: Colors.white, size: 16),
-                        ),
-                      ),
-                    ),
-                    // Hiển thị tọa độ llx, lly, urx, ury và trang hiện tại
-                    Positioned(
-                      left: 0,
-                      top: 0,
+                        }
+                      },
+                      onPanEnd: (_) {
+                        setState(() {
+                          _isResizingTopRight = false;
+                        });
+                      },
                       child: Container(
-                        padding: const EdgeInsets.all(4),
-                        color: Colors.black54,
-                        child: Text(
-                          'Page: $_currentPage\n'
-                              'llx: ${_llx?.toStringAsFixed(2) ?? 'N/A'}\n'
-                              'lly: ${_lly?.toStringAsFixed(2) ?? 'N/A'}\n'
-                              'urx: ${_urx?.toStringAsFixed(2) ?? 'N/A'}\n'
-                              'ury: ${_ury?.toStringAsFixed(2) ?? 'N/A'}',
-                          style: const TextStyle(color: Colors.white, fontSize: 10),
+                        width: 24,
+                        height: 24,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
                         ),
+                        child: const Icon(Icons.close, color: Colors.white, size: 16),
                       ),
                     ),
-                  ],
+                  ),
+                  // Bottom-right corner (blue arrow) for resizing
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: GestureDetector(
+                      onPanStart: (_) {
+                        setState(() {
+                          _isResizingBottomRight = true;
+                        });
+                      },
+                      onPanUpdate: (details) {
+                        if (_isResizingBottomRight) {
+                          setState(() {
+                            _signatureWidth += details.delta.dx;
+                            _signatureHeight += details.delta.dy;
+                            _signatureWidth = _signatureWidth.clamp(50, 300);
+                            _signatureHeight = _signatureHeight.clamp(25, 150);
+                          });
+                          _restrictSignatureBounds();
+                        }
+                      },
+                      onPanEnd: (_) {
+                        setState(() {
+                          _isResizingBottomRight = false;
+                        });
+                      },
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.open_with, color: Colors.white, size: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Chạm vị trí bất kỳ để chọn chữ ký',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 8), // Space between text and button
+            ElevatedButton(
+              onPressed: _onComplete,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Blue background
+                foregroundColor: Colors.white, // White text/icon color
+                minimumSize: const Size(double.infinity, 50), // Full width, height 50
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Rounded corners
                 ),
               ),
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FloatingActionButton.extended(
-              onPressed: _showSignaturePopup,
-              label: const Text("Thực hiện ký số"),
-              icon: const Icon(Icons.edit),
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-            ),
-            const SizedBox(width: 16),
-            if (_isSignatureVisible)
-              FloatingActionButton.extended(
-                onPressed: _onComplete,
-                label: const Text("Hoàn thành"),
-                icon: const Icon(Icons.check),
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+              child: const Text(
+                'Hoàn thành',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+            ),
           ],
         ),
-      );
-    }
+      ),
+    );
   }
-
-
+}

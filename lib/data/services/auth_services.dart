@@ -10,7 +10,7 @@ class AuthService {
     required String password,
     required String fcmToken,
   }) async {
-    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Authentication/view-sign-in');
+    final url = Uri.parse('http://103.90.227.64:5290/api/Authentication/view-sign-in');
 
     final body = jsonEncode({
       'email': email,
@@ -43,7 +43,7 @@ class AuthService {
   }
 
   static Future<void> sendOtp({required String email}) async {
-    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Authentication/create-send-otp?email=$email');
+    final url = Uri.parse('http://103.90.227.64:5290/api/Authentication/create-send-otp?email=$email');
 
     final body = jsonEncode({'email': email});
 
@@ -71,7 +71,7 @@ class AuthService {
     required String email,
     required String otpCode,
   }) async {
-    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Authentication/create-verify-otp');
+    final url = Uri.parse('http://103.90.227.64:5290/api/Authentication/create-verify-otp');
 
     final body = jsonEncode({
       'email': email,
@@ -98,7 +98,7 @@ class AuthService {
     required String newPassword,
     required String confirmPassword,
   }) async {
-    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Authentication/create-forgot-password');
+    final url = Uri.parse('http://103.90.227.64:5290/api/Authentication/create-forgot-password');
 
     final body = jsonEncode({
       'email': email,
@@ -129,7 +129,7 @@ class AuthService {
     required String newPassword,
     required String confirmPassword,
   }) async {
-    final url = Uri.parse('http://nghetrenghetre.xyz:5290/api/Authentication/create-change-password');
+    final url = Uri.parse('http://103.90.227.64:5290/api/Authentication/create-change-password');
 
     final body = jsonEncode({
       'email': email,

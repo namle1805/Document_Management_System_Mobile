@@ -35,10 +35,64 @@ class _TaskListPageState extends State<TaskListPage> {
   }
 
   @override
+  // Widget build(BuildContext context) {
+  //   final filteredTasks = allTasks.where((task) {
+  //     return isSameDay(task.startDate, _selectedDay);
+  //   }).toList();
+  //
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: Text('Lịch trình'),
+  //       centerTitle: true,
+  //     ),
+  //     body: Column(
+  //       children: [
+  //         TableCalendar(
+  //           firstDay: DateTime(2020),
+  //           lastDay: DateTime(2030),
+  //           focusedDay: _focusedDay,
+  //           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+  //           onDaySelected: (selected, focused) {
+  //             setState(() {
+  //               _selectedDay = selected;
+  //               _focusedDay = focused;
+  //             });
+  //           },
+  //           calendarFormat: CalendarFormat.week,
+  //         ),
+  //         Expanded(
+  //           child: filteredTasks.isEmpty
+  //               ? Center(child: Text("Không có nhiệm vụ"))
+  //               : ListView.builder(
+  //             padding: EdgeInsets.all(16),
+  //             itemCount: filteredTasks.length,
+  //             itemBuilder: (context, index) {
+  //               final task = filteredTasks[index];
+  //               final startTime = task.startDate.hour.toString().padLeft(2, '0') + ':' + task.startDate.minute.toString().padLeft(2, '0');
+  //               final timeRange = '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}';
+  //               return TaskItem(
+  //                 time: startTime,
+  //                 title: task.title,
+  //                 timeRange: timeRange,
+  //                 isHighlighted: task.taskStatus == 'Completed', taskId: task.taskId,
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  @override
   Widget build(BuildContext context) {
+    // Lọc các task theo ngày được chọn
     final filteredTasks = allTasks.where((task) {
       return isSameDay(task.startDate, _selectedDay);
     }).toList();
+
+    // Sắp xếp các task theo thời gian bắt đầu (startDate) từ thấp đến cao
+    filteredTasks.sort((a, b) => a.startDate.compareTo(b.startDate));
 
     return Scaffold(
       appBar: AppBar(
@@ -68,13 +122,18 @@ class _TaskListPageState extends State<TaskListPage> {
               itemCount: filteredTasks.length,
               itemBuilder: (context, index) {
                 final task = filteredTasks[index];
-                final startTime = task.startDate.hour.toString().padLeft(2, '0') + ':0' +task.startDate.minute.toString();
-                final timeRange = '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}';
+                final startTime = task.startDate.hour.toString().padLeft(2, '0') +
+                    ':' +
+                    task.startDate.minute.toString().padLeft(2, '0');
+                final timeRange =
+                    '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - '
+                    '${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}';
                 return TaskItem(
                   time: startTime,
                   title: task.title,
                   timeRange: timeRange,
-                  isHighlighted: task.taskStatus == 'Completed', taskId: task.taskId,
+                  isHighlighted: task.taskStatus == 'Completed',
+                  taskId: task.taskId,
                 );
               },
             ),

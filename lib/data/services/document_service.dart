@@ -5,7 +5,7 @@ import '../../features/document/models/document_detail.dart';
 import '../../features/document/models/document_list.dart';
 
 class DocumentService {
-  static const String baseUrl = 'http://nghetrenghetre.xyz:5290';
+  static const String baseUrl = 'http://103.90.227.64:5290';
 
 
 
@@ -23,7 +23,7 @@ class DocumentService {
   Future<List<DocumentModel>> fetchDocuments(String workFlowId, String documentTypeId) async {
 
     final response = await http.get(
-        Uri.parse("http://nghetrenghetre.xyz:5290/api/Document/view-all-documents-mobile?workFlowId=$workFlowId&documentTypeId=$documentTypeId"),
+        Uri.parse("http://103.90.227.64:5290/api/Document/view-all-documents-mobile?workFlowId=$workFlowId&documentTypeId=$documentTypeId"),
         headers: {
           "Authorization": 'Bearer ${UserManager().token}'
         }
@@ -40,7 +40,7 @@ class DocumentService {
 
   Future<List<DocumentModel>> fetchDocumentsHome(String documentType) async {
     final response = await http.get(
-        Uri.parse("http://nghetrenghetre.xyz:5290/api/Document/view-all-documents-by-document-type-mobile?documentTypeId=$documentType"),
+        Uri.parse("http://103.90.227.64:5290/api/Document/view-all-documents-by-document-type-mobile?documentTypeId=$documentType"),
         headers: {
           "Authorization": 'Bearer ${UserManager().token}'
         }
@@ -62,7 +62,7 @@ class DocumentService {
 
   Future<List<DocumentModel>> fetchSearchDocuments(String query) async {
     final response = await http.get(
-        Uri.parse("http://nghetrenghetre.xyz:5290/api/Document/view-document-by-name?documentName=$query"),
+        Uri.parse("http://103.90.227.64:5290/api/Document/view-document-by-name?documentName=$query"),
         headers: {
           "Authorization": 'Bearer ${UserManager().token}'
         }
@@ -91,7 +91,7 @@ class DocumentService {
     required String workFlowId,
   }) async {
     final url = Uri.parse(
-      'http://nghetrenghetre.xyz:5290/api/Document/view-detail-documents-mobile'
+      'http://103.90.227.64:5290/api/Document/view-detail-documents-mobile'
           '?documentId=$documentId&workFlowId=$workFlowId',
     );
 
