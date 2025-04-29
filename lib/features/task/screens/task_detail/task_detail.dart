@@ -29,6 +29,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   String? workflowId;
   String? createdBy;
   bool isLoading = true;
+  bool? isUsb;
 
   @override
   void initState() {
@@ -48,6 +49,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       documentId = taskContent?.documentId;
       documentType = taskContent?.documentTypeName;
       createdBy = taskContent?.userNameCreateTask;
+      isUsb = taskContent?.isUsb;
       isLoading = false;
     });
   }
@@ -285,6 +287,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
+            SizedBox(height: 16),
 
 
             // Loại văn bản
@@ -311,7 +314,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
 
             // Thời gian bắt đầu
-            SizedBox(height: 16),
+            SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -439,7 +442,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                                 border: Border.all(color: Colors.grey[300]!),
                               ),
                               child: Text(
-                                  '${formatDateTime(taskDetail!.endDate)}',
+                                '${formatDateTime(taskDetail!.endDate)}',
                                 style: TextStyle(fontSize: 20, color: TColors.black, fontWeight: FontWeight.w600), textAlign: TextAlign.center,
                               ),
                             ),
@@ -468,7 +471,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 border: Border.all(color: Colors.grey[300]!),
               ),
               child: Text(
-               scope!,
+                scope!,
                 style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
@@ -488,30 +491,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               child: Text(
                 workflow!,
-                style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
-              ),
-            ),
-            SizedBox(height: 16),
-
-
-
-
-            // Nhiệm vụ chính
-            const Text(
-              'Nhiệm vụ chính',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-            ),
-            SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: TColors.darkerGrey_1,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Text(
-                '${taskDetail!.taskType}',
                 style: TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
               ),
             ),
@@ -638,7 +617,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
             // Nút "Xem chi tiết văn bản"
             ElevatedButton(
-              onPressed: () => Get.to(() => DocumentDetailPage(workFlowId: workflowId!, documentId: documentId!, sizes: [], size: '', date: '', taskId: taskDetail!.taskId,)),
+              onPressed: () => Get.to(() => DocumentDetailPage(workFlowId: workflowId!, documentId: documentId!, sizes: [], size: '', date: '', taskId: taskDetail!.taskId, isUsb: isUsb!, taskType: taskDetail!.taskType,)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 minimumSize: Size(double.infinity, 50),

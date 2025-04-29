@@ -94,7 +94,7 @@ class NotificationService {
           }else{
             Get.to(() => DocumentDetailPage(
               documentId: data['documentId']!,
-              workFlowId: data['workflowId']!, sizes: [], size: '', date: '', taskId: '',
+              workFlowId: data['workflowId']!, sizes: [], size: '', date: '', taskId: '', taskType: '', isUsb: null!,
             ));
           }
 

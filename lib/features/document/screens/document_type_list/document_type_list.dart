@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dms/features/document/screens/document_type_list_by_workflow/document_list_by_workflow.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +121,7 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
                   return DocumentTypeItem(
                     title: docType.documentTypeName,
                     onTap: () {
-                      Get.to(() => DocumentListPage(
+                      Get.to(() => DocumentsListByWorkflowPage(
                         workFlowId: currentWorkflow.workFlowId!,
                         documentTypeId: docType.documentTypeId, typeName: docType.documentTypeName,
                       ));

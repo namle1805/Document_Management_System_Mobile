@@ -1,5 +1,6 @@
 import 'package:dms/data/services/document_service.dart';
 import 'package:dms/features/document/screens/document_detail/document_detail.dart';
+import 'package:dms/features/document/screens/document_type_list_by_workflow/document_detail_by_workflow.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,28 +10,26 @@ import '../../models/document_list.dart';
 import '../search_document/search_document.dart';
 
 
-class DocumentListPage extends StatefulWidget {
-  final String workFlowId;
+class DocumentsListByWorkflowPage extends StatefulWidget {
   final String documentTypeId;
+  final String workFlowId;
   final String typeName;
 
-  const DocumentListPage({
-    required this.workFlowId,
-    required this.documentTypeId,
-    required this.typeName,
+  const DocumentsListByWorkflowPage({
+    required this.documentTypeId, required this.workFlowId, required this.typeName,
   });
 
   @override
-  _DocumentListPageState createState() => _DocumentListPageState();
+  _DocumentsListByWorkPageState createState() => _DocumentsListByWorkPageState();
 }
 
-class _DocumentListPageState extends State<DocumentListPage> {
+class _DocumentsListByWorkPageState extends State<DocumentsListByWorkflowPage> {
   late Future<List<DocumentModel>> futureDocuments;
 
   @override
   void initState() {
     super.initState();
-    futureDocuments = DocumentService().fetchDocuments(widget.workFlowId, widget.documentTypeId);
+    futureDocuments = DocumentService().fetchDocumentsHome(widget.documentTypeId);
   }
 
   @override
@@ -235,7 +234,7 @@ class DocumentItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 👉 Chuyển đến trang chi tiết
-        Get.to(() => DocumentDetailPage(workFlowId: workFlowId, documentId: documentId, sizes: [], size: size, date: date, taskId: '', taskType: '', isUsb: null!,
+        Get.to(() => DocumentDetailByWorkflowPage(workFlowId: workFlowId, documentId: documentId, sizes: [], size: size, date: date, taskId: '',
         ));
       },
       child: Container(

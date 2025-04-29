@@ -12,29 +12,27 @@ import 'package:intl/intl.dart';
 import '../../../../data/services/document_service.dart';
 import '../../../../utils/constants/colors.dart';
 
-class DocumentDetailPage extends StatefulWidget {
+class DocumentDetailByWorkflowPage extends StatefulWidget {
   final String workFlowId;
   final String documentId;
   final List<SizeInfo> sizes;
   final String size;
   final String date;
   final String taskId;
-  final String taskType;
-  final bool isUsb;
 
 
 
-  const DocumentDetailPage({
+  const DocumentDetailByWorkflowPage({
     Key? key,
     required this.workFlowId,
-    required this.documentId, required this.sizes, required this.size, required this.date, required this.taskId, required this.isUsb, required this.taskType,
+    required this.documentId, required this.sizes, required this.size, required this.date, required this.taskId,
   }) : super(key: key);
 
   @override
-  _DocumentDetailPageState createState() => _DocumentDetailPageState();
+  _DocumentDetailByWorkflowPageState createState() => _DocumentDetailByWorkflowPageState();
 }
 
-class _DocumentDetailPageState extends State<DocumentDetailPage> {
+class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowPage> {
   bool _isContentExpanded = false;
   late Future<DocumentDetail?> _documentDetailFuture;
   List<String> signBys = [];
@@ -349,22 +347,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                             ),
                           ),
                         ),
-                        // IconButton(
-                        //   icon: const Icon(
-                        //     Iconsax.search_zoom_in,
-                        //     color: Colors.white,
-                        //     size: 40,
-                        //   ),
-                        //   onPressed: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => ViewDocumentSignaturePage(imageUrl: noCacheUrl, documentName: document.documentName, sizes: document.sizes, size: widget.size, documentId: document.documentId, date: document.createdDate, taskId: widget.taskId,),
-                        //       ),
-                        //     );
-                        //   },
-                        // ),
-
                         IconButton(
                           icon: const Icon(
                             Iconsax.search_zoom_in,
@@ -372,31 +354,12 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                             size: 40,
                           ),
                           onPressed: () {
-                            if (widget.taskType == 'Sign' && !widget.isUsb) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ViewDocumentSignaturePage(
-                                    imageUrl: noCacheUrl,
-                                    documentName: document.documentName,
-                                    sizes: document.sizes,
-                                    size: widget.size,
-                                    documentId: document.documentId,
-                                    date: document.createdDate,
-                                    taskId: widget.taskId,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ViewDocumentPage(
-                                    imageUrl: noCacheUrl,
-                                  ),
-                                ),
-                              );
-                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewDocumentPage(imageUrl: noCacheUrl),
+                              ),
+                            );
                           },
                         ),
                       ],

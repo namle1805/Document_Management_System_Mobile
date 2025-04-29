@@ -64,6 +64,7 @@ class TaskContent {
   final String userNameCreateTask;
   final String workflowId;
   final String documentId;
+  final bool isUsb;
 
   TaskContent({
     required this.taskDetail,
@@ -72,6 +73,7 @@ class TaskContent {
     required this.workflowId,
     required this.documentId,
     required this.stepAction,    required this.documentTypeName,    required this.userNameCreateTask,
+    required this.isUsb
   });
 
   factory TaskContent.fromJson(Map<String, dynamic> json) {
@@ -79,7 +81,7 @@ class TaskContent {
       taskDetail: TaskDetail.fromJson(json['taskDto']),
       scope: json['scope'],
       workflowName: json['workflowName'],
-      stepAction: json['stepAction'], documentTypeName: json['documentTypeName'], userNameCreateTask: json['userNameCreateTask'], workflowId: json['workflowId'], documentId: json['documentId'],
+      stepAction: json['stepAction'], documentTypeName: json['documentTypeName'], userNameCreateTask: json['userNameCreateTask'], workflowId: json['workflowId'], documentId: json['documentId'], isUsb: json['isUsb'] ?? false,
     );
   }
 }
