@@ -6,12 +6,12 @@ import '../../../../../utils/helpers/helper_functions.dart';
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({
     super.key,
-    required this.image,
+    // required this.image,
     required this.title,
     required this.subTitle,
   });
 
-  final String image, title, subTitle;
+  final String  title, subTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +20,12 @@ class OnBoardingPage extends StatelessWidget {
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 40),
-          Image(
-            width: THelperFunctions.screenWidth() * 0.9,
-            height: THelperFunctions.screenHeight() * 0.6,
-            image: AssetImage(image),
-          ),
+          // const SizedBox(height: 40),
+          // Image(
+          //   width: THelperFunctions.screenWidth() * 0.9,
+          //   height: THelperFunctions.screenHeight() * 0.6,
+          //   image: AssetImage(image),
+          // ),
           Text(title,
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center),

@@ -1,4 +1,5 @@
 import 'package:dms/data/services/document_service.dart';
+import 'package:dms/features/document/screens/document_type_list_by_workflow/document_detail_by_workflow.dart';
 import 'package:flutter/material.dart';
 import 'package:dms/features/document/screens/document_detail/document_detail.dart';
 import 'package:dms/navigation_menu.dart';
@@ -63,6 +64,7 @@ class _SearchDocumentPageState extends State<SearchDocumentPage> {
                       date: DateFormat('yyyy-MM-dd').format(doc.createdDate),
                       size: doc.size ?? 'Không rõ',
                       iconColor: Colors.red[100]!,
+                      documentId: doc.id,
                     );
                   },
                 );
@@ -149,6 +151,8 @@ class DocumentItem extends StatelessWidget {
   final String date;
   final String size;
   final Color iconColor;
+  final String documentId;
+
 
   const DocumentItem({
     super.key,
@@ -157,6 +161,7 @@ class DocumentItem extends StatelessWidget {
     required this.date,
     required this.size,
     required this.iconColor,
+    required this.documentId,
   });
 
   String _getIconAsset() {
@@ -181,7 +186,11 @@ class DocumentItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 👉 Chuyển đến trang chi tiết
-        Get.to(() => DocumentDetailPage(workFlowId: '', documentId: '', sizes: [], size: size, date: date, taskId: '', taskType: '', isUsb: null!,
+        Get.to(() =>
+        //     DocumentDetailPage(workFlowId: '', documentId: '', sizes: [], size: size, date: date, taskId: '', taskType: '', isUsb: null!,
+        // )
+        DocumentDetailByWorkflowPage(workFlowId: '092abc80-61e9-46c3-84c4-91f8d4d19554', documentId: documentId, sizes: [], size: size, date: date, taskId: '',
+
         ));
       },
       child: Container(

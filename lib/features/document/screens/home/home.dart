@@ -1,4 +1,5 @@
 import 'package:dms/features/authentication/controllers/user/user_manager.dart';
+import 'package:dms/features/document/screens/document_type_list_by_workflow/document_list_by_workflow.dart';
 import 'package:dms/features/document/screens/setting/setting.dart';
 import 'package:dms/features/task/screens/task_detail/task_detail.dart';
 import 'package:dms/features/task/screens/task_list/task_list.dart';
@@ -382,7 +383,8 @@ class DocumentTypeCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DocumentsListPage(workFlowId:'092abc80-61e9-46c3-84c4-91f8d4d19554' , documentTypeId: documentTypeId, typeName: typeName,
+            builder: (context) => DocumentsListByWorkflowPage
+              (workFlowId:'092abc80-61e9-46c3-84c4-91f8d4d19554' , documentTypeId: documentTypeId, typeName: typeName,
             ),
           ),
         );
