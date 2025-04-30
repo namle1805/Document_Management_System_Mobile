@@ -357,7 +357,7 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewDocumentPage(imageUrl: noCacheUrl),
+                                builder: (context) => ViewDocumentPage(imageUrl: noCacheUrl, documentName: document.documentName,),
                               ),
                             );
                           },

@@ -17,8 +17,9 @@ import '../../models/document_detail.dart';
 
 class ViewDocumentPage extends StatefulWidget {
   final String imageUrl;
+  final String documentName;
 
-  const ViewDocumentPage({super.key, required this.imageUrl, });
+  const ViewDocumentPage({super.key, required this.imageUrl, required this.documentName, });
 
   @override
   State<ViewDocumentPage> createState() => _ViewDocumentPageState();
@@ -45,7 +46,7 @@ class _ViewDocumentPageState extends State<ViewDocumentPage> {
     return Scaffold(
       appBar:
       AppBar(
-        title: Text('Quyết định 53/2015 QD-TTg chính sách nội trú học sinh, sinh viên học cao đẳng trung cấp', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white), textAlign: TextAlign.center),
+        title: Text('${widget.documentName}', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white), textAlign: TextAlign.center),
         centerTitle: true,
         backgroundColor: TColors.primary,
         iconTheme: IconThemeData(color: Colors.white),

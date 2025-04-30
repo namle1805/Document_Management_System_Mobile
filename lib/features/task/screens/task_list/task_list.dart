@@ -96,7 +96,7 @@ class _TaskListPageState extends State<TaskListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lịch trình'),
+        title: const Text('Lịch trình', style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: Column(

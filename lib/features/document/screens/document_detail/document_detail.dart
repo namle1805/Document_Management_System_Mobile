@@ -11,6 +11,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../../data/services/document_service.dart';
 import '../../../../utils/constants/colors.dart';
+import '../document_approve/document_approve.dart';
 
 class DocumentDetailPage extends StatefulWidget {
   final String workFlowId;
@@ -349,6 +350,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                             ),
                           ),
                         ),
+
                         // IconButton(
                         //   icon: const Icon(
                         //     Iconsax.search_zoom_in,
@@ -356,12 +358,31 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                         //     size: 40,
                         //   ),
                         //   onPressed: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => ViewDocumentSignaturePage(imageUrl: noCacheUrl, documentName: document.documentName, sizes: document.sizes, size: widget.size, documentId: document.documentId, date: document.createdDate, taskId: widget.taskId,),
-                        //       ),
-                        //     );
+                        //     if (widget.taskType == 'Sign' && !widget.isUsb) {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => ViewDocumentSignaturePage(
+                        //             imageUrl: noCacheUrl,
+                        //             documentName: document.documentName,
+                        //             sizes: document.sizes,
+                        //             size: widget.size,
+                        //             documentId: document.documentId,
+                        //             date: document.createdDate,
+                        //             taskId: widget.taskId,
+                        //           ),
+                        //         ),
+                        //       );
+                        //     } else {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => ViewDocumentPage(
+                        //             imageUrl: noCacheUrl,
+                        //           ),
+                        //         ),
+                        //       );
+                        //     }
                         //   },
                         // ),
 
@@ -387,12 +408,21 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                                   ),
                                 ),
                               );
+                            } else if (widget.taskType == 'Browse') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewDocumentApprovePage(
+                                    imageUrl: noCacheUrl, documentName: document.documentName, documentId: document.documentId, taskId: widget.taskId,
+                                  ),
+                                ),
+                              );
                             } else {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ViewDocumentPage(
-                                    imageUrl: noCacheUrl,
+                                    imageUrl: noCacheUrl, documentName: document.documentName,
                                   ),
                                 ),
                               );
