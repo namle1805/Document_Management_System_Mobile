@@ -21,6 +21,7 @@ class DocumentDetailPage extends StatefulWidget {
   final String date;
   final String taskId;
   final String taskType;
+  final String taskStatus;
   final bool isUsb;
 
 
@@ -28,7 +29,7 @@ class DocumentDetailPage extends StatefulWidget {
   const DocumentDetailPage({
     Key? key,
     required this.workFlowId,
-    required this.documentId, required this.sizes, required this.size, required this.date, required this.taskId, required this.isUsb, required this.taskType,
+    required this.documentId, required this.sizes, required this.size, required this.date, required this.taskId, required this.isUsb, required this.taskType, required this.taskStatus,
   }) : super(key: key);
 
   @override
@@ -393,7 +394,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                             size: 40,
                           ),
                           onPressed: () {
-                            if (widget.taskType == 'Sign' && !widget.isUsb) {
+                            if (widget.taskType == 'Sign' && widget.taskStatus == 'InProgress' && !widget.isUsb) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -408,7 +409,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                                   ),
                                 ),
                               );
-                            } else if (widget.taskType == 'Browse') {
+                            } else if (widget.taskType == 'Browse' && widget.taskStatus == 'InProgress') {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
 
   String convertTaskStatus(String status) {
     switch (status) {
-      case 'Pending':
+      case 'Waiting':
         return 'Đang chờ xác nhận';
       case 'Revised':
         return 'Cần chỉnh sửa';

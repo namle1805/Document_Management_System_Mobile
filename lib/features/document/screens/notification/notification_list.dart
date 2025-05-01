@@ -120,7 +120,7 @@ class _NotificationListPageState extends State<NotificationListPage> {
                   if (notification.documentId != null && notification.workflowId != null) {
                     Get.to(() => DocumentDetailPage(
                       workFlowId: notification.workflowId!,
-                      documentId: notification.documentId!, sizes: [], size: '', date: '', taskId: '', taskType: '', isUsb: null!,
+                      documentId: notification.documentId!, sizes: [], size: '', date: '', taskId: '', taskType: '', taskStatus: '', isUsb: null!,
                     ));
                   }
                 } else if (notification.type.toLowerCase() == 'task') {
