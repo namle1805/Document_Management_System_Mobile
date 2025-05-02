@@ -1,9 +1,7 @@
 import 'dart:ui';
 import 'package:dms/features/authentication/controllers/user/user_manager.dart';
 import 'package:dms/features/document/models/document_detail.dart';
-import 'package:dms/features/document/screens/document_list/document_belong_type_list.dart';
 import 'package:dms/features/document/screens/view_document/view_document.dart';
-import 'package:dms/features/document/screens/view_document_signature/view_document_signature.dart';
 import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -357,7 +355,7 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewDocumentPage(imageUrl: noCacheUrl, documentName: document.documentName,),
+                                builder: (context) => ViewDocumentPage(imageUrl: noCacheUrl, documentName: document.documentName ?? '',),
                               ),
                             );
                           },
@@ -370,7 +368,7 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                 // Tên văn bản
                 Center(
                   child: Text(
-                    document.documentName,
+                    document.documentName ?? '',
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                     softWrap: true,
@@ -405,7 +403,7 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                               const SizedBox(width: 8),
                               Flexible(
                                 child: Text(
-                                  document.documentTypeName,
+                                  document.documentTypeName ?? '',
                                   style: const TextStyle(color: Colors.orange, fontSize: 12),
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
@@ -507,8 +505,8 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                           TextSpan(
                             text: _isContentExpanded
                                 ? document.documentContent
-                                : document.documentContent.length > 100
-                                ? '${document.documentContent.substring(0, 100)}... '
+                                :(document.documentContent?.length ?? 0) > 100
+                                ? '${document.documentContent?.substring(0, 100)}... '
                                 : '${document.documentContent} ',
                             style: const TextStyle(fontSize: 15, color: Colors.black87),
                           ),
@@ -567,7 +565,7 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                 ),
                 const SizedBox(height: 8),
                 // Thông tin chi tiết
-                InfoItem(title: 'Ngày tạo:', value: formatDate(document.createdDate)),
+                InfoItem(title: 'Ngày tạo:', value: formatDate(document.createdDate ?? '')),
                 InfoItem(
                   title: 'Ngày có hiệu lực:',
                   value: document.dateIssued != null ? formatDate(document.dateIssued!) : 'Không có',
@@ -594,8 +592,8 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                   ],
                 ),
                 const SizedBox(height: 8),
-                InfoItem(title: 'Mã văn bản:', value: document.documentId),
-                InfoItem(title: 'Số hiệu văn bản:', value: document.numberOfDocument),
+                InfoItem(title: 'Mã văn bản:', value: document.documentId ?? ''),
+                InfoItem(title: 'Số hiệu văn bản:', value: document.numberOfDocument ?? ''),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,

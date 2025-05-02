@@ -400,11 +400,11 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                                 MaterialPageRoute(
                                   builder: (context) => ViewDocumentSignaturePage(
                                     imageUrl: noCacheUrl,
-                                    documentName: document.documentName,
+                                    documentName: document.documentName ?? '',
                                     sizes: document.sizes,
                                     size: widget.size,
-                                    documentId: document.documentId,
-                                    date: document.createdDate,
+                                    documentId: document.documentId ?? '',
+                                    date: document.createdDate ?? '',
                                     taskId: widget.taskId,
                                   ),
                                 ),
@@ -414,7 +414,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ViewDocumentApprovePage(
-                                    imageUrl: noCacheUrl, documentName: document.documentName, documentId: document.documentId, taskId: widget.taskId,
+                                    imageUrl: noCacheUrl, documentName: document.documentName ?? '', documentId: document.documentId ?? '', taskId: widget.taskId,
                                   ),
                                 ),
                               );
@@ -423,7 +423,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ViewDocumentPage(
-                                    imageUrl: noCacheUrl, documentName: document.documentName,
+                                    imageUrl: noCacheUrl, documentName: document.documentName ?? '',
                                   ),
                                 ),
                               );
@@ -438,7 +438,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 // Tên văn bản
                 Center(
                   child: Text(
-                    document.documentName,
+                    document.documentName ?? '',
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                     softWrap: true,
@@ -473,7 +473,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                               const SizedBox(width: 8),
                               Flexible(
                                 child: Text(
-                                  document.documentTypeName,
+                                  document.documentTypeName ?? '',
                                   style: const TextStyle(color: Colors.orange, fontSize: 12),
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
@@ -575,8 +575,8 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                           TextSpan(
                             text: _isContentExpanded
                                 ? document.documentContent
-                                : document.documentContent.length > 100
-                                ? '${document.documentContent.substring(0, 100)}... '
+                                : (document.documentContent?.length ?? 0) > 100
+                                ? '${document.documentContent?.substring(0, 100)}... '
                                 : '${document.documentContent} ',
                             style: const TextStyle(fontSize: 15, color: Colors.black87),
                           ),
@@ -635,7 +635,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 ),
                 const SizedBox(height: 8),
                 // Thông tin chi tiết
-                InfoItem(title: 'Ngày tạo:', value: formatDate(document.createdDate)),
+                InfoItem(title: 'Ngày tạo:', value: formatDate(document.createdDate ?? '')),
                 InfoItem(
                   title: 'Ngày có hiệu lực:',
                   value: document.dateIssued != null ? formatDate(document.dateIssued!) : 'Không có',
@@ -662,8 +662,8 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                InfoItem(title: 'Mã văn bản:', value: document.documentId),
-                InfoItem(title: 'Số hiệu văn bản:', value: document.numberOfDocument),
+                InfoItem(title: 'Mã văn bản:', value: document.documentId ?? ''),
+                InfoItem(title: 'Số hiệu văn bản:', value: document.numberOfDocument ?? ''),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,

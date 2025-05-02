@@ -1,64 +1,13 @@
-// class DocumentDetail {
-//   final String documentId;
-//   final String documentName;
-//   final String documentContent;
-//   final String numberOfDocument;
-//   final String processingStatus;
-//   final String dateIssued;
-//   final String documentTypeName;
-//   final String createdDate;
-//   final String createdBy;
-//   final List<String> divisionList;
-//   final List<UserInfo> userList;
-//   final List<String>? signBys;
-//   final String documentUrl;
-//
-//   DocumentDetail({
-//     required this.documentId,
-//     required this.documentName,
-//     required this.documentContent,
-//     required this.numberOfDocument,
-//     required this.processingStatus,
-//     required this.dateIssued,
-//     required this.documentTypeName,
-//     required this.createdDate,
-//     required this.createdBy,
-//     required this.divisionList,
-//     required this.userList,
-//      this.signBys,
-//     required this.documentUrl,
-//   });
-//
-//   factory DocumentDetail.fromJson(Map<String, dynamic> json) {
-//     return DocumentDetail(
-//       documentId: json['documentId'],
-//       documentName: json['documentName'],
-//       documentContent: json['documentContent'],
-//       numberOfDocument: json['numberOfDocument'],
-//       processingStatus: json['processingStatus'],
-//       dateIssued: json['dateIssued'],
-//       documentTypeName: json['documentTypeName'],
-//       createdDate: json['createdDate'],
-//       createdBy: json['createdBy'],
-//       divisionList: List<String>.from(json['divisionList']),
-//       userList: List<UserInfo>.from(json['userList'].map((x) => UserInfo.fromJson(x))),
-//       signBys: (json['signBys'] as List?)?.map((e) => e.toString()).toList(),
-//       documentUrl: json['documentUrl'],
-//     );
-//   }
-// }
-
-
 class DocumentDetail {
-  final String documentId;
-  final String documentName;
-  final String documentContent;
-  final String numberOfDocument;
-  final String processingStatus;
+  final String? documentId;
+  final String? documentName;
+  final String? documentContent;
+  final String? numberOfDocument;
+  final String? processingStatus;
   final String? dateIssued;
-  final String documentTypeName;
-  final String createdDate;
-  final String createdBy;
+  final String? documentTypeName;
+  final String? createdDate;
+  final String? createdBy;
   final List<String> divisionList;
   final List<UserInfo> userList;
   final List<String>? signBys;
@@ -66,20 +15,20 @@ class DocumentDetail {
   final List<SizeInfo> sizes;
 
   DocumentDetail({
-    required this.documentId,
-    required this.documentName,
-    required this.documentContent,
-    required this.numberOfDocument,
-    required this.processingStatus,
-     this.dateIssued,
-    required this.documentTypeName,
-    required this.createdDate,
-    required this.createdBy,
+    this.documentId,
+    this.documentName,
+    this.documentContent,
+    this.numberOfDocument,
+    this.processingStatus,
+    this.dateIssued,
+    this.documentTypeName,
+    this.createdDate,
+    this.createdBy,
     required this.divisionList,
     required this.userList,
     this.signBys,
     required this.documentUrl,
-    required this.sizes, // <-- Thêm dòng này
+    required this.sizes,
   });
 
   factory DocumentDetail.fromJson(Map<String, dynamic> json) {
@@ -91,16 +40,21 @@ class DocumentDetail {
       processingStatus: json['processingStatus'],
       dateIssued: json['dateIssued'],
       documentTypeName: json['documentTypeName'],
-      createdDate: json['createdDate']! as String,
+      createdDate: json['createdDate'],
       createdBy: json['createdBy'],
-      divisionList: List<String>.from(json['divisionList']),
-      userList: List<UserInfo>.from(json['userList'].map((x) => UserInfo.fromJson(x))),
+      divisionList: List<String>.from(json['divisionList'] ?? []),
+      userList: List<UserInfo>.from(
+        (json['userList'] ?? []).map((x) => UserInfo.fromJson(x)),
+      ),
       signBys: (json['signBys'] as List?)?.map((e) => e.toString()).toList(),
       documentUrl: json['documentUrl'],
-      sizes: List<SizeInfo>.from(json['sizes'].map((x) => SizeInfo.fromJson(x))), // <-- Thêm dòng này
+      sizes: List<SizeInfo>.from(
+        (json['sizes'] ?? []).map((x) => SizeInfo.fromJson(x)),
+      ),
     );
   }
 }
+
 
 
 class SizeInfo {

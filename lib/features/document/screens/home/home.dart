@@ -3,7 +3,6 @@ import 'package:dms/features/document/screens/document_type_list_by_workflow/doc
 import 'package:dms/features/document/screens/setting/setting.dart';
 import 'package:dms/features/task/screens/task_detail/task_detail.dart';
 import 'package:dms/features/task/screens/task_list/task_list.dart';
-import 'package:dms/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -12,8 +11,6 @@ import '../../../../data/repositories/document_type_repository.dart';
 import '../../../../data/repositories/task_repository.dart';
 import '../../../task/models/task_model.dart';
 import '../../models/document_type.dart';
-import '../document_list/document_belong_type_list.dart';
-import '../document_list/document_list.dart';
 import '../search_document/search_document.dart';
 
 
@@ -74,8 +71,8 @@ class _HomePageState extends State<HomePage> {
   }
   Future<void> _refreshData() async {
     // Gọi API hoặc reload dữ liệu ở đây
-    await fetchDocumentTypes(); // Ví dụ: gọi lại API lấy loại văn bản
-    await fetchTaskData();         // Ví dụ: gọi lại danh sách nhiệm vụ
+    await fetchDocumentTypes();
+    await fetchTaskData();
 
     setState(() {}); // Cập nhật giao diện sau khi load lại
   }
@@ -252,27 +249,6 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 8),
 
-              // ...allTasks
-              //     .where((task) =>
-              //     task.taskStatus == 'Revised' ||
-              //     task.taskStatus == 'Waiting' ||
-              //     task.taskStatus == 'InProgress')
-              // .take(2)
-              //     .map((task) {
-              //   double progress = 0;
-              //   if (task.taskStatus == 'InProgress') {
-              //     progress = 0.5;
-              //   }
-              //
-              //   return DocumentCard(
-              //     title: task.title ?? '',
-              //     time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
-              //     progress: progress,
-              //     members: 1,
-              //     taskId: task.taskId, status: convertTaskStatus(task.taskStatus ?? ''), workflow: task.workflowName,
-              //   );
-              // }).toList(),
-              //
               pendingTasks.isEmpty
                   ? const Center(
                 child: Padding(
@@ -312,8 +288,8 @@ class _HomePageState extends State<HomePage> {
                     child: Text(
                       'Nhiệm vụ đã hoàn thành',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis, // Tránh tràn ra ngoài nếu quá dài
-                      softWrap: true, // Cho phép xuống dòng khi cần
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
                     ),
                   ),
                   TextButton(
@@ -330,16 +306,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               SizedBox(height: 8),
-              // ...allTasks
-              //     .where((task) => task.taskStatus == 'Completed')
-              //     .take(2)
-              //     .map((task) => TaskCard(
-              //   title: task.title ?? '',
-              //   category: task.taskType ?? '',
-              //   time: '${task.startDate.hour}:${task.startDate.minute.toString().padLeft(2, '0')} - ${task.endDate.hour}:${task.endDate.minute.toString().padLeft(2, '0')}',
-              //   status: convertTaskStatus(task.taskStatus ?? ''),
-              //   taskId: task.taskId,
-              // )),
 
               completedTasks.isEmpty
                   ? const Center(
@@ -637,154 +603,7 @@ class DocumentCard extends StatelessWidget {
     );
   }
 }
-// class DocumentCard extends StatelessWidget {
-//   final String title;
-//   final String time;
-//   final String status;
-//   final String workflow;
-//   final String taskId;
-//   final double progress;
-//   final int members;
-//
-//   const DocumentCard({
-//     required this.title,
-//     required this.time,
-//     required this.progress,
-//     required this.members, required this.taskId, required this.status, required this.workflow,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: () {
-//         Navigator.push(context,
-//             MaterialPageRoute(builder: (_) => TaskDetailPage(taskId: taskId,
-//             ),));
-//       },
-//       child: Container(
-//         margin: const EdgeInsets.only(bottom: 12),
-//         padding: const EdgeInsets.all(16),
-//         decoration: BoxDecoration(
-//           color: Color(0xFFE7F0EF),
-//           borderRadius: BorderRadius.circular(16),
-//         ),
-//         child: Stack(
-//           children: [
-//             // Main content
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 // Left content
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     // Title
-//                     SizedBox(
-//                       width: 180,
-//                       child: Text(
-//                         title,
-//                         style: const TextStyle(
-//                           fontSize: 15,
-//                           fontWeight: FontWeight.w600,
-//                           overflow: TextOverflow.ellipsis,
-//                         ),
-//                         maxLines: 1,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 6),
-//
-//                     // "workflow" label
-//                     Text(
-//                       workflow,
-//                       style: TextStyle(fontSize: 12, color: Colors.grey),
-//                     ),
-//                     const SizedBox(height: 6),
-//
-//                     // Avatars
-//                     Row(
-//                       children: List.generate(
-//                         1,
-//                             (index) => Padding(
-//                           padding: const EdgeInsets.only(right: 4),
-//                           child: CircleAvatar(
-//                             radius: 12,
-//                             backgroundImage: NetworkImage(UserManager().avatar.toString()),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     const SizedBox(height: 10),
-//
-//                     // Time
-//                     Row(
-//                       children: [
-//                         const Icon(Icons.access_time_filled, size: 16, color: Colors.redAccent),
-//                         const SizedBox(width: 4),
-//                         Text(
-//                           time,
-//                           style: const TextStyle(fontSize: 13, color: Colors.black54),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//
-//                 // Right: Progress circle
-//                 Column(
-//                   children: [
-//                     const SizedBox(height: 16), // <-- Add spacing here
-//                     Stack(
-//                       alignment: Alignment.center,
-//                       children: [
-//                         SizedBox(
-//                           width: 52,
-//                           height: 52,
-//                           child: CircularProgressIndicator(
-//                             value: progress,
-//                             strokeWidth: 5,
-//                             backgroundColor: Colors.grey.shade300,
-//                             valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
-//                           ),
-//                         ),
-//                         Text(
-//                           '${(progress * 100).toInt()}%',
-//                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//
-//               ],
-//             ),
-//
-//             // Top-right badge
-//             Positioned(
-//               top: 0,
-//               right: 0,
-//               child: Container(
-//                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-//                 decoration: BoxDecoration(
-//                   color: Colors.black,
-//                   borderRadius: BorderRadius.circular(12),
-//                 ),
-//                 child: Text(
-//                   status,
-//                   style: TextStyle(
-//                     fontSize: 11,
-//                     color: Colors.white,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
-// Widget cho thẻ Nhiệm vụ
 class TaskCard extends StatelessWidget {
   final String title;
   final String category;

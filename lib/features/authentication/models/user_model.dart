@@ -1,38 +1,38 @@
 import 'package:intl/intl.dart';
 
 class UserModel {
-  final String userId;
-  final String fullName;
-  final String userName;
-  final String email;
-  final String phoneNumber;
-  final String address;
-  final String gender;
-  final String identityCard;
-  final String dateOfBirth;
-  final String position;
-  final String divisionName;
+  final String? userId;
+  final String? fullName;
+  final String? userName;
+  final String? email;
+  final String? phoneNumber;
+  final String? address;
+  final String? gender;
+  final String? identityCard;
+  final String? dateOfBirth;
+  final String? position;
+  final String? divisionName;
   final String avatar;
-  final String roleName;
-  final String sign;
-  final String signDigital;
+  final String? roleName;
+  final String? sign;
+  final String? signDigital;
 
   UserModel({
-    required this.userId,
-    required this.fullName,
-    required this.userName,
-    required this.email,
-    required this.phoneNumber,
-    required this.address,
-    required this.gender,
-    required this.identityCard,
-    required this.dateOfBirth,
-    required this.position,
-    required this.divisionName,
-    required this.avatar,
-    required this.roleName,
-    required this.sign,
-    required this.signDigital,
+     this.userId,
+     this.fullName,
+     this.userName,
+     this.email,
+     this.phoneNumber,
+     this.address,
+     this.gender,
+     this.identityCard,
+     this.dateOfBirth,
+     this.position,
+     this.divisionName,
+     required this.avatar,
+     this.roleName,
+     this.sign,
+     this.signDigital,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
