@@ -42,14 +42,10 @@ class _DocumentsListByWorkPageState extends State<DocumentsListByWorkflowPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => NavigationMenu()),
-            );
-          },
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
         ),
+
         title: Text(
           "Văn Bản ${widget.typeName}",
           style: TextStyle(

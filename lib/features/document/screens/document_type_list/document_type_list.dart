@@ -71,10 +71,10 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.to(() => const NavigationMenu()),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back, color: Colors.black),
+        //   onPressed: () => Get.to(() => const NavigationMenu()),
+        // ),
         title: const Text('Văn bản', style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),

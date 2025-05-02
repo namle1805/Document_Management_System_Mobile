@@ -85,10 +85,10 @@ class _NotificationListPageState extends State<NotificationListPage> {
       AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Get.to(() => NavigationMenu()),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.arrow_back),
+        //   onPressed: () => Get.to(() => NavigationMenu()),
+        // ),
         title: const Text(
           'Thông báo',
           style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),

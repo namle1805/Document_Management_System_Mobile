@@ -127,10 +127,20 @@ class _HomePageState extends State<HomePage> {
     }
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar:
+      AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: Icon(Icons.menu, color: Colors.black),
+        // leading: Icon(Icons.menu, color: Colors.black),
+        leading: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: CircleAvatar(
+            radius: 16,
+            backgroundImage: AssetImage(
+              'assets/logos/dms-document-management-system-digital-business-cloud-storage-icon-digital-data_100456-10606.jpg',
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),

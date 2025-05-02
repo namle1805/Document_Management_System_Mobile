@@ -309,7 +309,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-            return const Center(child: Text('Không thể tải dữ liệu.'));
+            return const Center(child: Text('Chưa thể xem văn bản'));
           }
 
           final document = snapshot.data!;

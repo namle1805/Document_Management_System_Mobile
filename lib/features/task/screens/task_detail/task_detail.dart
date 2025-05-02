@@ -1,6 +1,7 @@
 
 import 'package:dms/features/authentication/controllers/user/user_manager.dart';
 import 'package:dms/features/document/screens/document_detail/document_detail.dart';
+import 'package:dms/navigation_menu.dart';
 import 'package:dms/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -116,6 +117,20 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         return 'Không xác định';
     }
   }
+  String convertScope(String scope) {
+    switch (scope) {
+      case 'OutGoing':
+        return 'Văn bản đi';
+      case 'InComing':
+        return 'Văn bản đến';
+      case 'Division':
+        return 'Phòng ban';
+      case 'School':
+        return 'Toàn trường';
+      default:
+        return 'Không xác định';
+    }
+  }
 
 
   // Hàm hiển thị bottom sheet
@@ -221,11 +236,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_24),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
         ),
+
         title: const Text(
           'Chi tiết',
           style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
@@ -501,7 +515,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   border: Border.all(color: Colors.grey[300]!),
                 ),
                 child: Text(
-                  scope ?? '',
+                  convertScope(scope!) ?? '',
                   style: const TextStyle(fontSize: 18, color: TColors.black, fontWeight: FontWeight.w600),
                 ),
               ),

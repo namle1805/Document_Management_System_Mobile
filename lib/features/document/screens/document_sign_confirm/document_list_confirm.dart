@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dms/features/task/screens/task_detail/task_detail.dart';
-import 'package:dms/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
 import '../../../authentication/controllers/user/user_manager.dart';
-
 
 class DocumentListSignConfirmPage extends StatefulWidget {
   final int llx;
@@ -35,7 +35,8 @@ class DocumentListSignConfirmPage extends StatefulWidget {
     required this.lly,
     required this.urx,
     required this.ury,
-    required this.currentPage, required this.taskId,
+    required this.currentPage,
+    required this.taskId,
   }) : super(key: key);
 
   @override
@@ -44,7 +45,7 @@ class DocumentListSignConfirmPage extends StatefulWidget {
 
 class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPage> {
   late final List<Map<String, dynamic>> documents;
-  String? signatureContent; // Biến để lưu giá trị content từ API
+  String? signatureContent;
 
   @override
   void initState() {
@@ -65,7 +66,7 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
       DateTime parsedDate = DateTime.parse(inputDate);
       return DateFormat('dd MM yyyy').format(parsedDate);
     } catch (e) {
-      return inputDate; // Nếu lỗi thì trả về như cũ
+      return inputDate;
     }
   }
 
@@ -87,30 +88,67 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
         body: body,
       );
 
+      debugPrint('Phản hồi API đăng nhập - Status: ${response.statusCode}, Body: ${response.body}');
+
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        setState(() {
-          signatureContent = responseData['content']; // Lưu giá trị content
-        });
-        debugPrint('API Success - Content: $signatureContent');
-        _showPinDialog(context); // Chuyển sang dialog PIN sau khi gọi API thành công
+        if (responseData['content'] != null) {
+          final content = responseData['content'];
+          if (content.contains('Không lấy được token') || content.isEmpty) {
+            debugPrint('Đăng nhập thất bại - Content: $content');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Đăng nhập thất bại: $content')),
+            );
+            if (mounted) {
+              Get.dialog(_buildLoginDialog(context), barrierDismissible: false);
+            }
+            return;
+          }
+          setState(() {
+            signatureContent = content;
+          });
+          debugPrint('Đăng nhập API thành công - Content: $signatureContent');
+          if (mounted) {
+            Get.dialog(_buildPinDialog(context), barrierDismissible: false);
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Không tìm thấy content trong phản hồi API')),
+          );
+          if (mounted) {
+            Get.dialog(_buildLoginDialog(context), barrierDismissible: false);
+          }
+        }
       } else {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'Đăng nhập không thành công: ${response.statusCode}';
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đăng nhập thất bại: ${response.statusCode}')),
+          SnackBar(content: Text(errorMessage)),
         );
+        if (mounted) {
+          Get.dialog(_buildLoginDialog(context), barrierDismissible: false);
+        }
       }
     } catch (e) {
+      debugPrint('Lỗi API đăng nhập: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi khi gọi API: $e')),
+        const SnackBar(content: Text('Lỗi khi gọi API đăng nhập')),
       );
+      if (mounted) {
+        Get.dialog(_buildLoginDialog(context), barrierDismissible: false);
+      }
     }
   }
 
   Future<void> _callCreateSignatureApi(String otpCode, BuildContext context) async {
-    if (signatureContent == null) {
+    if (signatureContent == null || signatureContent!.contains('Không lấy được token') || signatureContent!.isEmpty) {
+      debugPrint('Lỗi: Không tìm thấy token hợp lệ');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Không tìm thấy token. Vui lòng đăng nhập lại.')),
+        const SnackBar(content: Text('Không tìm thấy token hợp lệ. Vui lòng đăng nhập lại.')),
       );
+      if (mounted) {
+        Get.dialog(_buildLoginDialog(context), barrierDismissible: false);
+      }
       return;
     }
 
@@ -137,14 +175,16 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
         body: body,
       );
 
-      if (response.statusCode == 200) {
-        debugPrint('Create Signature API Success: ${response.body}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ký tài liệu thành công!')),
-        );
+      debugPrint('Phản hồi API ký tài liệu - HTTP Status: ${response.statusCode}, Body: ${response.body}');
 
-        // Gọi API create-handle-task-action sau khi ký tài liệu thành công
-        final approveUrl = 'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=ApproveDocument';
+      final responseData = jsonDecode(response.body);
+      final bodyStatusCode = responseData['statusCode'] ?? 200;
+      if (response.statusCode == 200 &&
+          (bodyStatusCode == 200 || bodyStatusCode == 201) &&
+          responseData['message'] != 'Operation failed') {
+        debugPrint('Ký tài liệu API thành công: ${response.body}');
+        final approveUrl =
+            'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=SubmitDocument';
         try {
           final approveResponse = await http.post(
             Uri.parse(approveUrl),
@@ -154,160 +194,174 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
             },
           );
 
+          debugPrint('Phản hồi API phê duyệt - Status: ${approveResponse.statusCode}, Body: ${approveResponse.body}');
+
           if (approveResponse.statusCode == 200) {
-            debugPrint('Approve Document API Success: ${approveResponse.body}');
-          } else {
+            debugPrint('Phê duyệt tài liệu API thành công: ${approveResponse.body}');
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Phê duyệt tài liệu thất bại: ${approveResponse.statusCode}')),
+              const SnackBar(content: Text('Ký và phê duyệt tài liệu thành công!')),
             );
-            return; // Dừng lại nếu API phê duyệt thất bại
+            if (mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TaskDetailPage(taskId: widget.taskId),
+                ),
+                    (route) => false,
+              );
+            }
+          } else {
+            final errorData = jsonDecode(approveResponse.body);
+            final errorMessage = errorData['message'] ?? 'Phê duyệt tài liệu thất bại: ${approveResponse.statusCode}';
+            debugPrint('Phê duyệt thất bại: $errorMessage');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(errorMessage)),
+            );
           }
         } catch (e) {
+          debugPrint('Lỗi khi gọi API phê duyệt: $e');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Lỗi khi gọi API phê duyệt: $e')),
           );
-          return; // Dừng lại nếu có lỗi
         }
-
-        // Điều hướng về TaskDetailPage sau khi gọi API phê duyệt thành công
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TaskDetailPage(taskId: widget.taskId),
-          ),
-              (route) => false, // Xóa toàn bộ stack và chuyển về TaskDetailPage
-        );
       } else {
+        final errorMessage = responseData['message'] == 'Successfully created'
+            ? 'Ký tài liệu thất bại: Mã trạng thái không hợp lệ ($bodyStatusCode)'
+            : responseData['message'] ?? 'Nhập sai OTP: $bodyStatusCode';
+        debugPrint('Ký tài liệu thất bại: $errorMessage, Body: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ký tài liệu thất bại: ${response.statusCode}')),
+          SnackBar(content: Text(errorMessage)),
         );
+        if (mounted) {
+          Get.dialog(_buildPinDialog(context), barrierDismissible: false);
+        }
       }
     } catch (e) {
+      debugPrint('Lỗi khi gọi API ký tài liệu: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi khi gọi API: $e')),
+        SnackBar(content: Text('Lỗi khi gọi API ký tài liệu: $e')),
       );
+      if (mounted) {
+        Get.dialog(_buildPinDialog(context), barrierDismissible: false);
+      }
     }
   }
-  void _showLoginDialog(BuildContext context) {
+
+  Widget _buildLoginDialog(BuildContext context) {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(dialogContext).viewInsets.bottom,
-              left: 16,
-              right: 16,
-              top: 16,
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 16,
+          right: 16,
+          top: 16,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Image(
+              height: 200,
+              image: AssetImage(TImages.lightAppLogo),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Image(
-                  height: 200,
-                  image: AssetImage(TImages.lightAppLogo),
-                ),
-                Text(
-                  'DMS',
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: const Color(0xFF5894FE)),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Vui lòng đăng nhập tài khoản ký số',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: TColors.primary,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Vui lòng nhập tài khoản',
-                    labelText: 'Tài khoản',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: 'Vui lòng nhập mật khẩu',
-                    labelText: 'Mật khẩu',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final userName = emailController.text.trim();
-                      final password = passwordController.text.trim();
-                      if (userName.isEmpty || password.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Vui lòng nhập đầy đủ tài khoản và mật khẩu')),
-                        );
-                        return;
-                      }
-                      Navigator.pop(dialogContext);
-                      _callSignInApi(userName, password, context);
-                    },
-                    child: const Text('Đăng nhập'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
+            Text(
+              'DMS',
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: const Color(0xFF5894FE)),
+              textAlign: TextAlign.center,
             ),
-          ),
-        );
-      },
-    ).whenComplete(() {
-      emailController.dispose();
-      passwordController.dispose();
-    });
+            const SizedBox(height: 8),
+            Text(
+              'Vui lòng đăng nhập tài khoản ký số',
+              style: TextStyle(
+                fontSize: 16,
+                color: TColors.primary,
+              ),
+            ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                hintText: 'Vui lòng nhập tài khoản',
+                labelText: 'Tài khoản',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: 'Vui lòng nhập mật khẩu',
+                labelText: 'Mật khẩu',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  final userName = emailController.text.trim();
+                  final password = passwordController.text.trim();
+                  if (userName.isEmpty || password.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Vui lòng nhập đầy đủ tài khoản và mật khẩu')),
+                    );
+                    return;
+                  }
+                  Get.back();
+                  _callSignInApi(userName, password, context);
+                },
+                child: const Text('Đăng nhập'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
   }
 
-  void _showPinDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return PinDialog(
-          onVerify: (pin) {
-            Navigator.pop(dialogContext);
-            _callCreateSignatureApi(pin, context);
-          },
-          onError: (message) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(message)),
-            );
-          },
+  void _showLoginDialog(BuildContext context) {
+    if (!mounted) return;
+    Get.dialog(_buildLoginDialog(context), barrierDismissible: false);
+  }
+
+  Widget _buildPinDialog(BuildContext context) {
+    return PinDialog(
+      onVerify: (pin) {
+        Get.back();
+        _callCreateSignatureApi(pin, context);
+      },
+      onError: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
         );
       },
     );
+  }
+
+  void _showPinDialog(BuildContext context) {
+    if (!mounted) return;
+    Get.dialog(_buildPinDialog(context), barrierDismissible: false);
   }
 
   @override
@@ -389,7 +443,7 @@ class PinDialog extends StatefulWidget {
 class _PinDialogState extends State<PinDialog> {
   final List<TextEditingController> pinControllers = List.generate(6, (index) => TextEditingController());
   final List<FocusNode> focusNodes = List.generate(6, (index) => FocusNode());
-  int remainingSeconds = 180; // 3 phút = 180 giây
+  int remainingSeconds = 180;
   Timer? timer;
   bool _isMounted = false;
 
@@ -412,6 +466,8 @@ class _PinDialogState extends State<PinDialog> {
         });
       } else {
         timer.cancel();
+        widget.onError('Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.');
+        Get.back();
       }
     });
   }
@@ -422,7 +478,7 @@ class _PinDialogState extends State<PinDialog> {
       if (index < pinControllers.length - 1) {
         FocusScope.of(context).requestFocus(focusNodes[index + 1]);
       } else {
-        FocusScope.of(context).unfocus(); // Ẩn bàn phím khi nhập ô cuối
+        FocusScope.of(context).unfocus();
       }
     } else if (index > 0) {
       FocusScope.of(context).requestFocus(focusNodes[index - 1]);
@@ -433,8 +489,12 @@ class _PinDialogState extends State<PinDialog> {
   void dispose() {
     _isMounted = false;
     timer?.cancel();
-    pinControllers.forEach((controller) => controller.dispose());
-    focusNodes.forEach((focusNode) => focusNode.dispose());
+    for (var controller in pinControllers) {
+      controller.dispose();
+    }
+    for (var focusNode in focusNodes) {
+      focusNode.dispose();
+    }
     super.dispose();
   }
 
@@ -443,7 +503,7 @@ class _PinDialogState extends State<PinDialog> {
     String seconds = remainingSeconds.toString().padLeft(2, '0');
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final otpFieldWidth = (screenWidth * 0.9 - TSizes.md * 2 - 5 * 8) / 6; // Tính chiều rộng mỗi ô OTP
+    final otpFieldWidth = (screenWidth * 0.9 - TSizes.md * 2 - 5 * 8) / 6;
 
     return Dialog(
       backgroundColor: Colors.white,
@@ -452,8 +512,8 @@ class _PinDialogState extends State<PinDialog> {
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: screenWidth * 0.9, // Giới hạn chiều rộng tối đa là 90% màn hình
-          maxHeight: screenHeight * 0.7, // Giới hạn chiều cao tối đa là 70% màn hình
+          maxWidth: screenWidth * 0.9,
+          maxHeight: screenHeight * 0.7,
         ),
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
@@ -490,34 +550,36 @@ class _PinDialogState extends State<PinDialog> {
                 ),
               ),
               const SizedBox(height: TSizes.spaceBtwItems),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(6, (index) {
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: SizedBox(
-                    height: 50,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(6, (index) {
+                  return SizedBox(
+                    width: otpFieldWidth,
                     child: TextField(
                       controller: pinControllers[index],
                       focusNode: focusNodes[index],
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
                         counterText: "",
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                        filled: true,
+                        fillColor: Colors.grey[100],
                       ),
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: index == 5 ? TextInputAction.done : TextInputAction.next,
                       onChanged: (value) {
                         nextField(index, value);
                       },
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ),
-              );
-            }),),
+                  );
+                }),
+              ),
               const SizedBox(height: TSizes.spaceBtwItems),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -540,7 +602,7 @@ class _PinDialogState extends State<PinDialog> {
                         startTimer();
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Đã gửi lại mã PIN')),
+                        const SnackBar(content: Text('Đã gửi lại mã OTP')),
                       );
                     },
                     child: const Text(
@@ -555,10 +617,10 @@ class _PinDialogState extends State<PinDialog> {
                 onTap: () {
                   if (!_isMounted) return;
                   final pin = pinControllers.map((controller) => controller.text).join();
-                  if (pin.length == 6) {
+                  if (pin.length == 6 && RegExp(r'^\d{6}$').hasMatch(pin)) {
                     widget.onVerify(pin);
                   } else {
-                    widget.onError('Vui lòng nhập mã PIN 6 số');
+                    widget.onError('Vui lòng nhập mã OTP 6 số hợp lệ');
                   }
                 },
                 child: Container(
@@ -590,32 +652,12 @@ class _PinDialogState extends State<PinDialog> {
   }
 }
 
-class TabItem extends StatelessWidget {
-  final String title;
-
-  const TabItem({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-      child: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.grey,
-          fontWeight: FontWeight.normal,
-        ),
-      ),
-    );
-  }
-}
-
 class DocumentItem extends StatelessWidget {
   final String type;
   final String title;
   final String date;
   final String size;
-  final Color iconColor;
+  final Color? iconColor;
 
   const DocumentItem({
     super.key,
@@ -623,7 +665,7 @@ class DocumentItem extends StatelessWidget {
     required this.title,
     required this.date,
     required this.size,
-    required this.iconColor,
+    this.iconColor,
   });
 
   String _getIconAsset() {
@@ -647,8 +689,7 @@ class DocumentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // 👉 Chuyển đến trang chi tiết
-        // Get.to(() => DocumentDetailPage());
+        // TODO: Chuyển đến trang chi tiết nếu cần
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
@@ -675,7 +716,7 @@ class DocumentItem extends StatelessWidget {
               width: 40,
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: iconColor,
+                color: iconColor ?? Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
@@ -704,6 +745,26 @@ class DocumentItem extends StatelessWidget {
             ),
             const Icon(Icons.more_vert, color: Colors.grey),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class TabItem extends StatelessWidget {
+  final String title;
+
+  const TabItem({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.grey,
+          fontWeight: FontWeight.normal,
         ),
       ),
     );
