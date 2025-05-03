@@ -179,8 +179,8 @@ class _UserDetailPageState extends State<UserDetailPage> {
                               Expanded(
                                 child: Column(
                                   children: [
-                                    const Text(
-                                      '2209',
+                                     Text(
+                                      user.numberOfArchiveDocuments.toString(),
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600),
@@ -206,9 +206,9 @@ class _UserDetailPageState extends State<UserDetailPage> {
                               ),
                               Expanded(
                                 child: Column(
-                                  children: const [
+                                  children:  [
                                     Text(
-                                      '80',
+                                      (user.numberOfDocuments ?? 0).toString(),
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600),
