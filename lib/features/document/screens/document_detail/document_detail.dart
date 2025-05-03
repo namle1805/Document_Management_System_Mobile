@@ -14,22 +14,22 @@ import '../../../../utils/constants/colors.dart';
 import '../document_approve/document_approve.dart';
 
 class DocumentDetailPage extends StatefulWidget {
-  final String workFlowId;
-  final String documentId;
+  final String? workFlowId;
+  final String? documentId;
   final List<SizeInfo> sizes;
-  final String size;
-  final String date;
-  final String taskId;
-  final String taskType;
-  final String taskStatus;
+  final String? size;
+  final String? date;
+  final String? taskId;
+  final String? taskType;
+  final String? taskStatus;
   final bool isUsb;
 
 
 
   const DocumentDetailPage({
     Key? key,
-    required this.workFlowId,
-    required this.documentId, required this.sizes, required this.size, required this.date, required this.taskId, required this.isUsb, required this.taskType, required this.taskStatus,
+     this.workFlowId,
+     this.documentId, required this.sizes,  this.size,  this.date,  this.taskId, required this.isUsb,  this.taskType,  this.taskStatus,
   }) : super(key: key);
 
   @override
@@ -55,8 +55,8 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
   void initState() {
     super.initState();
     _documentDetailFuture = DocumentService.fetchDocumentDetail(
-      documentId: widget.documentId,
-      workFlowId: widget.workFlowId,
+      documentId: widget.documentId!,
+      workFlowId: widget.workFlowId!,
     );
 
     _documentDetailFuture.then((detail) {
@@ -402,10 +402,10 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                                     imageUrl: noCacheUrl,
                                     documentName: document.documentName ?? '',
                                     sizes: document.sizes,
-                                    size: widget.size,
+                                    size: widget.size!,
                                     documentId: document.documentId ?? '',
                                     date: document.createdDate ?? '',
-                                    taskId: widget.taskId,
+                                    taskId: widget.taskId!,
                                   ),
                                 ),
                               );
@@ -414,7 +414,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ViewDocumentApprovePage(
-                                    imageUrl: noCacheUrl, documentName: document.documentName ?? '', documentId: document.documentId ?? '', taskId: widget.taskId,
+                                    imageUrl: noCacheUrl, documentName: document.documentName ?? '', documentId: document.documentId ?? '', taskId: widget.taskId!,
                                   ),
                                 ),
                               );
