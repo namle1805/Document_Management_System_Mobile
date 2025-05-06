@@ -143,10 +143,10 @@ class _DocumentsListPageState extends State<DocumentsListPage> {
                     final doc = documents[index];
                     return DocumentItem(
                       type: "PDF", // hoặc bạn có thể viết logic để đoán loại file từ tên
-                      title: doc.documentName,
+                      title: doc.documentName ?? '',
                       date: _formatDate(doc.createdDate),
                       size: doc.size ?? "Chưa rõ",
-                      iconColor: Colors.red[100]!, workFlowId: widget.workFlowId, documentId: doc.id,
+                      iconColor: Colors.red[100]!, workFlowId: widget.workFlowId, documentId: doc.id!,
                     );
                   },
                 );

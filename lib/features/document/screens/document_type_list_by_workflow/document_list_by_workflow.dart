@@ -140,8 +140,8 @@ class _DocumentsListByWorkPageState extends State<DocumentsListByWorkflowPage> {
                     final doc = documents[index];
                     return DocumentItem(
                       type: "PDF", // hoặc bạn có thể viết logic để đoán loại file từ tên
-                      title: doc.documentName,
-                      date: _formatDate(doc.createdDate),
+                      title: doc.documentName ?? '',
+                      date: _formatDate(doc.createdDate) ?? '',
                       size: doc.size ?? "Chưa rõ",
                       iconColor: Colors.red[100]!, workFlowId: widget.workFlowId, documentId: doc.id,
                     );
@@ -191,25 +191,25 @@ class TabItem extends StatelessWidget {
 }
 
 class DocumentItem extends StatelessWidget {
-  final String type;
-  final String title;
-  final String date;
-  final String size;
-  final String workFlowId;
-  final String documentId;
+  final String? type;
+  final String? title;
+  final String? date;
+  final String? size;
+  final String? workFlowId;
+  final String? documentId;
   final Color iconColor;
 
   const DocumentItem({
     super.key,
-    required this.type,
-    required this.title,
-    required this.date,
-    required this.size,
-    required this.iconColor, required this.workFlowId, required this.documentId,
+     this.type,
+     this.title,
+     this.date,
+     this.size,
+    required this.iconColor,  this.workFlowId,  this.documentId,
   });
 
   String _getIconAsset() {
-    switch (type.toUpperCase()) {
+    switch (type?.toUpperCase()) {
       case 'PDF':
         return TImages.pdf;
       case 'DOCX':
@@ -231,7 +231,7 @@ class DocumentItem extends StatelessWidget {
       onTap: () {
         // 👉 Chuyển đến trang chi tiết
         Get.to(() =>
-            DocumentDetailByWorkflowPage(workFlowId: workFlowId, documentId: documentId, sizes: [], size: size, date: date, taskId: '',
+            DocumentDetailByWorkflowPage(workFlowId: workFlowId!, documentId: documentId!, sizes: [], size: size!, date: date!, taskId: '',
         ));
       },
       child: Container(
@@ -274,7 +274,7 @@ class DocumentItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    title!,
                     style:
                     TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,

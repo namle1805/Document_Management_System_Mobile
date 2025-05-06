@@ -59,12 +59,12 @@ class _SearchDocumentPageState extends State<SearchDocumentPage> {
                     final formattedDate = DateFormat('yyyy-MM-dd').format(doc.createdDate);
                     return DocumentItem(
                       type: "PDF",
-                      title: doc.documentName,
+                      title: doc.documentName ?? '',
                       // date: doc.createdDate.split('T')[0],
                       date: DateFormat('yyyy-MM-dd').format(doc.createdDate),
                       size: doc.size ?? 'Không rõ',
                       iconColor: Colors.red[100]!,
-                      documentId: doc.id,
+                      documentId: doc.id!,
                     );
                   },
                 );

@@ -1,12 +1,12 @@
 class DocumentModel {
-  final String id;
-  final String documentName;
+  final String? id;
+  final String? documentName;
   final DateTime createdDate;
   final String? size;
 
   DocumentModel({
-    required this.id,
-    required this.documentName,
+     this.id,
+     this.documentName,
     required this.createdDate,
     this.size,
   });

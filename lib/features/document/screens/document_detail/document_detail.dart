@@ -177,6 +177,97 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     );
   }
 
+  void _showApproveByList(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: Colors.white,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_circle_left_outlined, color: Colors.black, size: 30),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Danh sách người duyệt',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        maxLines: 2,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: signBys.length,
+                    itemBuilder: (context, index) {
+                      final signer = signBys[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 24,
+                              backgroundImage: AssetImage(TImages.user),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    signer,
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Người duyệt',
+                                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showSignByList(BuildContext context) {
     showDialog(
       context: context,
@@ -564,6 +655,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    /// Thiếu ngày hết hiệu lực, hạn xử lý, người gửi, người nhận, người có thẩm quyền, luồng xử lý, phạm vi
                     const Text(
                       'Nội dung',
                       style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
@@ -654,6 +746,27 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                         GestureDetector(
                           onTap: () {
                             _showSignByList(context);
+                          },
+                          child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Người duyệt:',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _showApproveByList(context);
                           },
                           child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
                         ),

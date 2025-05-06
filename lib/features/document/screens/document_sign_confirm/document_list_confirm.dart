@@ -231,7 +231,7 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
           responseData['message'] != 'Operation failed') {
         debugPrint('Ký tài liệu API thành công: ${response.body}');
         final approveUrl =
-            'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=ApproveDocument';
+            'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=SubmitDocument';
         try {
           final approveResponse = await http.post(
             Uri.parse(approveUrl),
