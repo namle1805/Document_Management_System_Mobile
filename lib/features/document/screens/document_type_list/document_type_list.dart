@@ -121,7 +121,7 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
                   return DocumentTypeItem(
                     title: docType.documentTypeName,
                     onTap: () {
-                      Get.to(() => DocumentsListByWorkflowPage(
+                      Get.to(() => DocumentListPage(
                         workFlowId: currentWorkflow.workFlowId!,
                         documentTypeId: docType.documentTypeId, typeName: docType.documentTypeName,
                       ));

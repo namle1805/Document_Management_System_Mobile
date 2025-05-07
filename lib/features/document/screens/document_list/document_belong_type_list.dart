@@ -196,25 +196,25 @@ class TabItem extends StatelessWidget {
 }
 
 class DocumentItem extends StatelessWidget {
-  final String type;
-  final String title;
-  final String date;
-  final String size;
-  final String workFlowId;
-  final String documentId;
+  final String? type;
+  final String? title;
+  final String? date;
+  final String? size;
+  final String? workFlowId;
+  final String? documentId;
   final Color iconColor;
 
   const DocumentItem({
     super.key,
-    required this.type,
-    required this.title,
-    required this.date,
-    required this.size,
-    required this.iconColor, required this.workFlowId, required this.documentId,
+     this.type,
+     this.title,
+     this.date,
+     this.size,
+    required this.iconColor,  this.workFlowId,  this.documentId,
   });
 
   String _getIconAsset() {
-    switch (type.toUpperCase()) {
+    switch (type?.toUpperCase()) {
       case 'PDF':
         return TImages.pdf;
       case 'DOCX':
@@ -235,7 +235,9 @@ class DocumentItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 👉 Chuyển đến trang chi tiết
-        Get.to(() => DocumentDetailPage(workFlowId: workFlowId, documentId: documentId, sizes: [], size: size, date: date, taskId: '', taskType: '', taskStatus: '', isUsb: null!,
+        Get.to(() => DocumentDetailPage(workFlowId: workFlowId!, documentId: documentId!, sizes: [], size: size!, date: date!, taskId: '', taskType: '', taskStatus: '',
+          // isUsb: null!,
+          isUsb: false,
         ));
       },
       child: Container(
@@ -278,7 +280,7 @@ class DocumentItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    title!,
                     style:
                     TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
