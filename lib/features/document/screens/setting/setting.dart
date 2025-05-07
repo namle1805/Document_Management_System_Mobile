@@ -9,6 +9,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/services/auth_services.dart';
 import '../../../../utils/constants/colors.dart';
+import '../help_center/help_center.dart';
 
 
 class UpdateSettingsPage extends StatefulWidget {
@@ -95,17 +96,17 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                     title: 'Thông tin cá nhân',
                     onTap: () => Get.to(() => UserDetailPage(userId: UserManager().id,)),
                   ),
-                  SettingItem(
-                    icon: Iconsax.global,
-                    title: 'Language',
-                    trailing: Text(
-                      'English (US)',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    onTap: () {
-                      // Xử lý chọn ngôn ngữ
-                    },
-                  ),
+                  // SettingItem(
+                  //   icon: Iconsax.global,
+                  //   title: 'Language',
+                  //   trailing: Text(
+                  //     'English (US)',
+                  //     style: TextStyle(color: Colors.grey),
+                  //   ),
+                  //   onTap: () {
+                  //     // Xử lý chọn ngôn ngữ
+                  //   },
+                  // ),
                   SettingItem(
                     icon: Iconsax.password_check,
                     title: 'Thay đổi mật khẩu',
@@ -122,69 +123,69 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                       }
                     },
                   ),
-                  SettingItem(
-                    icon: Iconsax.setting,
-                    title: 'Setting',
-                    onTap: () {
-                      // Điều hướng đến trang cài đặt
-                    },
-                  ),
+                  // SettingItem(
+                  //   icon: Iconsax.setting,
+                  //   title: 'Setting',
+                  //   onTap: () {
+                  //     // Điều hướng đến trang cài đặt
+                  //   },
+                  // ),
                 ],
               ),
             ),
             // Notifications
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Thông báo',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16),
-                  SettingItem(
-                    icon: Iconsax.notification,
-                    title: 'Thông báo đẩy',
-                    trailing: Switch(
-                      value: _pushNotifications,
-                      onChanged: (value) {
-                        setState(() {
-                          _pushNotifications = value;
-                        });
-                      },
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _pushNotifications = !_pushNotifications;
-                      });
-                    },
-                  ),
-                  SettingItem(
-                    icon: Iconsax.notification,
-                    title: 'Promotional Notifications',
-                    trailing: Switch(
-                      value: _promotionalNotifications,
-                      onChanged: (value) {
-                        setState(() {
-                          _promotionalNotifications = value;
-                        });
-                      },
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _promotionalNotifications = !_promotionalNotifications;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            //   padding: EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(12),
+            //   ),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         'Thông báo',
+            //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            //       ),
+            //       SizedBox(height: 16),
+            //       SettingItem(
+            //         icon: Iconsax.notification,
+            //         title: 'Thông báo đẩy',
+            //         trailing: Switch(
+            //           value: _pushNotifications,
+            //           onChanged: (value) {
+            //             setState(() {
+            //               _pushNotifications = value;
+            //             });
+            //           },
+            //         ),
+            //         onTap: () {
+            //           setState(() {
+            //             _pushNotifications = !_pushNotifications;
+            //           });
+            //         },
+            //       ),
+            //       SettingItem(
+            //         icon: Iconsax.notification,
+            //         title: 'Promotional Notifications',
+            //         trailing: Switch(
+            //           value: _promotionalNotifications,
+            //           onChanged: (value) {
+            //             setState(() {
+            //               _promotionalNotifications = value;
+            //             });
+            //           },
+            //         ),
+            //         onTap: () {
+            //           setState(() {
+            //             _promotionalNotifications = !_promotionalNotifications;
+            //           });
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
             // More
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -203,11 +204,14 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                   SizedBox(height: 16),
                   SettingItem(
                     icon: Iconsax.info_circle,
-                    title: 'Help Center',
-                    onTap: () {
-                      // Điều hướng đến trang trung tâm trợ giúp
-                    },
-                  ),
+                    title: 'Hướng dẫn sử dụng',
+                    onTap: () =>
+                        Get.to(() => HelpCenterPage()
+                        ),),
+                  //   onTap: () {
+                  //     // Điều hướng đến trang cài đặt
+                  //   },
+                  // ),
                   SettingItem(
                     icon: Iconsax.logout,
                     title: 'Đăng xuất',

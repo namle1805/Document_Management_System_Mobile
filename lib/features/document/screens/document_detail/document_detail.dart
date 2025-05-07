@@ -28,8 +28,8 @@ class DocumentDetailPage extends StatefulWidget {
 
   const DocumentDetailPage({
     Key? key,
-     this.workFlowId,
-     this.documentId, required this.sizes,  this.size,  this.date,  this.taskId, required this.isUsb,  this.taskType,  this.taskStatus,
+    this.workFlowId,
+    this.documentId, required this.sizes,  this.size,  this.date,  this.taskId, required this.isUsb,  this.taskType,  this.taskStatus,
   }) : super(key: key);
 
   @override
@@ -370,6 +370,21 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     return dateFormat.format(dateTime);
   }
 
+  String convertTaskStatus(String status) {
+    switch (status) {
+      case 'Archived':
+        return 'Đã lưu';
+      case 'InProgress':
+        return 'Đang xử lý';
+      case 'Completed':
+        return 'Đã hoàn thành';
+      case 'Rejected':
+        return 'Đã từ chối';
+      default:
+        return 'Không xác định';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -590,7 +605,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                               const SizedBox(width: 8),
                               Flexible(
                                 child: Text(
-                                  'Trạng thái: ${document.processingStatus}',
+                                  'Trạng thái: ${convertTaskStatus(document.processingStatus.toString())}',
                                   style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
                                   softWrap: true,
                                   overflow: TextOverflow.visible,

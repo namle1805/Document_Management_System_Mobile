@@ -31,6 +31,8 @@ dependencies:
   flutter_cached_pdfview: ^0.4.3
   pdfrx: ^0.4.3
 #  pdf_render: ^1.4.0
+  youtube_player_flutter: ^9.0.4
+
 
 
 
