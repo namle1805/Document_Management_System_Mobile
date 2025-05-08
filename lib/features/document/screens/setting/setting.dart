@@ -198,7 +198,7 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'More',
+                    'Hệ thống',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 16),
@@ -212,6 +212,7 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                   //     // Điều hướng đến trang cài đặt
                   //   },
                   // ),
+                  SizedBox(height: 8),
                   SettingItem(
                     icon: Iconsax.logout,
                     title: 'Đăng xuất',

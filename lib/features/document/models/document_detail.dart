@@ -126,6 +126,7 @@ class DocumentDetail {
   final List<String>? signBys;
   final List<ViewerInfo>? viewerList;
   final List<GranterInfo>? granterList;
+  final List<ApproverInfo>? approveByList;
   final String documentUrl;
   final List<SizeInfo> sizes;
   final String? receiver;
@@ -151,6 +152,7 @@ class DocumentDetail {
     this.signBys,
     this.viewerList,
     this.granterList,
+    this.approveByList,
     required this.documentUrl,
     required this.sizes,
     this.receiver,
@@ -183,6 +185,9 @@ class DocumentDetail {
           .toList(),
       granterList: (json['granterList'] as List?)
           ?.map((x) => GranterInfo.fromJson(x))
+          .toList(),
+      approveByList: (json['approveByList'] as List?)
+          ?.map((x) => ApproverInfo.fromJson(x))
           .toList(),
       documentUrl: json['documentUrl'],
       sizes: List<SizeInfo>.from(
@@ -293,4 +298,30 @@ class ViewerInfo {
   }
 }
 
+
+class ApproverInfo {
+  final String userId;
+  final String fullName;
+  final String userName;
+  final String avatar;
+  final String? divisionName;
+
+  ApproverInfo({
+    required this.userId,
+    required this.fullName,
+    required this.userName,
+    required this.avatar,
+    this.divisionName,
+  });
+
+  factory ApproverInfo.fromJson(Map<String, dynamic> json) {
+    return ApproverInfo(
+      userId: json['userId'],
+      fullName: json['fullName'],
+      userName: json['userName'],
+      avatar: json['avatar'] ?? '',
+      divisionName: json['divisionName'],
+    );
+  }
+}
 

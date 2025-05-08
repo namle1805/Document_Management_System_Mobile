@@ -143,7 +143,7 @@ class _DocumentsListByWorkPageState extends State<DocumentsListByWorkflowPage> {
                       title: doc.documentName ?? '',
                       date: _formatDate(doc.createdDate) ?? '',
                       size: doc.size ?? "Chưa rõ",
-                      iconColor: Colors.red[100]!, workFlowId: widget.workFlowId, documentId: doc.id,
+                      iconColor: Colors.red[100]!, workFlowId: doc.workFlowId, documentId: doc.id,
                     );
                   },
                 );

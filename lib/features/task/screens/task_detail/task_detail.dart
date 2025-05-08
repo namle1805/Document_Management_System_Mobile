@@ -96,6 +96,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         return 'Xem văn bản';
       case 'Upload':
         return 'Tải văn bản lên';
+      case "Submit":
+        return "Nộp văn bản";
       case 'CreateUpload':
         return 'Khởi tạo và tải văn bản lên';
       default:

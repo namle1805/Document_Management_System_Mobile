@@ -251,7 +251,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Edit profile',
+                                  'Cập nhật thông tin',
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.white),
                                 ),
