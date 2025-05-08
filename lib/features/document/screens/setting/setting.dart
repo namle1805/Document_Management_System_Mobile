@@ -1,6 +1,7 @@
 import 'package:dms/features/authentication/controllers/user/user_manager.dart';
 import 'package:dms/features/authentication/screens/login/login.dart';
 import 'package:dms/features/authentication/screens/otp/otp_verification.dart';
+import 'package:dms/features/document/screens/help_center/help_system.dart';
 import 'package:dms/features/document/screens/user_detail/user_detail.dart';
 import 'package:dms/navigation_menu.dart';
 import 'package:flutter/material.dart';
@@ -202,6 +203,12 @@ class _UpdateSettingsPageState extends State<UpdateSettingsPage> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 16),
+                  SettingItem(
+                    icon: Icons.help_outline_rounded,
+                    title: 'Hỗ trợ',
+                    onTap: () => Get.to(() => HelpSystemPage())
+                  ),
+                  SizedBox(height: 8),
                   SettingItem(
                     icon: Iconsax.info_circle,
                     title: 'Hướng dẫn sử dụng',

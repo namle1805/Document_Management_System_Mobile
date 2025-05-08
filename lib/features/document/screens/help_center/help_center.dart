@@ -14,11 +14,11 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
   final List<Map<String, String>> videos = [
     {
       'title': 'Hướng dẫn sử dụng chữ ký số',
-      'url': 'https://youtu.be/dQw4w9WgXcQ', // Placeholder link
+      'url': 'https://youtu.be/iCRV5g-u_M0?si=pRikPOWiTyxoR0-1', // Placeholder link
     },
     {
       'title': 'Hướng dẫn cài đặt hệ thống ký số',
-      'url': 'https://youtu.be/9bZkp7q19f0', // Placeholder link
+      'url': 'https://youtu.be/b7Vm2Q6B3qc?si=uVzXjRNMLyecUV87', // Placeholder link
     },
     {
       'title': 'Hướng dẫn sử dụng hệ thống',
