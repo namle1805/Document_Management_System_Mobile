@@ -2,13 +2,13 @@ class DocumentType {
   final String id;
   final String name;
   final double percent;
-  // final bool? documentResponseMobiles;
+  final int sumDoc;
 
   DocumentType({
     required this.id,
     required this.name,
     required this.percent,
-     // this.documentResponseMobiles,
+    required this.sumDoc,
   });
 
   factory DocumentType.fromJson(Map<String, dynamic> json) {
@@ -16,9 +16,7 @@ class DocumentType {
       id: json['documentTypeId'],
       name: json['documentTypeName'],
       percent: (json['percent'] as num).toDouble(),
-      // documentResponseMobiles: json['documentResponseMobiles'] == null
-      //     ? null
-      //     : json['documentResponseMobiles'] as bool,
+      sumDoc: json['sumDoc'] ?? 0,
     );
   }
 }

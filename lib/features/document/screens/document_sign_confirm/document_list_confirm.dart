@@ -107,7 +107,7 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
       Get.dialog(_buildLoadingDialog(context), barrierDismissible: false);
     }
 
-    const url = 'http://103.90.227.64:5290/api/SignatureDIgitalApi/create-sign-in-signature-digital';
+    const url = 'https://www.signdoc-core.io.vn/api/SignatureDIgitalApi/create-sign-in-signature-digital';
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${UserManager().token}',
@@ -199,7 +199,7 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
       Get.dialog(_buildLoadingDialog(context), barrierDismissible: false);
     }
 
-    const url = 'http://103.90.227.64:5290/api/SignatureDIgitalApi/create-signature-digital';
+    const url = 'https://www.signdoc-core.io.vn/api/SignatureDIgitalApi/create-signature-digital';
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${UserManager().token}',
@@ -231,7 +231,7 @@ class _DocumentListSignConfirmPageState extends State<DocumentListSignConfirmPag
           responseData['message'] != 'Operation failed') {
         debugPrint('Ký tài liệu API thành công: ${response.body}');
         final approveUrl =
-            'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=SubmitDocument';
+            'https://www.signdoc-core.io.vn/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=SubmitDocument';
         try {
           final approveResponse = await http.post(
             Uri.parse(approveUrl),

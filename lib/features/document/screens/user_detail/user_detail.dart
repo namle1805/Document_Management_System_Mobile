@@ -136,6 +136,24 @@ class _UserDetailPageState extends State<UserDetailPage> {
       },
     );
   }
+  String convertRoleName(String roleName) {
+    switch (roleName) {
+      case "Leader":
+        return "Lãnh đạo trường";
+      case "Chief":
+        return "Chánh văn phòng";
+      case "Clerical Assistant":
+        return "Nhân viên văn thư";
+      case "Division Head":
+        return "Lãnh đạo phòng ban";
+      case "Specialist":
+        return "Chuyên viên";
+      case "Admin":
+        return "Quản trị viên";
+      default:
+        return "Không xác định"; // Trường hợp không khớp với bất kỳ role nào
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +249,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            user.roleName ?? 'Chưa có vai trò',
+                            convertRoleName(user.roleName.toString())?? 'Chưa có vai trò',
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.grey),
                           ),

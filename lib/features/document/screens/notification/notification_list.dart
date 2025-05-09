@@ -19,9 +19,17 @@ class NotificationListPage extends StatefulWidget {
 class _NotificationListPageState extends State<NotificationListPage> {
   List<NotificationModel> notifications = [];
   bool isLoading = true;
+  // String formatTime(String createdAt) {
+  //   try {
+  //     return DateFormat.Hm().format(DateTime.parse(createdAt));
+  //   } catch (e) {
+  //     return ''; // hoặc '00:00'
+  //   }
+  // }
   String formatTime(String createdAt) {
     try {
-      return DateFormat.Hm().format(DateTime.parse(createdAt));
+      final dateTime = DateTime.parse(createdAt).add(Duration(hours: 7));
+      return DateFormat.Hm().format(dateTime);
     } catch (e) {
       return ''; // hoặc '00:00'
     }

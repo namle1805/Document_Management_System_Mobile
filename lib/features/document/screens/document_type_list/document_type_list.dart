@@ -31,7 +31,7 @@ class _DocumentTypeListPageState extends State<DocumentTypeListPage> {
   Future<void> fetchWorkflows() async {
     try {
       final response = await http.get(
-        Uri.parse("http://103.90.227.64:5290/api/Document/view-all-type-documents-by-workflow-mobile"),
+        Uri.parse("https://www.signdoc-core.io.vn/api/Document/view-all-type-documents-by-workflow-mobile"),
         headers: {
           "Authorization": 'Bearer ${UserManager().token}'
         },

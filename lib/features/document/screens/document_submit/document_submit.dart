@@ -239,7 +239,7 @@ class _ViewDocumentSubmitPageState extends State<ViewDocumentSubmitPage> {
     try {
       final response = await http.post(
         Uri.parse(
-          'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=SubmitDocument',
+          'https://www.signdoc-core.io.vn/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=SubmitDocument',
         ),
         headers: {
           'Authorization': 'Bearer ${UserManager().token}',
@@ -264,7 +264,7 @@ class _ViewDocumentSubmitPageState extends State<ViewDocumentSubmitPage> {
   Future<bool> _rejectDocument(String reason) async {
     try {
       final response = await http.post(
-        Uri.parse('http://103.90.227.64:5290/api/Task/create-reject-document-action'),
+        Uri.parse('https://www.signdoc-core.io.vn/api/Task/create-reject-document-action'),
         headers: {
           'Authorization': 'Bearer ${UserManager().token}',
           'Content-Type': 'application/json',

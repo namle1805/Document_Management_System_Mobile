@@ -42,7 +42,6 @@ class LoginScreen extends StatelessWidget {
 
               /// Form
               TLoginForm(),
-
               /// Divider
               Row(
                 mainAxisAlignment:  MainAxisAlignment.center,

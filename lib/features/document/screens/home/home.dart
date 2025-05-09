@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(right: 12),
                       child: DocumentTypeCard(
                         title: doc.name,
-                        count: 10,          // hoặc đếm thực tế nếu có
+                        count: doc.sumDoc,          // hoặc đếm thực tế nếu có
                         progress: doc.percent,      // gán tạm
                         members: 1, avatar: UserManager().avatar.toString(), documentTypeId: doc.id, workFlowId: '092abc80-61e9-46c3-84c4-91f8d4d19554', typeName: doc.name,         // tạm gán
                       ),
