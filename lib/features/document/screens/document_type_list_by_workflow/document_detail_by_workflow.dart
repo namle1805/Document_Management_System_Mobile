@@ -389,12 +389,12 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-              return const Center(child: Text('Không có dữ liệu người xem'));
+              return const Center(child: Text('Không có dữ liệu người duyệt'));
             }
 
             final approveByList = snapshot.data!.approveByList;
             if (approveByList!.isEmpty) {
-              return const Center(child: Text('Không có người xem'));
+              return const Center(child: Text('Không có người duyệt'));
             }
 
             return Dialog(
@@ -423,7 +423,7 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                         ),
                         Expanded(
                           child: Text(
-                            'Danh sách người xem',
+                            'Danh sách người duyệt',
                             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                             softWrap: true,
@@ -1232,7 +1232,7 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                 if (document.viewerList != null && document.viewerList!.isNotEmpty) const SizedBox(height: 8),
                 if (document.documentId != null && document.documentId!.isNotEmpty)
                   InfoItem(
-                    title: 'Mã văn bản:',
+                    title: 'Số hiệu hệ thống:',
                     value: document.systemNumberDocument ?? document.documentId ?? '',
                   ),
                 if (document.numberOfDocument != null && document.numberOfDocument!.isNotEmpty)
