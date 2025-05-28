@@ -55,8 +55,8 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
       if (detail != null) {
         setState(() {
           signBys = detail.signBys ?? [];
-          // senders = detail.sender ?? [];
-          // receivers = detail.receiver ?? [];
+          senders = detail.sender ?? [];
+          receivers = detail.receiver ?? [];
           granterList = detail.granterList ?? [];
           viewerList = detail.viewerList ?? [];
           approveByList = detail.approveByList ?? [];
@@ -1340,75 +1340,75 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                     title: 'Ngày ban hành:',
                     value: formatDate(document.dateIssued!),
                   ),
-                if (document.sender != null && document.sender!.isNotEmpty)
-                  InfoItem(title: 'Người gửi:', value: document.sender!),
-                if (document.receiver != null && document.receiver!.isNotEmpty)
-                  InfoItem(title: 'Người nhận:', value: document.receiver!),
-                // if (senders.isNotEmpty)
-                //   Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       const Text(
-                //         'Người gửi:',
-                //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                //       ),
-                //       Row(
-                //         children: [
-                //           GestureDetector(
-                //             onTap: () {
-                //               _showSenderList(context);
-                //             },
-                //             child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // if (senders.isNotEmpty) const SizedBox(height: 8),
-                // if (receivers.isNotEmpty)
-                //   Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       const Text(
-                //         'Người nhận:',
-                //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                //       ),
-                //       Row(
-                //         children: [
-                //           GestureDetector(
-                //             onTap: () {
-                //               _showReceiverList(context);
-                //             },
-                //             child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // if (receivers.isNotEmpty) const SizedBox(height: 8),
-                // if (signBys.isNotEmpty)
-                //   Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       const Text(
-                //         'Ký bởi:',
-                //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                //       ),
-                //       Row(
-                //         children: [
-                //           GestureDetector(
-                //             onTap: () {
-                //               _showSignByList(context);
-                //             },
-                //             child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
+                // if (document.sender != null && document.sender!.isNotEmpty)
+                //   InfoItem(title: 'Người gửi:', value: document.sender!),
+                // if (document.receiver != null && document.receiver!.isNotEmpty)
+                //   InfoItem(title: 'Người nhận:', value: document.receiver!),
+                if (senders.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Người gửi:',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _showSenderList(context);
+                            },
+                            child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                if (senders.isNotEmpty) const SizedBox(height: 8),
+                if (receivers.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Người nhận:',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _showReceiverList(context);
+                            },
+                            child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                if (receivers.isNotEmpty) const SizedBox(height: 8),
+                if (signBys.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Ký bởi:',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _showSignByList(context);
+                            },
+                            child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 if (signBys.isNotEmpty) const SizedBox(height: 8),
                 if (signBys.isNotEmpty)
                   Row(
