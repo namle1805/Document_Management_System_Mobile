@@ -130,7 +130,9 @@ class DocumentDetail {
   final String documentUrl;
   final List<SizeInfo> sizes;
   final String? receiver;
+  // final List<String>? receiver;
   final String? sender;
+  // final List<String>? sender;
   final String? dateExpired;
   final String? deadline;
   final String? workFlowName;
@@ -180,6 +182,8 @@ class DocumentDetail {
         (json['userList'] ?? []).map((x) => UserInfo.fromJson(x)),
       ),
       signBys: (json['signBys'] as List?)?.map((e) => e.toString()).toList(),
+      // sender: (json['sender'] as List?)?.map((e) => e.toString()).toList(),
+      // receiver: (json['receiver'] as List?)?.map((e) => e.toString()).toList(),
       viewerList: (json['viewerList'] as List?)
           ?.map((x) => ViewerInfo.fromJson(x))
           .toList(),

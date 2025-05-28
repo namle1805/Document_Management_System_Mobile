@@ -36,6 +36,8 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
   bool _isContentExpanded = false;
   late Future<DocumentDetail?> _documentDetailFuture;
   List<String> signBys = [];
+  List<String> receivers = [];
+  List<String> senders = [];
   List<GranterInfo> granterList = [];
   List<ViewerInfo> viewerList = [];
   List<ApproverInfo> approveByList = [];
@@ -53,6 +55,8 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
       if (detail != null) {
         setState(() {
           signBys = detail.signBys ?? [];
+          // senders = detail.sender ?? [];
+          // receivers = detail.receiver ?? [];
           granterList = detail.granterList ?? [];
           viewerList = detail.viewerList ?? [];
           approveByList = detail.approveByList ?? [];
@@ -697,6 +701,194 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
       },
     );
   }
+  void _showSenderList(BuildContext context) {
+    if (senders.isEmpty) {
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: Colors.white,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_circle_left_outlined, color: Colors.black, size: 30),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Danh sách người gửi',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        maxLines: 2,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: senders.length,
+                    itemBuilder: (context, index) {
+                      final signer = senders[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 24,
+                              backgroundImage: AssetImage(TImages.user),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    signer,
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Người gửi',
+                                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  void _showReceiverList(BuildContext context) {
+    if (receivers.isEmpty) {
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: Colors.white,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_circle_left_outlined, color: Colors.black, size: 30),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Danh sách người nhận',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        maxLines: 2,
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: receivers.length,
+                    itemBuilder: (context, index) {
+                      final signer = receivers[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 24,
+                              backgroundImage: AssetImage(TImages.user),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    signer,
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Người nhận',
+                                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
 
   String formatDate(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
@@ -1125,6 +1317,16 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                   InfoItem(title: 'Ngày tạo:', value: formatDate(document.createdDate!)),
                 if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
                   InfoItem(
+                    title: 'Hiệu lực văn bản:',
+                    value: formatDate(document.dateExpired!),
+                  ),
+                if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
+                  InfoItem(
+                    title: 'Ngày có hiệu lực:',
+                    value: formatDate(document.dateExpired!),
+                  ),
+                if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
+                  InfoItem(
                     title: 'Ngày hết hiệu lực:',
                     value: formatDate(document.dateExpired!),
                   ),
@@ -1142,27 +1344,71 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                   InfoItem(title: 'Người gửi:', value: document.sender!),
                 if (document.receiver != null && document.receiver!.isNotEmpty)
                   InfoItem(title: 'Người nhận:', value: document.receiver!),
-                if (signBys.isNotEmpty)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Ký bởi:',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _showSignByList(context);
-                            },
-                            child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                // if (senders.isNotEmpty)
+                //   Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       const Text(
+                //         'Người gửi:',
+                //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                //       ),
+                //       Row(
+                //         children: [
+                //           GestureDetector(
+                //             onTap: () {
+                //               _showSenderList(context);
+                //             },
+                //             child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // if (senders.isNotEmpty) const SizedBox(height: 8),
+                // if (receivers.isNotEmpty)
+                //   Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       const Text(
+                //         'Người nhận:',
+                //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                //       ),
+                //       Row(
+                //         children: [
+                //           GestureDetector(
+                //             onTap: () {
+                //               _showReceiverList(context);
+                //             },
+                //             child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // if (receivers.isNotEmpty) const SizedBox(height: 8),
+                // if (signBys.isNotEmpty)
+                //   Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       const Text(
+                //         'Ký bởi:',
+                //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                //       ),
+                //       Row(
+                //         children: [
+                //           GestureDetector(
+                //             onTap: () {
+                //               _showSignByList(context);
+                //             },
+                //             child: const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
                 if (signBys.isNotEmpty) const SizedBox(height: 8),
                 if (signBys.isNotEmpty)
                   Row(
