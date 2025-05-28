@@ -134,6 +134,7 @@ class DocumentDetail {
   // final String? sender;
   final List<String>? sender;
   final String? dateExpired;
+  final String? validFrom;
   final String? deadline;
   final String? workFlowName;
   final String? scope;
@@ -160,6 +161,7 @@ class DocumentDetail {
     this.receiver,
     this.sender,
     this.dateExpired,
+    this.validFrom,
     this.deadline,
     this.workFlowName,
     this.scope,
@@ -200,6 +202,7 @@ class DocumentDetail {
       // receiver: json['receiver'],
       // sender: json['sender'],
       dateExpired: json['dateExpired'],
+      validFrom: json['validFrom'],
       deadline: json['deadline'],
       workFlowName: json['workFlowName'],
       scope: json['scope'],

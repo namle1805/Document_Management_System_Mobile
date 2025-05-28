@@ -5,6 +5,7 @@ import 'package:dms/features/document/screens/document_submit/document_submit.da
 import 'package:dms/features/document/screens/view_document/view_document.dart';
 import 'package:dms/features/document/screens/view_document_signature/view_document_signature.dart';
 import 'package:dms/utils/constants/image_strings.dart';
+import 'package:dms/utils/local_storage/storage_utility.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -1365,10 +1366,10 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                     title: 'Hiệu lực văn bản:',
                     value: formatDate(document.dateExpired!),
                   ),
-                if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
+                if (document.validFrom != null && document.validFrom!.isNotEmpty)
                   InfoItem(
                     title: 'Ngày có hiệu lực:',
-                    value: formatDate(document.dateExpired!),
+                    value: formatDate(document.validFrom!),
                   ),
                 if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
                   InfoItem(
@@ -1380,7 +1381,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                     title: 'Hạn xử lý:',
                     value: formatDate(document.deadline!),
                   ),
-                if (document.dateIssued != null && document.dateIssued!.isNotEmpty)
+                if (document.dateIssued != null && document.dateIssued!.isNotEmpty && document.dateIssued != '0001-01-01T00:00:00+00:00')
                   InfoItem(
                     title: 'Ngày ban hành:',
                     value: formatDate(document.dateIssued!),
