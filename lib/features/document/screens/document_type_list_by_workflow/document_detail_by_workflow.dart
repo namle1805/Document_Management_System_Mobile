@@ -1313,7 +1313,8 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                   InfoItem(title: 'Phạm vi:', value: convertScope(document.scope!)),
                 if (document.workFlowName != null && document.workFlowName!.isNotEmpty)
                   InfoItem(title: 'Luồng xử lý:', value: document.workFlowName!),
-                if (document.createdDate != null && document.createdDate!.isNotEmpty)
+                if (document.createdDate != null && document.createdDate!.isNotEmpty && DateTime.tryParse(document.createdDate!)?.year != null &&
+                    DateTime.parse(document.createdDate!).year > 1900)
                   InfoItem(title: 'Ngày tạo:', value: formatDate(document.createdDate!)),
                 if (document.isExpire != null)
                   InfoItem(
@@ -1330,17 +1331,20 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                     value: formatDate(document.validFrom!),
                   ),
 
-                if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
+                if (document.dateExpired != null && document.dateExpired!.isNotEmpty && DateTime.tryParse(document.dateExpired!)?.year != null &&
+                    DateTime.parse(document.dateExpired!).year > 1900)
                   InfoItem(
                     title: 'Ngày hết hiệu lực:',
                     value: formatDate(document.dateExpired!),
                   ),
-                if (document.deadline != null && document.deadline!.isNotEmpty)
+                if (document.deadline != null && document.deadline!.isNotEmpty && DateTime.tryParse(document.deadline!)?.year != null &&
+                    DateTime.parse(document.deadline!).year > 1900)
                   InfoItem(
                     title: 'Hạn xử lý:',
                     value: formatDate(document.deadline!),
                   ),
-                if (document.dateIssued != null && document.dateIssued!.isNotEmpty && document.dateIssued != '0001-01-01T00:00:00+00:00')
+                if (document.dateIssued != null && document.dateIssued!.isNotEmpty && DateTime.tryParse(document.dateIssued!)?.year != null &&
+                    DateTime.parse(document.dateIssued!).year > 1900)
                   InfoItem(
                     title: 'Ngày ban hành:',
                     value: formatDate(document.dateIssued!),
