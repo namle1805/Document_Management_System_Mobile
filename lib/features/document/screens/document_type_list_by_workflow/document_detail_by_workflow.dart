@@ -1315,16 +1315,21 @@ class _DocumentDetailByWorkflowPageState extends State<DocumentDetailByWorkflowP
                   InfoItem(title: 'Luồng xử lý:', value: document.workFlowName!),
                 if (document.createdDate != null && document.createdDate!.isNotEmpty)
                   InfoItem(title: 'Ngày tạo:', value: formatDate(document.createdDate!)),
-                if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
+                if (document.isExpire != null)
                   InfoItem(
                     title: 'Hiệu lực văn bản:',
-                    value: formatDate(document.dateExpired!),
+                    value: document.isExpire! ? 'Hết hiệu lực' : 'Còn hiệu lực',
                   ),
-                if (document.validFrom != null && document.validFrom!.isNotEmpty)
+
+                if (document.validFrom != null &&
+                    document.validFrom!.isNotEmpty &&
+                    DateTime.tryParse(document.validFrom!)?.year != null &&
+                    DateTime.parse(document.validFrom!).year > 1900)
                   InfoItem(
                     title: 'Ngày có hiệu lực:',
                     value: formatDate(document.validFrom!),
                   ),
+
                 if (document.dateExpired != null && document.dateExpired!.isNotEmpty)
                   InfoItem(
                     title: 'Ngày hết hiệu lực:',

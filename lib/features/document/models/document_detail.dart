@@ -139,6 +139,8 @@ class DocumentDetail {
   final String? workFlowName;
   final String? scope;
   final String? systemNumberDocument;
+  final bool? isExpire;
+
 
   DocumentDetail({
     this.documentId,
@@ -166,6 +168,7 @@ class DocumentDetail {
     this.workFlowName,
     this.scope,
     this.systemNumberDocument,
+    this.isExpire,
   });
 
   factory DocumentDetail.fromJson(Map<String, dynamic> json) {
@@ -207,6 +210,7 @@ class DocumentDetail {
       workFlowName: json['workFlowName'],
       scope: json['scope'],
       systemNumberDocument: json['systemNumberDocument'],
+      isExpire: json['isExpire'],
     );
   }
 }
@@ -240,8 +244,8 @@ class UserInfo {
   UserInfo({
     required this.userId,
     required this.fullName,
-     this.avatar,
-     required this.divisionName,
+    this.avatar,
+    required this.divisionName,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
