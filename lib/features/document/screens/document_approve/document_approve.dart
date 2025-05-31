@@ -112,7 +112,7 @@ class _ViewDocumentApprovePageState extends State<ViewDocumentApprovePage> {
     try {
       final response = await http.post(
         Uri.parse(
-          'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=AcceptTask',
+          'http://103.90.227.64:5290/api/Task/create-handle-task-action?taskId=${widget.taskId}&userId=${UserManager().id}&action=ApproveDocument',
         ),
         headers: {
           'Authorization': 'Bearer ${UserManager().token}',
